@@ -146,7 +146,7 @@ export default function NavbarCustom() {
         </NavbarMenuItem>
         <NavbarMenuItem className="lg:flex">
           <Link
-            href="/login"
+            href="#"
             className="font-bold text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
           >
             Login
