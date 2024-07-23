@@ -1,9 +1,9 @@
-import Login from "./pages/login";
+import LoginSimoanginangin from "./pages/loginSimoanginangin";
 
 function App() {
   return (
     <div>
-      <Login />
+      <LoginSimoanginangin />
     </div>
   );
 }
