@@ -10,10 +10,12 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/react";
 import { ChevronDown } from "./Icon.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function NavbarCustom() {
   const [activeMenu, setActiveMenu] = useState("Beranda");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const icons = {
     chevron: <ChevronDown fill="currentColor" size={16} />,
@@ -21,6 +23,7 @@ export default function NavbarCustom() {
 
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
+    navigate(path);
   };
 
   const getMenuClasses = (menu) => {
@@ -63,7 +66,7 @@ export default function NavbarCustom() {
       <NavbarContent className="hidden gap-4 sm:flex items-center">
         <NavbarItem className="hidden lg:flex">
           <Link
-            href="#"
+            href="/beranda"
             className={getMenuClasses("Beranda")}
             onClick={() => handleMenuClick("Beranda")}
           >
@@ -81,7 +84,7 @@ export default function NavbarCustom() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link
-            href="#"
+            href="/buletin"
             className={getMenuClasses("Buletin")}
             onClick={() => handleMenuClick("Buletin")}
           >
@@ -90,7 +93,7 @@ export default function NavbarCustom() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link
-            href="#"
+            href="/tentangkami"
             className={getMenuClasses("TentangKami")}
             onClick={() => handleMenuClick("TentangKami")}
           >
@@ -110,7 +113,7 @@ export default function NavbarCustom() {
       <NavbarMenu>
         <NavbarMenuItem className="lg:flex">
           <Link
-            href="#"
+            href="/beranda"
             className={getMenuClasses("Beranda")}
             onClick={() => handleMenuClick("Beranda")}
           >
@@ -128,7 +131,7 @@ export default function NavbarCustom() {
         </NavbarMenuItem>
         <NavbarMenuItem className="lg:flex">
           <Link
-            href="#"
+            href="/buletin"
             className={getMenuClasses("Buletin")}
             onClick={() => handleMenuClick("Buletin")}
           >
@@ -137,7 +140,7 @@ export default function NavbarCustom() {
         </NavbarMenuItem>
         <NavbarMenuItem className="lg:flex">
           <Link
-            href="#"
+            href="/tentangkami"
             className={getMenuClasses("TentangKami")}
             onClick={() => handleMenuClick("TentangKami")}
           >

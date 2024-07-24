@@ -13,7 +13,7 @@ import { ChevronDown } from "./Icon.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function NavbarCustom() {
-  const [activeMenu, setActiveMenu] = useState("Buletin");
+  const [activeMenu, setActiveMenu] = useState("TentangKami");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 

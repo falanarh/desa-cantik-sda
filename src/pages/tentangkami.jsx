@@ -1,13 +1,13 @@
 import React from 'react';
-import BuletinPage from "../components/Buletin";
-import Header from "../components/Buletin/header";
+import TentangKami from "../components/TentangKami";
+import Header from "../components/TentangKami/header";
 
 const Buletin = () => {
   return (
     <div>
       <>
         <Header />
-        <BuletinPage />
+        <TentangKami />
       </>
     </div>
   );
