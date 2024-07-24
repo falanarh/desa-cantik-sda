@@ -1,10 +1,11 @@
 import LoginSimoanginangin from "./pages/loginSimoanginangin";
-import Beranda from "./pages/beranda";
+// import Beranda from "./pages/beranda";
 
 function App() {
   return (
     <div>
-      <Beranda />
+      {/* <Beranda /> */}
+      <LoginSimoanginangin />
     </div>
   );
 }

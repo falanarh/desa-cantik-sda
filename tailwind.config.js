@@ -20,6 +20,8 @@ module.exports = {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
         assistant: ["Assistant", "sans-serif"],
+        nunito: ["Nunito", "sans-serif"],
+        quicksand: ["Quicksand", "sans-serif"], 
       },
       screens: {
         'xs': '350px',
