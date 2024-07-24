@@ -31,36 +31,36 @@ export default function NavbarCustom() {
 
   return (
     <Navbar className="bg-base" shouldHideOnScroll>
-      <NavbarContent className="flex items-center w-full px-11">
+      <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         />
-        <NavbarBrand className="flex px-10">
-        <a href="https://pahlawan140.com" target="_blank" rel="noopener noreferrer">
+        <NavbarBrand className="flex items-center">
+          <a href="https://pahlawan140.com" target="_blank" rel="noopener noreferrer">
             <img
               src="https://www.bps.go.id/_next/image?url=%2Fassets%2Flogo-bps.png&w=1080&q=75"
               alt="BPS Logo"
-              width={48}
-              height={48}
+              width={45}
+              height={45}
+              className="mr-6"
             />
           </a>
-        </NavbarBrand>
-        <NavbarBrand className="flex items-center">
+          <span></span>
           <img
             src="/pict/logo_dc.png"
             alt="Desa Cantik Logo"
             width={48}
             height={48}
           />
-          <p className="font-[600] font-inter italic text-[14px] sm:text-[18px] text-pdarkblue ml-3 block xs:inline-block">
-            DESA CANTIK <br className="xs:hidden" />KABUPATEN SIDOARJO
+          <p className="font-bold font-inter italic text-[14px] sm:text-[18px] text-pdarkblue ml-3 block xs:inline-block">
+            DESA CANTIK <br />KABUPATEN SIDOARJO
           </p>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden gap-4 sm:flex justify-center items-center w-full">
+      <NavbarContent className="hidden gap-4 sm:flex items-center">
         <NavbarItem className="hidden lg:flex">
           <Link
             href="#"
@@ -97,7 +97,7 @@ export default function NavbarCustom() {
             Tentang Kami
           </Link>
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex px-20">
+        <NavbarItem className="hidden lg:flex px-5">
           <Link
             href="#"
             className="font-bold font-assistant text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
