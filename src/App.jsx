@@ -1,5 +1,6 @@
 import LoginSimoanginangin from "./pages/loginSimoanginangin";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import LoginSimoanginangin from "./pages/loginSimoanginangin";
 import Beranda from "./pages/beranda";
 import Buletin from "./pages/buletin";
 
@@ -13,6 +14,8 @@ function App() {
           <Route path="/buletin" element={<Buletin />} />
         </Routes>
       </BrowserRouter>
+      <Beranda />
+      {/* <LoginSimoanginangin /> */}
     </div>
   );
 }
