@@ -1,10 +1,12 @@
 // import LoginSimoanginangin from "./pages/loginSimoanginangin";
-import Beranda from "./pages/beranda";
+// import Beranda from "./pages/beranda";
+import PetaUMKMSimonaginagin from "./pages/petaUMKMSimoanginagin";
+
 
 function App() {
   return (
     <div>
-      <Beranda />
+      <PetaUMKMSimonaginagin />
       {/* <LoginSimoanginangin /> */}
     </div>
   );
