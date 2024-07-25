@@ -4,6 +4,7 @@ import Beranda from "./pages/beranda";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Buletin from "./pages/buletin";
 import TentangKami from "./pages/tentangkami";
+import { NextUIProvider } from "@nextui-org/system";
 
 function App() {
   const navigate = useNavigate();
