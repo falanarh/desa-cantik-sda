@@ -1,0 +1,32 @@
+/* .bg-default-100 {
+  background-color: #ffffffb4 !important;
+} */
+
+[data-slot="tabList"] {
+    background-color: #ffffffb4 !important;
+}
+
+[data-slot="tabContent"] {
+  color: #0b588f !important;
+}
+
+[data-slot="cursor"] {
+  background-color: #a7daff !important;
+  box-shadow: none !important;
+  /* margin: 2px !important; */
+}
+
+.group[data-focus="true"] .group-data-\[focus\=true\]\:bg-default-100,
+[data-slot="input-wrapper"]:hover {
+  background-color: rgb(241 245 249) !important;
+}
+
+.ant-statistic-title {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.ant-statistic-content-value {
+  color: white !important;
+  font-weight: 700 !important;
+}
