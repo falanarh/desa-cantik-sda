@@ -9,6 +9,8 @@ import { FaShop } from "react-icons/fa6";
 import { MdTrolley } from "react-icons/md";
 import RutaTable from "../components/RutaTable";
 
+const username = localStorage.getItem("username");
+
 const formatter = (value) => <CountUp end={value} separator="," />;
 
 const AdminSimoanginangin = () => {
@@ -52,7 +54,7 @@ const AdminSimoanginangin = () => {
         <h1 className="text-lg font-semibold">Manajemen Data Peta Tematik</h1>
         <div className="flex items-center gap-2">
           <PiUserCircleDashedDuotone className="text-[40px]" />
-          <h1 className="text-lg font-semibold">Falana</h1>
+          <h1 className="text-lg font-semibold">{username}</h1>
         </div>
       </div>
       <div className="flex flex-col w-full min-h-screen bg-[#eefcff] px-[10%] 2xl:px-[20%] font-inter text-pdarkblue">

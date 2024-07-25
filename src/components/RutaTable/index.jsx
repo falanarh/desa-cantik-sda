@@ -141,7 +141,6 @@ const RutaDetail = ({ ruta }) => {
   );
 };
 
-
 const RutaTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRuta, setSelectedRuta] = useState(null); // State untuk menyimpan RT yang dipilih
@@ -159,48 +158,50 @@ const RutaTable = () => {
     onOpen: onEditModalOpen,
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
-  const [editRtData, setEditRtData] = useState(null);
+  const [editRutaData, setEditRutaData] = useState(null);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleDetailClick = (rt) => {
-    setSelectedRuta(rt);
+  const handleDetailClick = (ruta) => {
+    setSelectedRuta(ruta);
     onOpen();
   };
 
-  const handleEditClick = (rt) => {
-    setEditRtData(rt);
+  const handleEditClick = (ruta) => {
+    setEditRutaData(ruta);
     onEditModalOpen();
   };
 
-  const handleDelete = (rt) => {
-    setData(data.filter((item) => item.kode !== rt.kode));
-    message.success(`RT ${rt.rt} berhasil dihapus.`);
+  const handleDelete = (ruta) => {
+    setData(data.filter((item) => item.kode !== ruta.kode));
+    message.success(`Rumah tangga ${ruta.nama_krt} berhasil dihapus.`);
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditRtData({ ...editRtData, [name]: value });
+    setEditRutaData({ ...editRutaData, [name]: value });
   };
 
   const handleEditSave = () => {
     setData(
-      data.map((item) => (item.kode === editRtData.kode ? editRtData : item))
+      data.map((item) =>
+        item.kode === editRutaData.kode ? editRutaData : item
+      )
     );
-    message.success(`RT ${editRtData.rt} berhasil diupdate.`);
+    message.success(`Rumah tangga ${editRutaData.nama_krt} berhasil diupdate.`);
     onEditModalOpenChange(false);
   };
 
-  const filteredData = data.filter((rt) =>
-    Object.values(rt).some((value) =>
+  const filteredData = data.filter((ruta) =>
+    Object.values(ruta).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
-  const renderCell = (rt, columnKey) => {
-    const cellValue = rt[columnKey];
+  const renderCell = (ruta, columnKey) => {
+    const cellValue = ruta[columnKey];
 
     switch (columnKey) {
       case "aksi":
@@ -209,7 +210,7 @@ const RutaTable = () => {
             <Tooltip content="Detail">
               <span
                 className="text-lg cursor-pointer text-default-400 active:opacity-50"
-                onClick={() => handleDetailClick(rt)}
+                onClick={() => handleDetailClick(ruta)}
               >
                 <EyeIcon />
               </span>
@@ -217,16 +218,16 @@ const RutaTable = () => {
             <Tooltip content="Edit">
               <span
                 className="text-lg cursor-pointer text-default-400 active:opacity-50"
-                onClick={() => handleEditClick(rt)}
+                onClick={() => handleEditClick(ruta)}
               >
                 <EditIcon />
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Hapus">
               <Popconfirm
-                title="Hapus Rukun Tetangga (RT)"
-                description="Anda yakin menghapus RT ini?"
-                onConfirm={() => handleDelete(rt)}
+                title="Hapus Rumah Tangga"
+                description="Anda yakin menghapus Rumah tangga ini?"
+                onConfirm={() => handleDelete(ruta)}
                 onOpenChange={() => console.log("open change")}
               >
                 <span className="text-lg cursor-pointer text-danger active:opacity-50">
@@ -329,16 +330,12 @@ const RutaTable = () => {
         }}
       >
         <ModalContent className="font-inter text-pdarkblue">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-                Detail Rumah Tangga UMKM
-              </ModalHeader>
-              <ModalBody className="py-4">
-                <RutaDetail ruta={selectedRuta} />
-              </ModalBody>
-            </>
-          )}
+          <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
+            Detail Rumah Tangga UMKM
+          </ModalHeader>
+          <ModalBody className="py-4">
+            <RutaDetail ruta={selectedRuta} />
+          </ModalBody>
         </ModalContent>
       </Modal>
 
@@ -375,43 +372,26 @@ const RutaTable = () => {
                     fullWidth
                     classNames={{ inputWrapper: "shadow" }}
                   />
-                  <Select
-                    size="md"
-                    label="Pilih RT"
-                    className="w-full"
-                  >
+                  <Select size="md" label="RT" className="w-full" placeholder="Masukkan RT">
                     {daftarRt.map((rt) => (
-                      <SelectItem key={rt.key}>
-                        {rt.label}
-                      </SelectItem>
+                      <SelectItem key={rt.key}>{rt.label}</SelectItem>
                     ))}
                   </Select>
-                  <Select
-                    size="md"
-                    label="Pilih RW"
-                    className="w-full"
-                  >
+                  <Select size="md" label="RW" className="w-full" placeholder="Masukkan RW">
                     {daftarRw.map((rw) => (
-                      <SelectItem key={rw.key}>
-                        {rw.label}
-                      </SelectItem>
+                      <SelectItem key={rw.key}>{rw.label}</SelectItem>
                     ))}
                   </Select>
-                  <Select
-                    size="md"
-                    label="Pilih dusun"
-                    className="w-full"
-                  >
+                  <Select size="md" label="Dusun" className="w-full" placeholder="Masukkan Dusun">
                     {daftarDusun.map((dusun) => (
-                      <SelectItem key={dusun.key}>
-                        {dusun.label}
-                      </SelectItem>
+                      <SelectItem key={dusun.key}>{dusun.label}</SelectItem>
                     ))}
                   </Select>
                   <Select
                     size="md"
-                    label="Pilih klasifikasi baku umkm"
+                    label="Klasifikasi UMKM"
                     className="w-full"
+                    placeholder="Masukkan Klasifikasi UMKM"
                   >
                     {daftarKlasifikasi.map((klasifikasi) => (
                       <SelectItem key={klasifikasi.key}>
@@ -419,15 +399,9 @@ const RutaTable = () => {
                       </SelectItem>
                     ))}
                   </Select>
-                  <Select
-                    size="md"
-                    label="Pilih jenis umkm"
-                    className="w-full"
-                  >
+                  <Select size="md" label="Jenis UMKM" className="w-full" placeholder="Masukkan Jenis UMKM">
                     {daftarJenisUmkm.map((jenis) => (
-                      <SelectItem key={jenis.key}>
-                        {jenis.label}
-                      </SelectItem>
+                      <SelectItem key={jenis.key}>{jenis.label}</SelectItem>
                     ))}
                   </Select>
                   <Input
@@ -446,7 +420,7 @@ const RutaTable = () => {
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  Tutup
                 </Button>
                 <Button
                   className="bg-[#0B588F] text-white font-inter font-semibold"
@@ -480,14 +454,23 @@ const RutaTable = () => {
                 Edit Rumah Tangga UMKM
               </ModalHeader>
               <ModalBody className="py-4">
-                {/* Form untuk mengedit RT */}
+                {/* Form untuk mengedit Ruta */}
                 <div className="space-y-4">
                   <Input
                     label="Kode"
                     placeholder="Masukkan kode"
                     fullWidth
                     name="kode"
-                    value={editRtData?.kode || ""}
+                    value={editRutaData?.kode ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Nama KRT"
+                    placeholder="Masukkan Nama KRT"
+                    fullWidth
+                    name="nama_krt"
+                    value={editRutaData?.nama_krt ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
@@ -496,7 +479,7 @@ const RutaTable = () => {
                     placeholder="Masukkan RT"
                     fullWidth
                     name="rt"
-                    value={editRtData?.rt || ""}
+                    value={editRutaData?.rt ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
@@ -505,59 +488,60 @@ const RutaTable = () => {
                     placeholder="Masukkan RW"
                     fullWidth
                     name="rw"
-                    value={editRtData?.rw || ""}
+                    value={editRutaData?.rw ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM"
-                    placeholder="Masukkan jumlah UMKM"
+                    label="Dusun"
+                    placeholder="Masukkan dusun"
                     fullWidth
-                    name="jml_umkm"
-                    value={editRtData?.jml_umkm || ""}
+                    name="dusun"
+                    value={editRutaData?.dusun ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM Tetap"
-                    placeholder="Masukkan jumlah UMKM tetap"
+                    label="Klasifikasi KBLI"
+                    placeholder="Masukkan klasifikasi KBLI"
                     fullWidth
-                    name="jml_umkm_tetap"
-                    value={editRtData?.jml_umkm_tetap || ""}
+                    name="klasifikasi_klbi"
+                    value={editRutaData?.klasifikasi_klbi ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM Non Tetap"
-                    placeholder="Masukkan jumlah UMKM non tetap"
+                    label="Jenis UMKM"
+                    placeholder="Masukkan jenis UMKM"
                     fullWidth
-                    name="jml_umkm_nontetap"
-                    value={editRtData?.jml_umkm_nontetap || ""}
+                    name="jenis_umkm"
+                    value={editRutaData?.jenis_umkm ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
-                  <div className="flex flex-col text-pdarkblue font-inter">
-                    <p className="font-semibold text-[14px] ml-3 mb-3">
-                      Upload geoJSON
-                    </p>
-                    <Dragger {...uploadProps}>
-                      <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                      </p>
-                      <p className="ant-upload-text">
-                        Click or drag file to this area to upload
-                      </p>
-                      <p className="ant-upload-hint">
-                        Support for a single or bulk upload. Strictly prohibited
-                        from uploading company data or other banned files.
-                      </p>
-                    </Dragger>
-                  </div>
+                  <Input
+                    label="Latitude"
+                    placeholder="Masukkan latitude"
+                    fullWidth
+                    name="latitude"
+                    value={editRutaData?.latitude ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Longitude"
+                    placeholder="Masukkan longitude"
+                    fullWidth
+                    name="longitude"
+                    value={editRutaData?.longitude ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
                 </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  Tutup
                 </Button>
                 <Button
                   className="bg-[#0B588F] text-white font-inter font-semibold"

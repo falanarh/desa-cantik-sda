@@ -80,6 +80,22 @@ const RtDetail = ({ rt }) => {
           </tr>
           <tr className="bg-white/70">
             <th className="p-3 font-semibold text-left border border-gray-300">
+              Dusun
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.dusun}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah Ruta
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_ruta}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               Jumlah UMKM
             </th>
             <td className="p-3 text-right border border-gray-300">
@@ -100,6 +116,174 @@ const RtDetail = ({ rt }) => {
             </th>
             <td className="p-3 text-right border border-gray-300">
               {rt.jml_umkm_nontetap}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI A)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_a}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI B)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_b}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI C)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_c}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI D)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_d}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI E)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_e}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI F)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_f}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI G)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_g}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI H)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_h}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI I)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_i}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI J)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_j}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI K)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_k}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI L)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_l}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI M)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_m}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI N)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_n}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI O)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_o}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI P)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_p}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI Q)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_q}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI R)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_r}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI S)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_s}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI T)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_t}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Jumlah UMKM (KBLI U)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.jml_umkm_kbli_u}
             </td>
           </tr>
         </tbody>
@@ -300,7 +484,7 @@ const RtTable = () => {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         size="lg"
-        className="font-inter bg-slate-100"
+        className="font-inter bg-slate-100 max-h-[90%]"
         classNames={{
           header: "border-b-[1px] border-slate-300",
           footer: "border-t-[1px] border-slate-300",
@@ -312,7 +496,7 @@ const RtTable = () => {
               <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
                 Detail Rukun Tetangga (RT)
               </ModalHeader>
-              <ModalBody className="py-4">
+              <ModalBody className="py-4 overflow-y-auto">
                 <RtDetail rt={selectedRt} />
               </ModalBody>
             </>
@@ -414,115 +598,307 @@ const RtTable = () => {
       </Modal>
 
       {/* Modal untuk Edit */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onOpenChange={onEditModalOpenChange}
-        size="lg"
-        className="bg-slate-100 font-inter max-h-[90%]"
-        classNames={{
-          header: "border-b-[1px] border-slate-300",
-          footer: "border-t-[1px] border-slate-300",
-          body: "overflow-y-auto",
-          wrapper: "overflow-y-hidden",
-        }}
-      >
-        <ModalContent className="font-inter text-pdarkblue">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-                Edit Rukun Tetangga (RT)
-              </ModalHeader>
-              <ModalBody className="py-4">
-                {/* Form untuk mengedit RT */}
-                <div className="space-y-4">
-                  <Input
-                    label="Kode"
-                    placeholder="Masukkan kode"
-                    fullWidth
-                    name="kode"
-                    value={editRtData?.kode || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RT"
-                    placeholder="Masukkan RT"
-                    fullWidth
-                    name="rt"
-                    value={editRtData?.rt || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RW"
-                    placeholder="Masukkan RW"
-                    fullWidth
-                    name="rw"
-                    value={editRtData?.rw || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM"
-                    placeholder="Masukkan jumlah UMKM"
-                    fullWidth
-                    name="jml_umkm"
-                    value={editRtData?.jml_umkm || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Tetap"
-                    placeholder="Masukkan jumlah UMKM tetap"
-                    fullWidth
-                    name="jml_umkm_tetap"
-                    value={editRtData?.jml_umkm_tetap || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Non Tetap"
-                    placeholder="Masukkan jumlah UMKM non tetap"
-                    fullWidth
-                    name="jml_umkm_nontetap"
-                    value={editRtData?.jml_umkm_nontetap || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <div className="flex flex-col text-pdarkblue font-inter">
-                    <p className="font-semibold text-[14px] ml-3 mb-3">
-                      Upload geoJSON
-                    </p>
-                    <Dragger {...uploadProps}>
-                      <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                      </p>
-                      <p className="ant-upload-text">
-                        Click or drag file to this area to upload
-                      </p>
-                      <p className="ant-upload-hint">
-                        Support for a single or bulk upload. Strictly prohibited
-                        from uploading company data or other banned files.
-                      </p>
-                    </Dragger>
-                  </div>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Tutup
-                </Button>
-                <Button
-                  className="bg-[#0B588F] text-white font-inter font-semibold"
-                  onPress={handleEditSave}
-                >
-                  Simpan
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+<Modal
+  isOpen={isEditModalOpen}
+  onOpenChange={onEditModalOpenChange}
+  size="lg"
+  className="bg-slate-100 font-inter max-h-[90%]"
+  classNames={{
+    header: "border-b-[1px] border-slate-300",
+    footer: "border-t-[1px] border-slate-300",
+    body: "overflow-y-auto",
+    wrapper: "overflow-y-hidden",
+  }}
+>
+  <ModalContent className="font-inter text-pdarkblue">
+    {(onClose) => (
+      <>
+        <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
+          Edit Rukun Tetangga (RT)
+        </ModalHeader>
+        <ModalBody className="py-4">
+          {/* Form untuk mengedit RT */}
+          <div className="space-y-4">
+            <Input
+              label="Kode"
+              placeholder="Masukkan kode"
+              fullWidth
+              name="kode"
+              value={editRtData?.kode ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="RT"
+              placeholder="Masukkan RT"
+              fullWidth
+              name="rt"
+              value={editRtData?.rt ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="RW"
+              placeholder="Masukkan RW"
+              fullWidth
+              name="rw"
+              value={editRtData?.rw ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Dusun"
+              placeholder="Masukkan dusun"
+              fullWidth
+              name="dusun"
+              value={editRtData?.dusun ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah Ruta"
+              placeholder="Masukkan jumlah Ruta"
+              fullWidth
+              name="jml_ruta"
+              value={editRtData?.jml_ruta ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM"
+              placeholder="Masukkan jumlah UMKM"
+              fullWidth
+              name="jml_umkm"
+              value={editRtData?.jml_umkm ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM Tetap"
+              placeholder="Masukkan jumlah UMKM tetap"
+              fullWidth
+              name="jml_umkm_tetap"
+              value={editRtData?.jml_umkm_tetap ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM Non Tetap"
+              placeholder="Masukkan jumlah UMKM non tetap"
+              fullWidth
+              name="jml_umkm_nontetap"
+              value={editRtData?.jml_umkm_nontetap ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI A)"
+              placeholder="Masukkan jumlah UMKM KBLI A"
+              fullWidth
+              name="jml_umkm_kbli_a"
+              value={editRtData?.jml_umkm_kbli_a ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI B)"
+              placeholder="Masukkan jumlah UMKM KBLI B"
+              fullWidth
+              name="jml_umkm_kbli_b"
+              value={editRtData?.jml_umkm_kbli_b ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI C)"
+              placeholder="Masukkan jumlah UMKM KBLI C"
+              fullWidth
+              name="jml_umkm_kbli_c"
+              value={editRtData?.jml_umkm_kbli_c ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI D)"
+              placeholder="Masukkan jumlah UMKM KBLI D"
+              fullWidth
+              name="jml_umkm_kbli_d"
+              value={editRtData?.jml_umkm_kbli_d ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI E)"
+              placeholder="Masukkan jumlah UMKM KBLI E"
+              fullWidth
+              name="jml_umkm_kbli_e"
+              value={editRtData?.jml_umkm_kbli_e ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI F)"
+              placeholder="Masukkan jumlah UMKM KBLI F"
+              fullWidth
+              name="jml_umkm_kbli_f"
+              value={editRtData?.jml_umkm_kbli_f ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI G)"
+              placeholder="Masukkan jumlah UMKM KBLI G"
+              fullWidth
+              name="jml_umkm_kbli_g"
+              value={editRtData?.jml_umkm_kbli_g ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI H)"
+              placeholder="Masukkan jumlah UMKM KBLI H"
+              fullWidth
+              name="jml_umkm_kbli_h"
+              value={editRtData?.jml_umkm_kbli_h ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI I)"
+              placeholder="Masukkan jumlah UMKM KBLI I"
+              fullWidth
+              name="jml_umkm_kbli_i"
+              value={editRtData?.jml_umkm_kbli_i ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI J)"
+              placeholder="Masukkan jumlah UMKM KBLI J"
+              fullWidth
+              name="jml_umkm_kbli_j"
+              value={editRtData?.jml_umkm_kbli_j ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI K)"
+              placeholder="Masukkan jumlah UMKM KBLI K"
+              fullWidth
+              name="jml_umkm_kbli_k"
+              value={editRtData?.jml_umkm_kbli_k ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI L)"
+              placeholder="Masukkan jumlah UMKM KBLI L"
+              fullWidth
+              name="jml_umkm_kbli_l"
+              value={editRtData?.jml_umkm_kbli_l ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI M)"
+              placeholder="Masukkan jumlah UMKM KBLI M"
+              fullWidth
+              name="jml_umkm_kbli_m"
+              value={editRtData?.jml_umkm_kbli_m ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI N)"
+              placeholder="Masukkan jumlah UMKM KBLI N"
+              fullWidth
+              name="jml_umkm_kbli_n"
+              value={editRtData?.jml_umkm_kbli_n ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI O)"
+              placeholder="Masukkan jumlah UMKM KBLI O"
+              fullWidth
+              name="jml_umkm_kbli_o"
+              value={editRtData?.jml_umkm_kbli_o ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI P)"
+              placeholder="Masukkan jumlah UMKM KBLI P"
+              fullWidth
+              name="jml_umkm_kbli_p"
+              value={editRtData?.jml_umkm_kbli_p ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI Q)"
+              placeholder="Masukkan jumlah UMKM KBLI Q"
+              fullWidth
+              name="jml_umkm_kbli_q"
+              value={editRtData?.jml_umkm_kbli_q ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI R)"
+              placeholder="Masukkan jumlah UMKM KBLI R"
+              fullWidth
+              name="jml_umkm_kbli_r"
+              value={editRtData?.jml_umkm_kbli_r ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI S)"
+              placeholder="Masukkan jumlah UMKM KBLI S"
+              fullWidth
+              name="jml_umkm_kbli_s"
+              value={editRtData?.jml_umkm_kbli_s ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI T)"
+              placeholder="Masukkan jumlah UMKM KBLI T"
+              fullWidth
+              name="jml_umkm_kbli_t"
+              value={editRtData?.jml_umkm_kbli_t ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+            <Input
+              label="Jumlah UMKM (KBLI U)"
+              placeholder="Masukkan jumlah UMKM KBLI U"
+              fullWidth
+              name="jml_umkm_kbli_u"
+              value={editRtData?.jml_umkm_kbli_u ?? ""}
+              onChange={handleEditChange}
+              classNames={{ inputWrapper: "shadow" }}
+            />
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="danger" variant="light" onPress={onClose}>
+            Tutup
+          </Button>
+          <Button
+            className="bg-[#0B588F] text-white font-inter font-semibold"
+            onPress={handleEditSave}
+          >
+            Simpan
+          </Button>
+        </ModalFooter>
+      </>
+    )}
+  </ModalContent>
+</Modal>
+
+
     </div>
   );
 };
