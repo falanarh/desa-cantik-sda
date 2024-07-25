@@ -66,7 +66,7 @@ export default function NavbarCustom() {
       <NavbarContent className="hidden gap-4 sm:flex items-center">
         <NavbarItem className="hidden lg:flex">
           <Link
-            href="/beranda"
+            href="/"
             className={getMenuClasses("Beranda")}
             onClick={() => handleMenuClick("Beranda")}
           >
@@ -102,7 +102,7 @@ export default function NavbarCustom() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex px-5">
           <Link
-            href="#"
+            href="/login"
             className="font-bold font-assistant text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
           >
             Login
@@ -113,7 +113,7 @@ export default function NavbarCustom() {
       <NavbarMenu>
         <NavbarMenuItem className="lg:flex">
           <Link
-            href="/beranda"
+            href="/"
             className={getMenuClasses("Beranda")}
             onClick={() => handleMenuClick("Beranda")}
           >
@@ -149,7 +149,7 @@ export default function NavbarCustom() {
         </NavbarMenuItem>
         <NavbarMenuItem className="lg:flex">
           <Link
-            href="#"
+            href="/login"
             className="font-bold text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
           >
             Login
