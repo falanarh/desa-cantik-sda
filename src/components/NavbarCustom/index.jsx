@@ -9,21 +9,18 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@nextui-org/react";
-import { ChevronDown } from "./Icon.jsx";
+import { ChevronDown } from "./Icon.jsx"; // Ensure correct path
 import { useNavigate } from "react-router-dom";
 
 export default function NavbarCustom() {
   const [activeMenu, setActiveMenu] = useState("Beranda");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
-
-  const icons = {
-    chevron: <ChevronDown fill="currentColor" size={16} />,
-  };
 
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
-    navigate(path);
+    navigate(menu.toLowerCase());
   };
 
   const getMenuClasses = (menu) => {
@@ -66,21 +63,32 @@ export default function NavbarCustom() {
       <NavbarContent className="hidden gap-4 sm:flex items-center">
         <NavbarItem className="hidden lg:flex">
           <Link
-            href="/beranda"
+            href="/"
             className={getMenuClasses("Beranda")}
             onClick={() => handleMenuClick("Beranda")}
           >
             Beranda
           </Link>
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
+        <NavbarItem className="hidden lg:flex relative">
           <Link
             href="#"
             className={getMenuClasses("PetaTematik")}
-            onClick={() => handleMenuClick("PetaTematik")}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             Peta Tematik
+            <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
+              <Link
+                href="#"
+                className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
+              >
+                Simoanginangin
+              </Link>
+            </div>
+          )}
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">
           <Link
@@ -103,7 +111,7 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex px-5">
           <Link
             href="#"
-            className="font-bold font-assistant text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
+            className="font-semibold font-assistant text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>
@@ -113,7 +121,7 @@ export default function NavbarCustom() {
       <NavbarMenu>
         <NavbarMenuItem className="lg:flex">
           <Link
-            href="/beranda"
+            href="/"
             className={getMenuClasses("Beranda")}
             onClick={() => handleMenuClick("Beranda")}
           >
@@ -121,13 +129,24 @@ export default function NavbarCustom() {
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem className="lg:flex">
-          <Link
+        <Link
             href="#"
             className={getMenuClasses("PetaTematik")}
-            onClick={() => handleMenuClick("PetaTematik")}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             Peta Tematik
+            <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
+              <Link
+                href="#"
+                className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
+              >
+                Simoanginangin
+              </Link>
+            </div>
+          )}
         </NavbarMenuItem>
         <NavbarMenuItem className="lg:flex">
           <Link

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import WelcomeBanner from '../components/WelcomeBanner';
 import NavbarCustom from "../components/NavbarCustom";
 import ListDesa from "../components/ListDesa";
 import Stats from "../components/Stats";
@@ -10,6 +11,7 @@ const Beranda = () => {
   return (
     <>
       <NavbarCustom />
+      <WelcomeBanner />
       <ListDesa />
       <Stats />
       <Desc />
