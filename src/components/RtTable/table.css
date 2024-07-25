@@ -38,3 +38,7 @@ tbody tr td:last-child {
 .anticon-inbox {
   color: #0b588f !important;
 }
+
+.table-detail-rt th {
+  width: 48% !important;
+}

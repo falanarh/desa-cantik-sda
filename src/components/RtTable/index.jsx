@@ -16,6 +16,10 @@ import {
   ModalBody,
   useDisclosure,
   Pagination,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
@@ -54,28 +58,28 @@ const RtDetail = ({ rt }) => {
 
   return (
     <div className="p-4">
-      <table className="w-full overflow-hidden border border-gray-300 rounded-lg">
-        <tbody>
+      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-detail-rt">
+        <tbody className="text-[14px]">
           <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               Kode
             </th>
             <td className="p-3 text-right border border-gray-300">{rt.kode}</td>
           </tr>
           <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               RT
             </th>
             <td className="p-3 text-right border border-gray-300">{rt.rt}</td>
           </tr>
           <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               RW
             </th>
             <td className="p-3 text-right border border-gray-300">{rt.rw}</td>
           </tr>
           <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               Jumlah UMKM
             </th>
             <td className="p-3 text-right border border-gray-300">
@@ -83,7 +87,7 @@ const RtDetail = ({ rt }) => {
             </td>
           </tr>
           <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               Jumlah UMKM Tetap
             </th>
             <td className="p-3 text-right border border-gray-300">
@@ -91,7 +95,7 @@ const RtDetail = ({ rt }) => {
             </td>
           </tr>
           <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               Jumlah UMKM Non Tetap
             </th>
             <td className="p-3 text-right border border-gray-300">
@@ -232,14 +236,26 @@ const RtTable = () => {
           onChange={handleSearchChange}
           className="mb-4 w-[50%]"
         />
-        <Button
-          color="success"
-          className="text-[14px] font-semibold text-white"
-          startContent={<FaPlus className="text-[20px] text-white" />}
-          onClick={onAddModalOpen} // Tambahkan onClick untuk membuka modal tambah
-        >
-          Tambah
-        </Button>
+        <Dropdown className="font-inter text-pdarkblue">
+          <DropdownTrigger>
+            <Button
+              color="success"
+              className="text-[14px] font-semibold text-white"
+              startContent={<FaPlus className="text-[20px] text-white" />}
+              // onClick={onAddModalOpen}
+            >
+              Tambah
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Static Actions">
+            <DropdownItem key="add-one" onClick={onAddModalOpen}>
+              <p className="font-semibold">Satuan</p>
+            </DropdownItem>
+            <DropdownItem key="add-many">
+              <p className="font-semibold">Kumpulan</p>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </div>
       <Table
         aria-label="Example table with custom cells"
@@ -290,23 +306,15 @@ const RtTable = () => {
           footer: "border-t-[1px] border-slate-300",
         }}
       >
-        <ModalContent>
+        <ModalContent className="font-inter text-pdarkblue">
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
                 Detail Rukun Tetangga (RT)
               </ModalHeader>
               <ModalBody className="py-4">
                 <RtDetail rt={selectedRt} />
               </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
             </>
           )}
         </ModalContent>
@@ -325,10 +333,10 @@ const RtTable = () => {
           wrapper: "overflow-y-hidden",
         }}
       >
-        <ModalContent>
+        <ModalContent className="font-inter text-pdarkblue">
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
                 Tambah Rukun Tetangga (RT)
               </ModalHeader>
               <ModalBody className="py-4">
@@ -391,7 +399,7 @@ const RtTable = () => {
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  Tutup
                 </Button>
                 <Button
                   className="bg-[#0B588F] text-white font-inter font-semibold"
@@ -418,10 +426,10 @@ const RtTable = () => {
           wrapper: "overflow-y-hidden",
         }}
       >
-        <ModalContent>
+        <ModalContent className="font-inter text-pdarkblue">
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
                 Edit Rukun Tetangga (RT)
               </ModalHeader>
               <ModalBody className="py-4">
@@ -502,7 +510,7 @@ const RtTable = () => {
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                  Close
+                  Tutup
                 </Button>
                 <Button
                   className="bg-[#0B588F] text-white font-inter font-semibold"

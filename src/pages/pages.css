@@ -16,7 +16,7 @@
   /* margin: 2px !important; */
 }
 
-.group[data-focus="true"] .group-data-\[focus\=true\]\:bg-default-100,
+.form-login .group[data-focus="true"] .group-data-\[focus\=true\]\:bg-default-100,
 [data-slot="input-wrapper"]:hover {
   background-color: rgb(241 245 249) !important;
 }

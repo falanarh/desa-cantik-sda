@@ -11,7 +11,7 @@ const columns = [
 
 const daftarRt = [
     {
-      kode: "3515009001",
+      kode: "3515009001001",
       rt: "001",
       rw: "001",
       dusun: "Dusun A",
@@ -42,7 +42,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009002",
+      kode: "3515009001002",
       rt: "002",
       rw: "001",
       dusun: "Dusun B",
@@ -73,7 +73,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009003",
+      kode: "3515009001003",
       rt: "003",
       rw: "001",
       dusun: "Dusun C",
@@ -104,7 +104,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009004",
+      kode: "3515009001004",
       rt: "004",
       rw: "001",
       dusun: "Dusun D",
@@ -135,7 +135,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009005",
+      kode: "3515009001005",
       rt: "005",
       rw: "001",
       dusun: "Dusun E",
@@ -166,7 +166,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009006",
+      kode: "3515009001006",
       rt: "006",
       rw: "001",
       dusun: "Dusun F",
@@ -197,7 +197,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009007",
+      kode: "3515009001007",
       rt: "007",
       rw: "001",
       dusun: "Dusun G",
@@ -228,7 +228,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009008",
+      kode: "3515009001008",
       rt: "008",
       rw: "001",
       dusun: "Dusun H",
@@ -259,7 +259,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009009",
+      kode: "3515009001009",
       rt: "009",
       rw: "001",
       dusun: "Dusun I",
@@ -290,7 +290,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009010",
+      kode: "3515009001010",
       rt: "010",
       rw: "001",
       dusun: "Dusun J",
@@ -321,7 +321,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009011",
+      kode: "3515009001011",
       rt: "011",
       rw: "001",
       dusun: "Dusun K",
@@ -352,7 +352,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009012",
+      kode: "3515009001012",
       rt: "012",
       rw: "001",
       dusun: "Dusun L",
@@ -383,7 +383,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009013",
+      kode: "3515009001013",
       rt: "013",
       rw: "001",
       dusun: "Dusun M",
@@ -414,7 +414,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009014",
+      kode: "3515009001014",
       rt: "014",
       rw: "001",
       dusun: "Dusun N",
@@ -445,7 +445,7 @@ const daftarRt = [
       jml_umkm_kbli_u: 0
     },
     {
-      kode: "3515009015",
+      kode: "3515009001015",
       rt: "015",
       rw: "001",
       dusun: "Dusun O",

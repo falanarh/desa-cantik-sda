@@ -38,7 +38,7 @@ const LoginSimoanginangin = () => {
             DESA SIMOANGINANGIN
           </p>
         </div>
-        <form className="flex flex-col w-full gap-4 font-quicksand">
+        <form className="flex flex-col w-full gap-4 font-quicksand form-login">
           <Input
             label="Username"
             placeholder="Masukkan username anda"
@@ -63,7 +63,7 @@ const LoginSimoanginangin = () => {
           />
           <div className="flex justify-center">
             <Button className="w-full font-bold font-nunito bg-[#0B588F] text-white">
-              <Link to="/admin-simoanginangin" className="w-full">
+              <Link to="/admin-simoanginangin" className="flex items-center justify-center w-full h-full">
                 Masuk
               </Link>
             </Button>

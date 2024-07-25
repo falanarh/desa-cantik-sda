@@ -8,6 +8,7 @@ import { BsBasket2Fill } from "react-icons/bs";
 import { FaShop } from "react-icons/fa6";
 import { MdTrolley } from "react-icons/md";
 import RutaTable from "../components/RutaTable";
+
 const formatter = (value) => <CountUp end={value} separator="," />;
 
 const AdminSimoanginangin = () => {
@@ -16,19 +17,19 @@ const AdminSimoanginangin = () => {
       title: "Jumlah UMKM",
       value: 47,
       icon: <BsBasket2Fill className="text-[36px] text-white my-2" />,
-      color: "#548CA8",
+      color: "rgba(84, 140, 168, 0.7)", // Ubah ke RGBA
     },
     {
       title: "Jumlah UMKM Tetap",
       value: 33,
       icon: <FaShop className="text-[36px] text-white my-2" />,
-      color: "#EE6F57",
+      color: "rgba(238, 111, 87, 0.7)", // Ubah ke RGBA
     },
     {
       title: "Jumlah UMKM Non Tetap",
       value: 14,
       icon: <MdTrolley className="text-[36px] text-white my-2" />,
-      color: "#50D890",
+      color: "rgba(80, 216, 144, 0.7)", // Ubah ke RGBA
     },
   ];
 
@@ -60,8 +61,10 @@ const AdminSimoanginangin = () => {
             <Col
               key={index}
               span={7}
-              className={`p-4 shadow-md bg-[${item.color}] bg-opacity-70 rounded-xl flex justify-between items-end`}
-              // style={{ backgroundColor: item.color }}
+              className={`p-4 shadow-md bg-[${item.color}] rounded-xl flex justify-between items-end`}
+              style={{ 
+                backgroundColor: item.color, // Hapus properti ini jika sudah diubah ke RGBA di atas
+              }}              
             >
               <Statistic
                 title={item.title}
