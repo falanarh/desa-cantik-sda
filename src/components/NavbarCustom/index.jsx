@@ -25,8 +25,8 @@ export default function NavbarCustom() {
 
   const getMenuClasses = (menu) => {
     return activeMenu === menu
-      ? "font-bold font-inter text-[14px] text-white bg-pdarkblue py-2 px-4 rounded-full transition-colors duration-100"
-      : "font-bold font-inter text-[14px] text-pdarkblue transition-colors duration-100";
+      ? "font-bold font-inter text-[14px] text-white bg-porange py-2 px-4 rounded-full transition-colors duration-100"
+      : "font-bold font-inter text-[14px] text-porange transition-colors duration-100";
   };
 
   return (
@@ -83,7 +83,8 @@ export default function NavbarCustom() {
             <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
+                className="block px-4 py-2 font-assistant font-semibold hover:bg-base hover:text-[#F7BA74'] hover:rounded-md"
+                style={{ color: '#D17410' }}
               >
                 Simoanginangin
               </Link>
@@ -111,7 +112,7 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex px-5">
           <Link
             href="#"
-            className="font-semibold font-assistant text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
+            className="font-semibold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-pblue-400 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>

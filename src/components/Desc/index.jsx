@@ -1,29 +1,28 @@
 import React from "react";
 import { Image } from "@nextui-org/react";
-import { Margin } from "@mui/icons-material";
 
 export default function Desc() {
   const videoId = "bm5YOUC_9MM"; // Replace with your actual video ID
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
   return (
-    <div className="flex justify-center items-center p-8 min-h-screen">
+    <div className="flex justify-center items-center p-8 min-ha-screen">
       <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-2xl overflow-hidden">
         <div className="p-8 flex-1">
           <h2 className="font-bold text-4xl text-pdarkblue">Desa Cantik</h2>
-          <h3 className="font-semibold text-2xl text-pdarkblue mt-4">
+          <h3 className="font-semibold text-2xl text-pdarkblue mt-3">
             Apa Itu Desa Cinta Statistik?
           </h3>
-          <p className="text-blue-950 mt-4">
+          <p className="text-blue-950 mt-3">
             Desa Cantik adalah inisiatif Badan Pusat Statistik (BPS) untuk 
             meningkatkan kualitas dan akurasi data statistik di tingkat desa. 
-            Program ini bertujuan  mengidentifikasi dan mengelola desa-desa yang 
+            Bertujuan  mengidentifikasi dan mengelola desa-desa yang 
             memiliki potensi atau kebutuhan khusus dalam pengumpulan data, serta 
             mendorong keterlibatan masyarakat dalam proses tersebut. 
           </p>
-          <p className="text-gray-700 mt-4">
+          <p className="text-blue-950 mt-3">
             Dengan fokus pada desa-desa yang dianggap strategis, Desa Cantik berperan 
-            penting dalam memperbaiki kualitas data statistik yang akan digunakan untuk 
+            penting memperbaiki kualitas data statistik yang akan digunakan untuk 
             perencanaan dan pengambilan keputusan pemerintah. Selain itu, program ini juga 
             berkontribusi pada pemberdayaan masyarakat lokal melalui pelatihan dan 
             peningkatan kapasitas dalam pengelolaan data.
@@ -45,7 +44,6 @@ export default function Desc() {
                 maxHeight: "100%", 
                 objectFit: "cover", 
                 borderRadius: "0",
-                Margin: "2em"
               }}
             />
             <div className="absolute inset-0 flex justify-center items-center bg-opacity-50">
