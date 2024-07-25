@@ -65,11 +65,6 @@ export default function ListDesa() {
       desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
     },
     {
-      title: "Sugihwaras",
-      img: "/pict/grogol.jpg",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
-    },
-    {
       title: "Wangkal",
       img: "/pict/wangkal 2.jpg",
       desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."

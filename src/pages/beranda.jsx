@@ -12,9 +12,9 @@ const Beranda = () => {
     <>
       <NavbarCustom />
       <WelcomeBanner />
-      <ListDesa />
-      <Stats />
       <Desc />
+      <Stats />
+      <ListDesa />
       <Footer />
     </>
   );
