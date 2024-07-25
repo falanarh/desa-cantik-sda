@@ -13,8 +13,7 @@ function App() {
   return (
     <NextUIProvider navigate={navigate}>
       <Routes>
-        <Route index element={<PetaUMKMSimonaginagin />} />
-        <Route path="/beranda" element={<Beranda />} />
+        <Route path="/" element={<Beranda />} />
         <Route path="/buletin" element={<Buletin />} />
         <Route path="/tentangkami" element={<TentangKami />} />
         <Route path="/login-simoanginangin" element={<LoginSimoanginangin />} />
