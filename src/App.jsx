@@ -1,16 +1,20 @@
 import LoginSimoanginangin from "./pages/loginSimoanginangin";
+import AdminSimoanginangin from "./pages/adminSimoanginangin";
 import Beranda from "./pages/beranda";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import AdminSimoanginangin from "./pages/adminSimoanginangin";
-import { NextUIProvider } from "@nextui-org/system";
+import Buletin from "./pages/buletin";
+import TentangKami from "./pages/tentangkami";
 
 function App() {
   const navigate = useNavigate();
 
   return (
     <NextUIProvider navigate={navigate}>
-      <Routes>
-        <Route path="/" element={<Beranda />} />
+        <Routes>
+          <Route index element={<Beranda />} />
+          <Route path="/beranda" element={<Beranda />} />
+          <Route path="/buletin" element={<Buletin />} />
+          <Route path="/tentangkami" element={<TentangKami />} />
         <Route path="/login-simoanginangin" element={<LoginSimoanginangin />} />
         <Route path="/admin-simoanginangin" element={<AdminSimoanginangin />} />
       </Routes>
