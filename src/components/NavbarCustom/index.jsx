@@ -16,6 +16,7 @@ export default function NavbarCustom() {
   const [activeMenu, setActiveMenu] = useState("Beranda");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNestedDropdownOpen, setIsNestedDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleMenuClick = (menu) => {
@@ -25,8 +26,8 @@ export default function NavbarCustom() {
 
   const getMenuClasses = (menu) => {
     return activeMenu === menu
-      ? "font-bold font-inter text-[14px] text-white bg-porange py-2 px-4 rounded-full transition-colors duration-100"
-      : "font-bold font-inter text-[14px] text-porange transition-colors duration-100";
+      ? "font-bold font-inter text-[14px] text-white bg-porange py-2 px-4 rounded-full transition-colors duration-800"
+      : "font-bold font-inter text-[14px] text-porange transition-colors duration-200";
   };
 
   return (
@@ -85,8 +86,21 @@ export default function NavbarCustom() {
                 href="#"
                 className="block px-4 py-2 font-assistant font-semibold hover:bg-base hover:text-[#F7BA74'] hover:rounded-md"
                 style={{ color: '#D17410' }}
+                onMouseEnter={() => setIsNestedDropdownOpen(true)}
+                onMouseLeave={() => setIsNestedDropdownOpen(false)}
               >
                 Simoanginangin
+                {isNestedDropdownOpen && (
+                  <div className="absolute top-0 left-full bg-base shadow-lg rounded-md mt-0 z-10">
+                    <Link
+                      href="#"
+                      className="block px-4 py-2 font-assistant font-semibold hover:bg-base hover:text-[#F7BA74'] hover:rounded-md"
+                      style={{ color: '#D17410' }}
+                    >
+                      Pemetaan UMKM
+                    </Link>
+                  </div>
+                )}
               </Link>
             </div>
           )}
@@ -130,7 +144,7 @@ export default function NavbarCustom() {
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem className="lg:flex">
-        <Link
+          <Link
             href="#"
             className={getMenuClasses("PetaTematik")}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -143,8 +157,20 @@ export default function NavbarCustom() {
               <Link
                 href="#"
                 className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
+                onMouseEnter={() => setIsNestedDropdownOpen(true)}
+                onMouseLeave={() => setIsNestedDropdownOpen(false)}
               >
                 Simoanginangin
+                {isNestedDropdownOpen && (
+                  <div className="absolute top-0 left-full bg-base shadow-lg rounded-md mt-0 z-10">
+                    <Link
+                      href="#"
+                      className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
+                    >
+                      Pemetaan UMKM
+                    </Link>
+                  </div>
+                )}
               </Link>
             </div>
           )}
