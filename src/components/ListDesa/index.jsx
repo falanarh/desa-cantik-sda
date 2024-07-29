@@ -42,7 +42,7 @@ export default function ListDesa() {
     {
       title: "Simoanginangin",
       img: "/pict/simoanginagin.jpg",
-      desc: "Simoanginangin adalah sebuah desa di wilayah Kecamatan Wonoayu, Kabupaten Sidoarjo. Dengan luas 147.39 Ha."
+      desc: "Simoanginangin adalah sebuah desa di wilayah Kecamatan Wonoayu, Kabupaten Sidoarjo. Dengan luas 42 Ha."
     },
     {
       title: "Grogol",
@@ -57,7 +57,7 @@ export default function ListDesa() {
     {
       title: "Kedungrejo",
       img: "/pict/Kedungrejo.png",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
+      desc: "Kedungrejo adalah sebuah desa di wilayah Kecamatan Waru, Kabupaten Sidoarjo. Dengan luas 86.44 Ha."
     },
     {
       title: "Masangan Kulon",
