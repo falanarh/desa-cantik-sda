@@ -4,20 +4,31 @@ import { Chart as ChartJS, Tooltip, Legend, Title, ArcElement } from 'chart.js';
 // Register the necessary components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
-const DonutChart = ({ data }) => {
+export const DonutChart = ({ data }) => {
   const chartData = {
     labels: ['UMKM', 'Other'],
     datasets: [
       {
         label: 'UMKM Data',
         data: [data.umkm, data.other],
-        backgroundColor: ['#36A2EB', '#FF6384'],
-        hoverOffset: 4,
+        backgroundColor: ['#315493', '#8FA2D4'],
+        hoverOffset: 2,
       },
     ],
   };
 
-  return <Doughnut data={chartData} />;
+  const chartOptions = {
+    plugins: {
+      legend: {
+        display: false, // Hide the legend
+      },
+      tooltip: {
+        enabled: true, // Enable tooltips
+      },
+    },
+  };
+
+  return <Doughnut data={chartData} options={chartOptions} />;
 };
 
-export default DonutChart; // Exporting DonutChart here
+export default DonutChart;
