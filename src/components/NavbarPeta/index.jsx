@@ -2,8 +2,8 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@n
 
 export default function NavbarPeta() {
   return (
-    <div className="sticky top-0 z-50 border-b-4 border-red-600">
-      <Navbar className="bg-[#012640] h-[11vh] p-3 sm:p-4 mx-0 flex items-justify">
+    <div className="sticky top-0 z-50">
+      <Navbar className="bg-base h-[11vh] p-3 sm:p-4 mx-0 flex shadow-lg">
         <NavbarBrand justify="left">
           <img
             src="/pict/logo_dc.png"
@@ -12,7 +12,7 @@ export default function NavbarPeta() {
             height={48}
           />
           <div className="ml-3">
-            <p className="font-sfProDisplay font-medium text-white text-base leading-tight">
+            <p className="font-sfProDisplay font-semibold text-[#0F1820] leading-tight">
               PETA TEMATIK UMKM
               <br />
               <span className="font-sfProDisplay text-lg font-bold">DESA SIMOANGINANGIN</span>
@@ -24,9 +24,13 @@ export default function NavbarPeta() {
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Button as={Link} color="primary" href="#" variant="flat" className="bg-[#0F1820] font-medium text-white">
-              Masuk
-            </Button>
+          <Link
+            to="#"
+            className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base"
+          >
+            <span className="hidden md:inline">Masuk</span>
+            <span className="md:hidden material-icons">account_circle</span>
+          </Link>
           </NavbarItem>
         </NavbarContent>
       </Navbar>

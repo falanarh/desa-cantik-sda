@@ -76,7 +76,7 @@ const ExpandableList = () => {
 
 const Legenda = () => {
   return (
-    <div className="absolute bottom-4 right-4 z-10 w-[15%] p-2 mr-[7.5%] bg-white rounded-md shadow-md text-gray-800"
+    <div className="absolute bottom-4 right-4 z-10 w-[8rem] p-2 mr-[8%] bg-white rounded-md shadow-md text-gray-800"
       style={{
           backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
           backdropFilter: 'blur(12px)', // Blur effect
