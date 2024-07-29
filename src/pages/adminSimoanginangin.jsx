@@ -77,17 +77,6 @@ const AdminSimoanginangin = () => {
             </Col>
           ))}
         </div>
-
-        {/* <Row gutter={16}>
-        <Col span={12}>
-          <Statistic
-            title="Account Balance (CNY)"
-            value={112893}
-            precision={2}
-            formatter={formatter}
-          />
-        </Col>
-      </Row> */}
         <Tabs aria-label="Dynamic tabs" items={tabs} className="justify-center">
           {(item) => (
             <Tab key={item.id} title={item.label} className="font-semibold">

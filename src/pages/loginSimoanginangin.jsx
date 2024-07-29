@@ -1,18 +1,11 @@
 import { useState } from "react";
 import { Button, Input } from "@nextui-org/react";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import Logo from "../assets/logo/umkm-unggul.png";
 import { useNavigate } from "react-router-dom";
 import "./pages.css";
 import api from "../utils/api";
-import { Spin } from "antd";
-
-const contentStyle = {
-  padding: 50,
-  background: "#caf4ff85",
-  borderRadius: 4,
-};
-
-const content = <div style={contentStyle} />;
+import { Bars } from "react-loader-spinner";
 
 const TopEllipse = () => {
   return (
@@ -33,9 +26,14 @@ const BottomEllipse = () => {
 const LoginSimoanginangin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordType, setPasswordType] = useState("password");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const togglePasswordVisibility = () => {
+    setPasswordType(passwordType === "password" ? "text" : "password");
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -117,19 +115,28 @@ const LoginSimoanginangin = () => {
             }}
             className="my-2"
           />
-          <Input
-            label="Password"
-            placeholder="Masukkan password anda"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            classNames={{
-              label:
-                "text-black text-base md:text-lg mt-1 font-nunito font-bold",
-              inputWrapper: "bg-slate-100",
-            }}
-            className="my-2"
-          />
+          <div className="relative">
+            <Input
+              label="Password"
+              placeholder="Masukkan password anda"
+              type={passwordType}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              classNames={{
+                label:
+                  "text-black text-base md:text-lg mt-1 font-nunito font-bold",
+                inputWrapper: "bg-slate-100",
+              }}
+              className="my-2"
+            />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute transform -translate-y-1/2 right-2 top-10"
+            >
+              {passwordType === "password" ? <AiFillEye className="text-pdarkblue" /> : <AiFillEyeInvisible className="text-pdarkblue" />}
+            </button>
+          </div>
           {error && (
             <p className="text-red-500 text-[14px] ml-[15px]">{error}</p>
           )}
@@ -145,11 +152,17 @@ const LoginSimoanginangin = () => {
       </div>
 
       {loading && (
-        <div className="w-screen h-screen bg-[#caf4ff85] flex justify-center items-center absolute z-50">
-          {/* <BounceLoader color="#0B588F" /> */}
-          <Spin tip="Loading" size="large" className="text-[16px] font-inter text-pdarkblue">
-            {content}
-          </Spin>
+        <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
+          <Bars
+            height="60"
+            width="60"
+            color="#0B588F"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+          <p className="mt-3 font-semibold font-inter text-pdarkblue">Loading</p>
         </div>
       )}
     </div>

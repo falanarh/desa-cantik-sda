@@ -3,7 +3,7 @@ const columns = [
   { name: "Nama KRT", uid: "namaKrt" },
   { name: "RT", uid: "rt" },
   { name: "RW", uid: "rw" },
-  // { name: "Dusun", uid: "dusun" },
+  { name: "Dusun", uid: "dusun" },
   // { name: "Klasifikasi KBLI", uid: "klasifikasi_klbi" },
   // { name: "Jenis UMKM", uid: "jenis_umkm" },
   // { name: "Latitude", uid: "latitude" },
@@ -12,8 +12,8 @@ const columns = [
 ];
 
 const daftarJenisUmkm = [
-  { key: "tetap", label: "UMKM Tetap" },
-  { key: "nontetap", label: "UMKM Non Tetap" },
+  { key: "umkm_tetap", label: "UMKM Tetap" },
+  { key: "umkm_nontetap", label: "UMKM Non Tetap" },
 ];
 
 const daftarKlasifikasi = [
@@ -58,11 +58,11 @@ const daftarRt = [
 ];
 
 const daftarRw = [
-  { key: "001", label: "001" },
-  { key: "002", label: "002" },
-  { key: "003", label: "003" },
-  { key: "004", label: "004" },
-  { key: "005", label: "005" },
+  { key: "3515009001", label: "RW001" },
+  { key: "3515009002", label: "RW002" },
+  { key: "3515009003", label: "RW003" },
+  { key: "3515009004", label: "RW004" },
+  { key: "3515009005", label: "RW005" },
 ];
 
 const daftarDusun = [

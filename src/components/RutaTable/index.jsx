@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import {
   Table,
   TableHeader,
@@ -9,142 +8,36 @@ import {
   Tooltip,
   Input,
   Button,
-  ModalFooter,
-  ModalContent,
-  Modal,
-  ModalHeader,
-  ModalBody,
   useDisclosure,
   Pagination,
-  Select,
-  SelectItem,
 } from "@nextui-org/react";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import {
   columns,
-  daftarRuta,
   daftarKlasifikasi,
   daftarJenisUmkm,
-  daftarRt,
   daftarRw,
   daftarDusun,
-  daftarRuta as initialData,
 } from "./data";
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
 import { FaPlus } from "react-icons/fa6";
-import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload, Popconfirm } from "antd";
-import React, { useState } from "react";
-
-const { Dragger } = Upload;
-const uploadProps = {
-  name: "file",
-  multiple: true,
-  action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
-
-const RutaDetail = ({ ruta }) => {
-  if (!ruta) return null;
-
-  return (
-    <div className="p-4">
-      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-auto table-detail-ruta">
-        <tbody className="text-[14px]">
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Kode
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.kode}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Nama KRT
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.nama_krt}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              RT
-            </th>
-            <td className="p-3 text-right border border-gray-300">{ruta.rt}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              RW
-            </th>
-            <td className="p-3 text-right border border-gray-300">{ruta.rw}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Dusun
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.dusun}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Klasifikasi KBLI
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.klasifikasi_klbi}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jenis UMKM
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.jenis_umkm}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Latitude
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.latitude}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Longitude
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.longitude}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
-};
+import { message, Popconfirm } from "antd";
+import React, { useEffect, useState } from "react";
+import api from "../../utils/api";
+import { Bars } from "react-loader-spinner";
+import "leaflet/dist/leaflet.css";
+import AddRutaModal from "./AddRutaModal";
+import DetailRutaModal from "./DetailRutaModal";
+import EditRutaModal from "./EditRutaModal";
 
 const RutaTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRuta, setSelectedRuta] = useState(null); // State untuk menyimpan RT yang dipilih
-  const [data, setData] = useState(initialData); // State untuk data RT
+  const [selectedRuta, setSelectedRuta] = useState(null);
+  const [dataRuta, setDataRuta] = useState([]);
+  const [dataRt, setDataRt] = useState([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isAddModalOpen,
@@ -159,6 +52,75 @@ const RutaTable = () => {
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
   const [editRutaData, setEditRutaData] = useState(null);
+  const [loading, setLoading] = useState(true); // State untuk loading
+
+  const fetchData = async () => {
+    setLoading(true); // Mulai loading
+    try {
+      const [rtResponse, rutaResponse] = await Promise.all([
+        api.get("/api/rt"),
+        api.get("/api/rumahTangga"),
+      ]);
+      setDataRt(rtResponse.data.data);
+      console.log("Check dataRt", rtResponse.data.data);
+      setDataRuta(rutaResponse.data.data);
+      console.log("Check dataRuta", rutaResponse.data.data);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false); // Akhiri loading
+    }
+  };
+
+  const deleteData = async (ruta) => {
+    setLoading(true);
+    try {
+      await api.delete(`/api/rumahTangga/${ruta.kode}`);
+      setDataRuta(dataRuta.filter((item) => item.kode !== ruta.kode));
+      message.success(`Rumah Tangga ${ruta.namaKrt} berhasil dihapus.`, 5);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    // Fetch data from API
+    fetchData();
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -170,31 +132,19 @@ const RutaTable = () => {
   };
 
   const handleEditClick = (ruta) => {
+    console.log("handleEditClick: ", ruta);
     setEditRutaData(ruta);
     onEditModalOpen();
   };
 
   const handleDelete = (ruta) => {
-    setData(data.filter((item) => item.kode !== ruta.kode));
-    message.success(`Rumah tangga ${ruta.nama_krt} berhasil dihapus.`);
+    deleteData(ruta);
+    fetchData();
   };
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditRutaData({ ...editRutaData, [name]: value });
-  };
 
-  const handleEditSave = () => {
-    setData(
-      data.map((item) =>
-        item.kode === editRutaData.kode ? editRutaData : item
-      )
-    );
-    message.success(`Rumah tangga ${editRutaData.nama_krt} berhasil diupdate.`);
-    onEditModalOpenChange(false);
-  };
 
-  const filteredData = data.filter((ruta) =>
+  const filteredData = dataRuta.filter((ruta) =>
     Object.values(ruta).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -245,7 +195,9 @@ const RutaTable = () => {
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 10;
 
-  const pages = Math.ceil(daftarRuta.length / rowsPerPage);
+  const pages = Math.ceil(dataRuta.length / rowsPerPage);
+
+  console.log(pages);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -319,241 +271,51 @@ const RutaTable = () => {
         </TableBody>
       </Table>
 
-      <Modal
+      <DetailRutaModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        size="lg"
-        className="font-inter bg-slate-100"
-        classNames={{
-          header: "border-b-[1px] border-slate-300",
-          footer: "border-t-[1px] border-slate-300",
-        }}
-      >
-        <ModalContent className="font-inter text-pdarkblue">
-          <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-            Detail Rumah Tangga UMKM
-          </ModalHeader>
-          <ModalBody className="py-4">
-            <RutaDetail ruta={selectedRuta} />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+        selectedRuta={selectedRuta}
+      />
 
-      {/* Modal untuk Tambah */}
-      <Modal
+      <AddRutaModal
         isOpen={isAddModalOpen}
-        onOpenChange={onAddModalOpenChange}
-        size="lg"
-        className="bg-slate-100 font-inter max-h-[90%]"
-        classNames={{
-          header: "border-b-[1px] border-slate-300",
-          footer: "border-t-[1px] border-slate-300",
-          body: "overflow-y-auto",
-          wrapper: "overflow-y-hidden",
-        }}
-      >
-        <ModalContent className="font-inter text-pdarkblue">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-                Tambah Rumah Tangga UMKM
-              </ModalHeader>
-              <ModalBody className="py-4">
-                <div className="space-y-4">
-                  <Input
-                    label="Kode"
-                    placeholder="Masukkan kode"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Nama KRT"
-                    placeholder="Masukkan Nama KRT"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Select size="md" label="RT" className="w-full" placeholder="Masukkan RT">
-                    {daftarRt.map((rt) => (
-                      <SelectItem key={rt.key}>{rt.label}</SelectItem>
-                    ))}
-                  </Select>
-                  <Select size="md" label="RW" className="w-full" placeholder="Masukkan RW">
-                    {daftarRw.map((rw) => (
-                      <SelectItem key={rw.key}>{rw.label}</SelectItem>
-                    ))}
-                  </Select>
-                  <Select size="md" label="Dusun" className="w-full" placeholder="Masukkan Dusun">
-                    {daftarDusun.map((dusun) => (
-                      <SelectItem key={dusun.key}>{dusun.label}</SelectItem>
-                    ))}
-                  </Select>
-                  <Select
-                    size="md"
-                    label="Klasifikasi UMKM"
-                    className="w-full"
-                    placeholder="Masukkan Klasifikasi UMKM"
-                  >
-                    {daftarKlasifikasi.map((klasifikasi) => (
-                      <SelectItem key={klasifikasi.key}>
-                        {klasifikasi.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <Select size="md" label="Jenis UMKM" className="w-full" placeholder="Masukkan Jenis UMKM">
-                    {daftarJenisUmkm.map((jenis) => (
-                      <SelectItem key={jenis.key}>{jenis.label}</SelectItem>
-                    ))}
-                  </Select>
-                  <Input
-                    label="Latitude"
-                    placeholder="Masukkan nilai latitude"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Longitude"
-                    placeholder="Masukkan nilai longitude"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Tutup
-                </Button>
-                <Button
-                  className="bg-[#0B588F] text-white font-inter font-semibold"
-                  onPress={onClose}
-                >
-                  Tambah
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        onClose={onAddModalOpenChange}
+        daftarRt={dataRt}
+        daftarRw={daftarRw}
+        daftarDusun={daftarDusun}
+        daftarKlasifikasi={daftarKlasifikasi}
+        daftarJenisUmkm={daftarJenisUmkm}
+        fetchData={fetchData}
+      />
 
-      {/* Modal untuk Edit */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onOpenChange={onEditModalOpenChange}
-        size="lg"
-        className="bg-slate-100 font-inter max-h-[90%]"
-        classNames={{
-          header: "border-b-[1px] border-slate-300",
-          footer: "border-t-[1px] border-slate-300",
-          body: "overflow-y-auto",
-          wrapper: "overflow-y-hidden",
-        }}
-      >
-        <ModalContent className="font-inter text-pdarkblue">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-                Edit Rumah Tangga UMKM
-              </ModalHeader>
-              <ModalBody className="py-4">
-                {/* Form untuk mengedit Ruta */}
-                <div className="space-y-4">
-                  <Input
-                    label="Kode"
-                    placeholder="Masukkan kode"
-                    fullWidth
-                    name="kode"
-                    value={editRutaData?.kode ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Nama KRT"
-                    placeholder="Masukkan Nama KRT"
-                    fullWidth
-                    name="nama_krt"
-                    value={editRutaData?.nama_krt ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RT"
-                    placeholder="Masukkan RT"
-                    fullWidth
-                    name="rt"
-                    value={editRutaData?.rt ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RW"
-                    placeholder="Masukkan RW"
-                    fullWidth
-                    name="rw"
-                    value={editRutaData?.rw ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Dusun"
-                    placeholder="Masukkan dusun"
-                    fullWidth
-                    name="dusun"
-                    value={editRutaData?.dusun ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Klasifikasi KBLI"
-                    placeholder="Masukkan klasifikasi KBLI"
-                    fullWidth
-                    name="klasifikasi_klbi"
-                    value={editRutaData?.klasifikasi_klbi ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jenis UMKM"
-                    placeholder="Masukkan jenis UMKM"
-                    fullWidth
-                    name="jenis_umkm"
-                    value={editRutaData?.jenis_umkm ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Latitude"
-                    placeholder="Masukkan latitude"
-                    fullWidth
-                    name="latitude"
-                    value={editRutaData?.latitude ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Longitude"
-                    placeholder="Masukkan longitude"
-                    fullWidth
-                    name="longitude"
-                    value={editRutaData?.longitude ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Tutup
-                </Button>
-                <Button
-                  className="bg-[#0B588F] text-white font-inter font-semibold"
-                  onPress={handleEditSave}
-                >
-                  Simpan
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <EditRutaModal
+        isEditModalOpen={isEditModalOpen}
+        onEditModalOpenChange={onEditModalOpenChange}
+        ruta={editRutaData}
+        fetchData={fetchData}
+        daftarRt={dataRt}
+        daftarRw={daftarRw}
+        daftarDusun={daftarDusun}
+        daftarKlasifikasi={daftarKlasifikasi}
+        daftarJenisUmkm={daftarJenisUmkm}
+      />
+
+      {loading && (
+        <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
+          <Bars
+            height="60"
+            width="60"
+            color="#0B588F"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+          <p className="mt-3 font-semibold font-inter text-pdarkblue">
+            Loading
+          </p>
+        </div>
+      )}
     </div>
   );
 };
