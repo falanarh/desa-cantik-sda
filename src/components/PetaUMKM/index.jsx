@@ -81,7 +81,7 @@ const Legenda = () => {
           backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
           backdropFilter: 'blur(12px)', // Blur effect
         }}>
-      <div className="font-semibold mb-1 text-right">Jumlah UMKM</div>
+      <div className="font-semibold text-sm mb-1 text-right">Jumlah UMKM</div>
       <div className="relative h-6 bg-gradient-to-r from-red-600 to-blue-900 rounded-full">
         <div
           className="absolute inset-0"
@@ -92,8 +92,8 @@ const Legenda = () => {
         ></div>
       </div>
       <div className="flex justify-between mt-1 px-2">
-        <span className="text-sm">0</span>
-        <span className="text-sm">50+</span>
+        <span className="text-xs">0</span>
+        <span className="text-xs">50+</span>
       </div>
     </div>
   );
@@ -231,26 +231,38 @@ export default function MapSection() {
           className="w-full h-full"
           whenCreated={setMapInstance}
         >
-          <LayersControl position="bottomleft">
-            <LayersControl.BaseLayer checked name="OpenStreetMap">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-            </LayersControl.BaseLayer>
-            <LayersControl.BaseLayer name="Satellite">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-            </LayersControl.BaseLayer>
-            <LayersControl.BaseLayer name="Streets">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-            </LayersControl.BaseLayer>
-          </LayersControl>
+        <LayersControl position="bottomleft">
+          <LayersControl.BaseLayer name="OpenStreetMap HOT">
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer checked name="OpenStreetMap Standard">
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+          </LayersControl.BaseLayer>
+          {/* <LayersControl.BaseLayer name="OpenStreetMap Black and White">
+            <TileLayer
+              url="https://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+          </LayersControl.BaseLayer> */}
+          <LayersControl.BaseLayer name="OpenStreetMap DE">
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name="OpenStreetMap France">
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+          </LayersControl.BaseLayer>
+        </LayersControl>
 
           {geoJsonData && (
             <GeoJSON
