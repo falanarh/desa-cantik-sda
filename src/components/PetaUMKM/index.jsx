@@ -4,11 +4,81 @@ import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Transition } from '@headlessui/react';
+// import { DonutChart } from './Doughnut.jsx';
+
+const chartData = {
+  umkm: 30,
+  other: 70,
+};
+
+const ExpandableList = () => {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleToggle = () => {
+    setExpanded(!expanded);
+  };
+
+  return (
+    <div className="container flex flex-col items-start rounded shadow-lg">
+      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
+        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
+            55
+        </span>
+        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
+      </div>
+      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
+        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
+            55
+        </span>
+        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
+      </div>
+      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
+        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
+            55
+        </span>
+        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
+      </div>
+      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
+        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
+            55
+        </span>
+        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
+      </div>
+      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
+        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
+            55
+        </span>
+        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
+      </div>
+      {expanded && (
+        <div>
+          <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <span className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+              55
+          </span>
+          <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
+        </div>
+          <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
+        <span className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+            55
+        </span>
+        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
+      </div>
+          {/* Add more items as needed */}
+        </div>
+      )}
+      <button onClick={handleToggle} className="text-gray-400 text-right items-right text-sm mt-4">
+        {expanded ? 'Kembali' : 'Selengkapnya...'}
+      </button>
+    </div>
+  );
+};
 
 export default function MapSection() {
   const [geoJsonData, setGeoJsonData] = useState(null);
   const [mapInstance, setMapInstance] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isVisualizationOpen, setIsVisualizationOpen] = useState(true);
 
   useEffect(() => {
     // Fetch GeoJSON data from a local file or API
@@ -103,7 +173,7 @@ export default function MapSection() {
   };
 
   return (
-    <div className="relative w-full h-[86.5vh]">
+    <div className="relative w-full h-[89vh] font-sfProDisplay">
       <div className="absolute top-0 left-0 z-0 w-full h-full">
         <MapContainer 
           center={[-7.3187, 112.725]} // Default center, it will be adjusted later
@@ -141,47 +211,112 @@ export default function MapSection() {
           )}
         </MapContainer>
       </div>
+      
+    <div className="mx-[10%] font-sfProDisplay">
+      <button
+        className="absolute top-4 right-[10%] z-10 px-11 py-2 bg-[#AF282F] text-white rounded-xl shadow-md flex items-center"
+        onClick={() => setIsFilterOpen(!isFilterOpen)}
+      >
+        <span className="material-icons mr-2">filter_list</span>
+        Filter
+      </button>
 
-      {/* Filter Panel */}
-      <div className="fixed z-50" style={{ top: '15vh', right: '1rem' }}>
-        <button 
-          onClick={() => setIsFilterOpen(!isFilterOpen)}
-          className="bg-red-600 text-xs text-white px-4 py-2 rounded"
-        >
-          {isFilterOpen ? 'Close' : 'Open'} Filter
-        </button>
+      <button
+        className="absolute top-4 left-[10%] z-10 px-12 py-2 bg-[#AF282F] text-white rounded-xl shadow-md flex items-center"
+        onClick={() => setIsVisualizationOpen(!isVisualizationOpen)}
+      >
+        <span className="material-icons mr-2">analytics</span>
+        Visualisasi
+      </button>
 
-        <Transition
-          show={isFilterOpen}
-          enter="transition ease-out duration-300"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-200"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <div className="bg-white shadow-lg p-4 rounded text-xs mt-2 w-72">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xs font-bold">Filter</h2>
-              <button onClick={() => setIsFilterOpen(false)}>x</button>
-            </div>
-            <div>
-              <p>Tahun</p>
-              <select className="w-full p-2 border rounded">
-                <option value="2023">2023</option>
-              </select>
-              <p>Jenis KBLI</p>
-              <select className="w-full p-2 border rounded">
-                <option value="A">Pertanian, Kehutanan</option>
-              </select>
-              <p>RT</p>
-              <select className="w-full p-2 border rounded">
-                <option value="12">12</option>
-              </select>
-            </div>
-          </div>
-        </Transition>
-      </div>
+      <Transition
+        show={isFilterOpen}
+        enter="transition ease-out duration-300"
+        enterFrom="opacity-0 transform scale-95"
+        enterTo="opacity-100 transform scale-100"
+        leave="transition ease-in duration-200"
+        leaveFrom="opacity-100 transform scale-100"
+        leaveTo="opacity-0 transform scale-95"
+        className="absolute top-16 right-[10%] z-10 w-64 p-4 bg-[#101920] rounded-md shadow-md text-white"
+      >
+        <div>
+          <label className="block text-sm font-medium text-white">
+            Tahun
+          </label>
+          <select
+            id="tahun"
+            name="tahun"
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option>2023</option>
+            <option>2024</option>
+          </select>
+
+          <label className="block text-sm font-medium text-white mt-4">
+            Jenis KBLI
+          </label>
+          <select
+            id="jenis-kbli"
+            name="jenis-kbli"
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option>A. Pertanian</option>
+            <option>B. Perikanan</option>
+          </select>
+
+          <label className="block text-sm font-medium text-white mt-4">
+            RT
+          </label>
+          <select
+            id="rt"
+            name="rt"
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option>12</option>
+            <option>13</option>
+          </select>
+        </div>
+      </Transition>
+
+      <Transition
+  show={isVisualizationOpen}
+  enter="transition ease-out duration-300"
+  enterFrom="opacity-0 transform scale-95"
+  enterTo="opacity-100 transform scale-100"
+  leave="transition ease-in duration-200"
+  leaveFrom="opacity-100 transform scale-100"
+  leaveTo="opacity-0 transform scale-95"
+  className="absolute top-16 left-[10%] z-10 w-64 max-h-[77vh] p-4 bg-[#1D262C] rounded-md shadow-md text-white overflow-y-auto"
+>
+  <div className="text-center">
+    <div className="mb-4">
+      <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
+        <span className="text-sm material-icons mr-1">location_on</span> RT 12 RW 04 Dsn Pejagalan
+      </p>
+    </div>
+    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+      <p className="text-4xl font-bold">200</p>
+      <p className="text-xm">Pelaku Usaha Mikro</p>
+    </div>
+    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+      <p className="text-4xl font-bold">55%</p>
+      <p className="text-xm">Rumah Tangga UMKM</p>
+    </div>
+    {/* <div className="bg-[#2E2E2E] p-4 rounded-md mb-4">
+      <DonutChart data={chartData} />
+    </div> */}
+    <div>
+      <p className="mb-2 text-left font-xl font-semibold">Sebaran Lapangan Usaha UMKM</p>
+      <ExpandableList />
+    </div>
+    {/* <div className="mt-4">
+      <img src="/path/to/chart.png" alt="Chart" />
+      <p className="text-sm mt-2">55% Industri Pengolahan</p>
+    </div> */}
+  </div>
+</Transition>
+
+    </div>
     </div>
   );
 }

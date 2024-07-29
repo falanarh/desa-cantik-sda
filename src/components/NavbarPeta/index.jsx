@@ -3,8 +3,8 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@n
 export default function NavbarPeta() {
   return (
     <div className="sticky top-0 z-50 border-b-4 border-red-600">
-      <Navbar className="bg-[#012640] h-[13.5vh] p-3 sm:p-4 flex items-center">
-        <NavbarBrand>
+      <Navbar className="bg-[#012640] h-[11vh] p-3 sm:p-4 mx-0 flex items-justify">
+        <NavbarBrand justify="left">
           <img
             src="/pict/logo_dc.png"
             alt="Desa Cantik Logo"
