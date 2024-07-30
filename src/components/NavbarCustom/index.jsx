@@ -31,7 +31,7 @@ export default function NavbarCustom() {
   };
 
   return (
-    <Navbar className="bg-base" shouldHideOnScroll>
+    <Navbar className="bg-base sticky" >
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
