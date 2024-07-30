@@ -29,8 +29,9 @@ import DetailRtModal from "./DetailRtModal";
 
 const RtTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRt, setSelectedRt] = useState(null); // State untuk menyimpan RT yang dipilih
+  const [selectedRt, setSelectedRt] = useState({}); // State untuk menyimpan RT yang dipilih
   const [data, setData] = useState([]); // State untuk data RT
+  const [dataGeoJson, setDataGeoJson] = useState([]); // State untuk data GeoJSON
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isAddModalOpen,
@@ -47,12 +48,29 @@ const RtTable = () => {
   const [editRtData, setEditRtData] = useState(null);
   const [loading, setLoading] = useState(true); // State untuk loading
 
+  function getGeoJsonByKode(kode) {
+    for (let collection of dataGeoJson) {
+      for (let feature of collection.features) {
+        if (feature.properties.kode === kode) {
+          return feature;
+        }
+      }
+    }
+    return null; // Return null if no matching feature is found
+  }
+
   const fetchData = async () => {
     setLoading(true); // Mulai loading
     try {
-      const response = await api.get("/api/rt");
-      setData(response.data.data); // Update state dengan data dari API
-      console.log("Data fetched:", response.data.data);
+      // const response = await api.get("/api/rt");
+      const [rtResponse, geojsonResponse] = await Promise.all([
+        api.get("/api/rt"),
+        api.get("/api/rt/all/geojson"),
+      ])
+      setData(rtResponse.data.data); // Update state dengan data dari API
+      setDataGeoJson(geojsonResponse.data.data);
+      console.log("Data fetched:", rtResponse.data.data);
+      console.log("Data GeoJSON fetched:", geojsonResponse.data.data);
     } catch (error) {
       // Cek jika error memiliki respons body
       if (
@@ -259,6 +277,7 @@ const RtTable = () => {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         selectedRt={selectedRt}
+        geojsonRt={getGeoJsonByKode(selectedRt.kode)}
       />
 
       <GeoJSONUploadModal
