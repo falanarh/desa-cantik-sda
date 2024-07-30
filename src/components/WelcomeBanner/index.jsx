@@ -10,7 +10,7 @@ export default function WelcomeBanner() {
       }}
     >
       <img
-        src="/pict/SDA.jpg"
+        src="/pict/sda.jpg"
         alt="Sidoarjo"
         style={{
           width: "100%",

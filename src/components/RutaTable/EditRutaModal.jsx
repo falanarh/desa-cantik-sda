@@ -295,6 +295,7 @@ const EditRutaModal = ({
                         zoom={18}
                         scrollWheelZoom={false}
                         style={{ height: "200px", width: "100%" }}
+                        className="border-4 rounded-lg border-slate-300"
                       >
                         <TileLayer
                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
