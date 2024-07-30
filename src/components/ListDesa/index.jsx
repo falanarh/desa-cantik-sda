@@ -37,52 +37,52 @@ export default function ListDesa() {
     {
       title: "Simoketawang",
       img: "/pict/simoketawang.png",
-      desc: "Simoketawang adalah sebuah desa di wilayah Kecamatan Wonoayu, Kabupaten Sidoarjo. Dengan luas 96.53 Ha."
+      desc: "Simoketawang adalah desa di Kecamatan Wonoayu, Kabupaten Sidoarjo, dengan luas 96,53 hektar."
     },
     {
       title: "Simoanginangin",
       img: "/pict/simoanginagin.jpg",
-      desc: "Simoanginangin adalah sebuah desa di wilayah Kecamatan Wonoayu, Kabupaten Sidoarjo. Dengan luas 42 Ha."
+      desc: "Simoanginangin adalah desa di Kecamatan Wonoayu, Kabupaten Sidoarjo, dengan luas 42 hektar."
     },
     {
       title: "Grogol",
       img: "/pict/grogol.jpg",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
+      desc: "Grogol adalah desa di Kecamatan Tulangan, Kabupaten Sidoarjo, dengan luas 112.818 hektar."
     },
     {
       title: "Sugihwaras",
       img: "/pict/Sugihwaras.png",
-      desc: "Sugihwaras adalah sebuah desa di kecamatan Candi, Kabupaten Sidoarjo. Dengan luas 1.201 Ha."
+      desc: "Sugihwaras adalah desa di Kecamatan Candi, Kabupaten Sidoarjo, dengan luas 107.168 hektar."
     },
     {
       title: "Kedungrejo",
       img: "/pict/Kedungrejo.png",
-      desc: "Kedungrejo adalah sebuah desa di wilayah Kecamatan Waru, Kabupaten Sidoarjo. Dengan luas 86.44 Ha."
+      desc: "Kedungrejo adalah desa di Kecamatan Waru, Kabupaten Sidoarjo, dengan luas 86.44 hektar."
     },
     {
-      title: "Masangan Kulon",
+      title: "Masangankulon",
       img: "/pict/Masangan Kulon.png",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
+      desc: "Masangankulon adalah desa di Kecamatan Sukodono, Kabupaten Sidoarjo, dengan luas 2.03 hektar."
     },
     {
       title: "Wangkal",
       img: "/pict/wangkal 2.jpg",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
+      desc: "Wangkal adalah desa di Kecamatan Krembung, Kabupaten Sidoarjo, dengan luas 154.77 hektar."
     },
     {
       title: "Kedungturi",
       img: "/pict/kedungturi.jpg",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
+      desc: "Kedungturi adalah desa di Kecamatan Taman, Kabupaten Sidoarjo, dengan luas 158.58 hektar."
     },
     {
       title: "Kepunten",
       img: "/pict/kepunten.jpg",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
+      desc: "Kepunten adalah desa di Kecamatan Tulangan, Kabupaten Sidoarjo, dengan luas 194.5 hektar."
     },
     {
       title: "Kludan",
       img: "/pict/kludan.png",
-      desc: "Grogol adalah sebuah desa di wilayah Kecamatan Tulangan, Kabupaten Sidoarjo. Dengan luas 112.818 Ha."
+      desc: "Kludan adalah desa di Kecamatan Tanggulangin, Kabupaten Sidoarjo, dengan luas 88.20 hektar."
     }
   ];
 

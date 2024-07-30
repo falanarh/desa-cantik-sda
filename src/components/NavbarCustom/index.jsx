@@ -81,20 +81,20 @@ export default function NavbarCustom() {
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
+            <div className="absolute top-full left-0 bg-white shadow-lg rounded-md mt-3 z-10">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold hover:bg-base hover:text-[#F7BA74'] hover:rounded-md"
+                className="block px-4 py-2 font-assistant font-semibold hover:bg-white hover:text-[#F7BA74'] hover:rounded-md"
                 style={{ color: '#D17410' }}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
                 onMouseLeave={() => setIsNestedDropdownOpen(false)}
               >
                 Simoanginangin
                 {isNestedDropdownOpen && (
-                  <div className="absolute top-0 left-full bg-base shadow-lg rounded-md mt-0 z-10">
+                  <div className="absolute top-0 left-full bg-neutral-100 shadow-lg rounded-md mt-0 z-10">
                     <Link
                       href="#"
-                      className="block px-4 py-2 font-assistant font-semibold hover:bg-base hover:text-[#F7BA74'] hover:rounded-md"
+                      className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-100 hover:text-[#F7BA74'] hover:rounded-md"
                       style={{ color: '#D17410' }}
                     >
                       Pemetaan UMKM
