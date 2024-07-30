@@ -10,9 +10,9 @@ const StatCard = ({ num, label }) => (
 
 export default function Stats() {
   const list = [
-    { num: "5", label: "Kecamatan" },
-    { num: "5", label: "Desa" },
-    { num: "5", label: "RT" }
+    { num: "9", label: "Kecamatan" },
+    { num: "10", label: "Desa" },
+    { num: "269", label: "RT" }
   ];
 
   return (
