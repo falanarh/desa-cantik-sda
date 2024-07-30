@@ -5,11 +5,8 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Transition } from '@headlessui/react';
 import { DonutChart } from './Doughnut.jsx';
-
-const chartData = {
-  umkm: 30,
-  other: 70,
-};
+import api from '../../utils/api.js';
+import { message } from 'antd'; 
 
 const ExpandableList = () => {
   const [expanded, setExpanded] = useState(false);
@@ -86,14 +83,14 @@ const Legenda = () => {
         <div
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(to right, #BD0026, #FED976)',
+            background: 'linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)',
             borderRadius: '99px',
           }}
         ></div>
       </div>
       <div className="flex justify-between mt-1 px-2">
         <span className="text-xs">0</span>
-        <span className="text-xs">50+</span>
+        <span className="text-xs">100+</span>
       </div>
     </div>
   );
@@ -125,36 +122,104 @@ const Legend = () => {
 };
 
 export default function MapSection() {
-  const [geoJsonData, setGeoJsonData] = useState(null);
+  // const [geoJsonData, setGeoJsonData] = useState(null);
   const [mapInstance, setMapInstance] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisualizationOpen, setIsVisualizationOpen] = useState(true);
+  const [data, setData] = useState([]);
+  const [dataAgregat, setDataAgregat] = useState([]);
+  const [selectedRT, setSelectedRT] = useState('desa');
+  const [loading, setLoading] = useState(false);
+  const [filteredData, setFilteredData] = useState(data[0]);
+  const [chartData, setChartData] = useState([]);
+
+  const fetchData = async () => {
+    setLoading(true); // Mulai loading
+    try {
+      const response = await api.get("/api/rt/all/geojson");
+      setData(response.data.data); // Update state dengan data dari API
+      console.log("Data fetched:", response.data.data);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false); // Akhiri loading
+    }
+  };
+
+  const fetchDataAgregat = async () => {
+    setLoading(true); // Mulai loading
+    try {
+      const response = await api.get("/api/rt/all/aggregate");
+      setDataAgregat(response.data.data); // Update state dengan data dari API
+      console.log("Data fetched:", response.data.data);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false); // Akhiri loading
+    }
+  };
 
   useEffect(() => {
-    // Fetch GeoJSON data from a local file or API
-    fetch('/geoJson/desa.geojson')
-      .then((response) => response.json())
-      .then((data) => {
-        setGeoJsonData(data);
+    // Fetch data from API
+    fetchData();
+    fetchDataAgregat();
+  }, [  ])
 
-        // Calculate the centroid of the GeoJSON data
-        const centroid = turf.centroid(data);
-        const [longitude, latitude] = centroid.geometry.coordinates;
+  
+  useEffect(() => {
+    if (selectedRT === 'desa') {
+      setFilteredData(data[0]);
+    } else {
+      const filtered = data.find(item => item.features[0].properties.rt === selectedRT);
+      setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
+    }
+  }, [selectedRT, data]);
 
-        // Fit the map to the GeoJSON data bounds
-        if (mapInstance && data) {
-          const geoJsonLayer = L.geoJSON(data);
-          mapInstance.fitBounds(geoJsonLayer.getBounds());
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching GeoJSON data:', error);
-      });
-  }, [mapInstance]);
+  useEffect(() => {
+    if (filteredData) {
+      const chartData = {
+        name: filteredData.features[0].properties.rt,
+        value: filteredData.features[0].properties.jml_umkm,
+      };
+      setChartData([chartData]);
+    }
+  }, [filteredData]);
 
   // Function to determine style based on feature properties
-  const getStyle = (feature) => {
-    const density = feature.properties.density || 0;
+  const getStyle = (data) => {
+    const density = data.features[0].properties.jml_umkm || 0;
     return {
       fillColor: getColor(density),
       weight: 2,
@@ -166,14 +231,14 @@ export default function MapSection() {
   };
 
   const getColor = (density) => {
-    return density > 1000 ? '#800026' :
-      density > 500 ? '#BD0026' :
-        density > 200 ? '#E31A1C' :
-          density > 100 ? '#FC4E2A' :
-            density > 50 ? '#FD8D3C' :
-              density > 20 ? '#FEB24C' :
-                density > 10 ? '#FED976' :
-                  '#BD0026';
+    return density > 100 ? '#800026' :
+      density > 50 ? '#BD0026' :
+        density > 20 ? '#E31A1C' :
+          density > 10 ? '#FC4E2A' :
+            density > 5 ? '#FD8D3C' :
+              density > 2 ? '#FEB24C' :
+                density > 1 ? '#FED976' :
+                  '#000000';
   };
 
   const onEachFeature = (feature, layer) => {
@@ -187,13 +252,14 @@ export default function MapSection() {
           fillOpacity: 0.7,
         });
 
-        // Create a popup with the first 10 feature properties
+        // Define the keys you want to display
+        const keysLayer = ['RT', 'RW', 'Dusun', 'Jumlah Rumah Tangga', 'Jumlah UMKM', "UMKM Tetap", "UMKM Non-Tetap"];
+        const keysToShow = ['rt', 'rw', 'dusun', 'jml_ruta', 'jml_umkm','jml_umkm_tetap','jml_umkm_nontetap'];
+
+        // Create a popup with the specified keys
         const popupContent = `<div>
-          <strong>Feature Info:</strong><br>
-          ${Object.entries(feature.properties)
-            .slice(0, 10) // Show only the first 10 properties
-            .map(([key, value]) => `${key}: ${value}`)
-            .join('<br>')}
+          <strong>Informasi:</strong><br>
+          ${keysToShow.map((key, index) => `${keysLayer[index]}: ${feature.properties[key]}`).join('<br>')}
         </div>`;
 
         layer.bindPopup(popupContent).openPopup();
@@ -222,12 +288,15 @@ export default function MapSection() {
     });
   };
 
+
   return (
     <div className="relative w-full h-[89vh] font-sfProDisplay">
       <div className="absolute top-0 left-0 z-0 w-full h-full">
+      {data.length > 0 && (
         <MapContainer
           center={[-7.4388978,112.59942]} // lokasi desa simoanginangin
           zoom={15}
+          scrollWheelZoom={false}
           className="w-full h-full"
           whenCreated={setMapInstance}
         >
@@ -244,12 +313,6 @@ export default function MapSection() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
           </LayersControl.BaseLayer>
-          {/* <LayersControl.BaseLayer name="OpenStreetMap Black and White">
-            <TileLayer
-              url="https://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-          </LayersControl.BaseLayer> */}
           <LayersControl.BaseLayer name="OpenStreetMap DE">
             <TileLayer
               url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
@@ -263,15 +326,16 @@ export default function MapSection() {
             />
           </LayersControl.BaseLayer>
         </LayersControl>
-
-          {geoJsonData && (
-            <GeoJSON
-              data={geoJsonData}
-              style={getStyle}
-              onEachFeature={onEachFeature}
-            />
-          )}
+        {data.map((geoJsonData, index) => (
+        <GeoJSON
+          key={index}
+          data={geoJsonData}
+          style={getStyle(geoJsonData)}
+          onEachFeature={onEachFeature}
+        />
+        ))}
         </MapContainer>
+      )}
       </div>
 
       <div className="mx-[10%] font-sfProDisplay">
@@ -310,8 +374,7 @@ export default function MapSection() {
               name="tahun"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
-              <option>2023</option>
-              <option>2024</option>
+              <option value="2024">2024</option>
             </select>
 
             <label className="block text-sm font-medium text-white mt-4">
@@ -322,57 +385,106 @@ export default function MapSection() {
               name="jenis-kbli"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
-              <option>A. Pertanian</option>
-              <option>B. Perikanan</option>
+            <option value="all">Semua Lapangan Usaha</option>
+              <option value="A">A. Pertanian, Kehutanan, dan Perikanan</option>
+              <option value="B">B. Pertambangan dan Penggalian</option>
+              <option value="C">C. Industri Pengolahan</option>
+              <option value="D">D. Pengadaan Listrik dan Gas</option>
+              <option value="E">E. Pengadaan Air; Pengelolaan Sampah, Limbah, dan Daur Ulang</option>
+              <option value="F">F. Konstruksi</option>
+              <option value="G">G. Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor</option>
+              <option value="H">H. Transportasi dan Pergudangan</option>
+              <option value="I">I. Penyediaan Akomodasi dan Makan Minum</option>
+              <option value="J">J. Informasi dan Komunikasi</option>
+              <option value="K">K. Jasa Keuangan dan Asuransi</option>
+              <option value="L">L. Real Estat</option>
+              <option value="M">M, N. Jasa Perusahaan</option>
+              <option value="O">O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib</option>
+              <option value="P">P. Jasa Pendidikan</option>
+              <option value="Q">Q. Jasa Kesehatan dan Kegiatan Sosial</option>
+              <option value="R">R,S, T, U. Jasa Lainnya</option>
             </select>
 
             <label className="block text-sm font-medium text-white mt-4">
               RT
             </label>
-            <select
+            <select 
               id="rt"
               name="rt"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option>12</option>
-              <option>13</option>
+              value={selectedRT}
+              onChange={(e) => setSelectedRT(e.target.value)}>
+              <option value="desa">Semua RT</option>
+              {data.map((item, index) => (
+                <option key={index} value={item.features[0].properties.rt}>
+                  {item.features[0].properties.rt}
+                </option>
+              ))}
             </select>
           </div>
         </Transition>
 
         <Transition
-          show={isVisualizationOpen}
-          enter="transition ease-out duration-300"
-          enterFrom="opacity-0 transform scale-95"
-          enterTo="opacity-100 transform scale-100"
-          leave="transition ease-in duration-200"
-          leaveFrom="opacity-100 transform scale-100"
-          leaveTo="opacity-0 transform scale-95"
-          className="absolute top-16 left-[10%] z-10 w-64 max-h-[77vh] p-4 bg-[#1D262C] rounded-md shadow-md text-white overflow-y-auto"
-        >
-          <div className="text-center">
-            <div className="mb-4">
-              <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
-                <span className="text-sm material-icons mr-1">location_on</span> RT 12 RW 04 Dsn Pejagalan
-              </p>
-            </div>
-            <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-              <p className="text-4xl font-bold">200</p>
-              <p className="text-xm">Pelaku Usaha Mikro</p>
-            </div>
-            <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-              <p className="text-4xl font-bold">55%</p>
-              <p className="text-xm">Rumah Tangga UMKM</p>
-            </div>
-            <div>
-              <p className="mb-2 text-left font-xl font-semibold">Sebaran Lapangan Usaha UMKM</p>
-              <ExpandableList />
-            </div>
-            <div className="p-4 rounded-md mb-4">
-              <DonutChart data={chartData} />
-            </div>
+  show={isVisualizationOpen}
+  enter="transition ease-out duration-300"
+  enterFrom="opacity-0 transform scale-95"
+  enterTo="opacity-100 transform scale-100"
+  leave="transition ease-in duration-200"
+  leaveFrom="opacity-100 transform scale-100"
+  leaveTo="opacity-0 transform scale-95"
+  className="absolute top-16 left-[10%] z-10 w-64 max-h-[77vh] p-4 bg-[#1D262C] rounded-md shadow-md text-white overflow-y-auto"
+>
+  <div className="text-center">
+    {/* Check if data and necessary properties are defined */}
+    {filteredData && filteredData.features && filteredData.features[0] ? (
+        <>
+        {selectedRT !== 'desa' ? (
+          <>
+          <div className="mb-4">
+            <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
+              <span className="text-sm material-icons mr-1">location_on</span> RT {filteredData.features[0].properties.rt} RW {filteredData.features[0].properties.rw} Dsn {filteredData.features[0].properties.dusun}
+            </p>
           </div>
-        </Transition>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <p className="text-4xl font-bold">{filteredData.features[0].properties.jml_umkm}</p>
+            <p className="text-xm">Pelaku Usaha Mikro</p>
+          </div>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <p className="text-4xl font-bold">{((filteredData.features[0].properties.jml_umkm / filteredData.features[0].properties.jml_ruta) * 100).toFixed(2)}%</p>
+            <p className="text-xm">Rumah Tangga UMKM</p>
+          </div>
+          </>
+        ) : (
+            <>
+          <div className="mb-4">
+            <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
+              <span className="text-sm material-icons mr-1">location_on</span> Desa Simoanginangin
+              </p>
+          </div>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <p className="text-4xl font-bold">{dataAgregat.jml_umkm}</p>
+            <p className="text-xm">Pelaku Usaha Mikro</p>
+          </div>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <p className="text-4xl font-bold">{((dataAgregat.jml_umkm / dataAgregat.jml_ruta) * 100).toFixed(2)}%</p>
+            <p className="text-xm">Rumah Tangga UMKM</p>
+          </div>
+            </>
+        )}
+          <div>
+            <p className="mb-2 text-left font-xl font-semibold">Sebaran Lapangan Usaha UMKM</p>
+            <ExpandableList />
+          </div>
+          <div className="p-4 rounded-md mb-4">
+            <DonutChart data={chartData} />
+          </div>
+        </>
+      ) : (
+        <p>Data tidak tersedia</p>
+      )}
+  </div>
+</Transition>
+
 
         <Legenda />
       </div>
