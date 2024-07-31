@@ -66,11 +66,10 @@ const daftarRw = [
 ];
 
 const daftarDusun = [
-  { key: "3515009001b", label: "Sugihwaras" },
-  { key: "3515009002b", label: "Mangunharjo" },
-  { key: "3515009003b", label: "Tanjung Anom" },
-  { key: "3515009004b", label: "Gumukmas" },
-  { key: "3515009005b", label: "Bendungan" },
+  { key: "simo", label: "Simo" },
+  { key: "ngangin", label: "Ngangin" },
+  { key: "bendo-malang", label: "Bendo Malang" },
+  { key: "pejagalan", label: "Pejagalan" },
 ];
 
 

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -69,7 +68,7 @@ const EditRutaModal = ({
   // Update mapPosition when ruta changes
   useEffect(() => {
     if (ruta && ruta.latitude && ruta.longitude) {
-      if(latitudeError == "" && longitudeError == "") {
+      if (latitudeError == "" && longitudeError == "") {
         setMapPosition([ruta.latitude, ruta.longitude]);
       }
     }
@@ -77,7 +76,7 @@ const EditRutaModal = ({
 
   useEffect(() => {
     if (editRutaData && editRutaData.latitude && editRutaData.longitude) {
-      if(latitudeError == "" && longitudeError == "") {
+      if (latitudeError == "" && longitudeError == "") {
         setMapPosition([editRutaData.latitude, editRutaData.longitude]);
       }
     }
@@ -89,7 +88,7 @@ const EditRutaModal = ({
 
     if (name === "latitude") {
       if (!isValidLatitude(value)) {
-        setLatitudeError("Latitude must be between -90 and 90.");
+        setLatitudeError("Latitude harus antara -90 and 90.");
       } else {
         setLatitudeError("");
       }
@@ -97,7 +96,7 @@ const EditRutaModal = ({
 
     if (name === "longitude") {
       if (!isValidLongitude(value)) {
-        setLongitudeError("Longitude must be between -180 and 180.");
+        setLongitudeError("Longitude harus antara -180 and 180.");
       } else {
         setLongitudeError("");
       }
@@ -116,7 +115,10 @@ const EditRutaModal = ({
 
   const handleEditSave = () => {
     if (latitudeError || longitudeError) {
-      message.error("Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.", 5);
+      message.error(
+        "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
+        5
+      );
       return;
     }
 
@@ -234,7 +236,9 @@ const EditRutaModal = ({
                   label="Klasifikasi UMKM"
                   className="w-full"
                   name="klasifikasiKbli"
-                  selectedKeys={selectedKlasifikasi ? [selectedKlasifikasi] : []}
+                  selectedKeys={
+                    selectedKlasifikasi ? [selectedKlasifikasi] : []
+                  }
                   onChange={handleSelectChange}
                   placeholder="Pilih Klasifikasi UMKM"
                 >
@@ -269,7 +273,9 @@ const EditRutaModal = ({
                   classNames={{ inputWrapper: "shadow" }}
                 />
                 {latitudeError && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">{latitudeError}</p>
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {latitudeError}
+                  </p>
                 )}
                 <Input
                   label="Longitude"
@@ -281,7 +287,9 @@ const EditRutaModal = ({
                   classNames={{ inputWrapper: "shadow" }}
                 />
                 {longitudeError && (
-                  <p className="ml-4 text-sm text-red-600 font-inter">{longitudeError}</p>
+                  <p className="ml-4 text-sm text-red-600 font-inter">
+                    {longitudeError}
+                  </p>
                 )}
                 {editRutaData &&
                   editRutaData.latitude &&
@@ -297,9 +305,13 @@ const EditRutaModal = ({
                         style={{ height: "200px", width: "100%" }}
                         className="border-4 rounded-lg border-slate-300"
                       >
-                        <TileLayer
+                        {/* <TileLayer
                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        /> */}
+                        <TileLayer
+                          url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                          attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
                         />
                         <MapUpdater position={mapPosition} />
                         <Marker position={mapPosition}>
