@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -10,18 +10,33 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/react";
 import { ChevronDown } from "./Icon.jsx"; // Ensure correct path
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function NavbarCustom() {
-  const [activeMenu, setActiveMenu] = useState("Beranda");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeMenu, setActiveMenu] = useState(location.pathname);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNestedDropdownOpen, setIsNestedDropdownOpen] = useState(false);
-  const navigate = useNavigate();
 
-  const handleMenuClick = (menu) => {
-    setActiveMenu(menu);
-    navigate(menu.toLowerCase());
+  useEffect(() => {
+    setActiveMenu(location.pathname);
+  }, [location.pathname]);
+
+  const handleMenuClick = (route) => {
+    setActiveMenu(route);
+    setIsMenuOpen(false); // Close the menu after clicking
+    setIsDropdownOpen(false); // Close dropdowns if open
+    setIsNestedDropdownOpen(false); // Close nested dropdowns if open
+    navigate(route);
+  };
+
+  const handleDropdownClick = (route) => {
+    setActiveMenu(route);
+    setIsDropdownOpen(false);
+    setIsNestedDropdownOpen(false);
+    navigate(route);
   };
 
   const getMenuClasses = (menu) => {
@@ -31,7 +46,7 @@ export default function NavbarCustom() {
   };
 
   return (
-    <Navbar className="bg-base sticky" >
+    <Navbar className="bg-base sticky">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -65,8 +80,8 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/"
-            className={getMenuClasses("Beranda")}
-            onClick={() => handleMenuClick("Beranda")}
+            className={getMenuClasses("/")}
+            onClick={() => handleMenuClick("/")}
           >
             Beranda
           </Link>
@@ -74,7 +89,7 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex relative">
           <Link
             href="#"
-            className={getMenuClasses("PetaTematik")}
+            className={getMenuClasses("/peta-tematik")}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             Peta Tematik
@@ -86,6 +101,7 @@ export default function NavbarCustom() {
                 href="#"
                 className="block px-4 py-2 font-assistant font-semibold hover:bg-white hover:text-[#F7BA74'] hover:rounded-md"
                 style={{ color: '#D17410' }}
+                onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
                 onMouseLeave={() => setIsNestedDropdownOpen(false)}
               >
@@ -96,6 +112,7 @@ export default function NavbarCustom() {
                       href="#"
                       className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-100 hover:text-[#F7BA74'] hover:rounded-md"
                       style={{ color: '#D17410' }}
+                      onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
                     >
                       Pemetaan UMKM
                     </Link>
@@ -108,8 +125,8 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/buletin"
-            className={getMenuClasses("Buletin")}
-            onClick={() => handleMenuClick("Buletin")}
+            className={getMenuClasses("/buletin")}
+            onClick={() => handleMenuClick("/buletin")}
           >
             Buletin
           </Link>
@@ -117,8 +134,8 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/tentangkami"
-            className={getMenuClasses("TentangKami")}
-            onClick={() => handleMenuClick("TentangKami")}
+            className={getMenuClasses("/tentangkami")}
+            onClick={() => handleMenuClick("/tentangkami")}
           >
             Tentang Kami
           </Link>
@@ -137,8 +154,8 @@ export default function NavbarCustom() {
         <NavbarMenuItem className="lg:flex">
           <Link
             href="/"
-            className={getMenuClasses("Beranda")}
-            onClick={() => handleMenuClick("Beranda")}
+            className={getMenuClasses("/")}
+            onClick={() => handleMenuClick("/")}
           >
             Beranda
           </Link>
@@ -146,7 +163,7 @@ export default function NavbarCustom() {
         <NavbarMenuItem className="lg:flex">
           <Link
             href="#"
-            className={getMenuClasses("PetaTematik")}
+            className={getMenuClasses("/peta-tematik")}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             Peta Tematik
@@ -157,6 +174,7 @@ export default function NavbarCustom() {
               <Link
                 href="#"
                 className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
+                onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
                 onMouseLeave={() => setIsNestedDropdownOpen(false)}
               >
@@ -166,6 +184,7 @@ export default function NavbarCustom() {
                     <Link
                       href="#"
                       className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
+                      onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
                     >
                       Pemetaan UMKM
                     </Link>
@@ -178,8 +197,8 @@ export default function NavbarCustom() {
         <NavbarMenuItem className="lg:flex">
           <Link
             href="/buletin"
-            className={getMenuClasses("Buletin")}
-            onClick={() => handleMenuClick("Buletin")}
+            className={getMenuClasses("/buletin")}
+            onClick={() => handleMenuClick("/buletin")}
           >
             Buletin
           </Link>
@@ -187,8 +206,8 @@ export default function NavbarCustom() {
         <NavbarMenuItem className="lg:flex">
           <Link
             href="/tentangkami"
-            className={getMenuClasses("TentangKami")}
-            onClick={() => handleMenuClick("TentangKami")}
+            className={getMenuClasses("/tentangkami")}
+            onClick={() => handleMenuClick("/tentangkami")}
           >
             Tentang Kami
           </Link>

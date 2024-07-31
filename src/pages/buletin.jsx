@@ -1,12 +1,12 @@
 import React from 'react';
 import BuletinPage from "../components/Buletin";
-import Header from "../components/Buletin/header";
+import NavbarCustom from "../components/NavbarCustom";
 
 const Buletin = () => {
   return (
     <div>
       <>
-        <Header />
+        <NavbarCustom />
         <BuletinPage />
       </>
     </div>
