@@ -21,6 +21,7 @@
     "@nextui-org/theme": "^2.2.9",
     "@turf/turf": "^7.0.0",
     "antd": "^5.19.3",
+    "aos": "^2.3.4",
     "axios": "^1.7.2",
     "framer-motion": "^11.3.8",
     "jsonwebtoken": "^9.0.2",
