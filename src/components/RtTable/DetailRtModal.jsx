@@ -302,9 +302,13 @@ const RtDetail = ({ rt, geojson = null }) => {
               mapRef.current = mapInstance;
             }}
           >
-            <TileLayer
+            {/* <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            /> */}
+            <TileLayer
+              url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+              attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
             />
           </MapContainer>
         </div>

@@ -376,30 +376,19 @@ const EditRtModal = ({
                 <Button
                   className="bg-[#0B588F] text-white font-inter font-semibold"
                   onPress={handleEditSave}
+                  disabled={loading}
                 >
-                  Simpan
+                  {loading ? (
+                    <Bars width="25" height="25" color="#ffffff" />
+                  ) : (
+                    "Simpan"
+                  )}
                 </Button>
               </ModalFooter>
             </>
           )}
         </ModalContent>
       </Modal>
-      {loading && (
-        <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
-          <p className="mt-3 font-semibold font-inter text-pdarkblue">
-            Loading
-          </p>
-          <Bars
-            height="60"
-            width="60"
-            ariaLabel="bars-loading"
-            color="#0B588F"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-        </div>
-      )}
     </>
   );
 };

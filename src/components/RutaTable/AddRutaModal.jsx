@@ -41,6 +41,7 @@ const AddRutaModal = ({
   fetchData,
   daftarRt,
   daftarRw,
+  daftarDusun,
   daftarKlasifikasi,
   daftarJenisUmkm,
 }) => {
@@ -49,6 +50,7 @@ const AddRutaModal = ({
   const [mapPosition, setMapPosition] = useState([-7.437249, 112.601518]); // Default position
   const [selectedRt, setSelectedRt] = useState("");
   const [selectedRw, setSelectedRw] = useState("");
+  const [selectedDusun, setSelectedDusun] = useState("");
   const [selectedKlasifikasi, setSelectedKlasifikasi] = useState("");
   const [selectedJenisUmkm, setSelectedJenisUmkm] = useState("");
   const [latitudeError, setLatitudeError] = useState("");
@@ -59,18 +61,22 @@ const AddRutaModal = ({
       const latitude = parseFloat(addRutaData.latitude);
       const longitude = parseFloat(addRutaData.longitude);
 
-      if (isValidLatitude(latitude) && isValidLongitude(longitude)) {
+      if (latitudeError == "" && longitudeError == "") {
         setMapPosition([latitude, longitude]);
-        setLatitudeError("");
-        setLongitudeError("");
-      } else {
-        if (!isValidLatitude(latitude)) {
-          setLatitudeError("Latitude must be between -90 and 90.");
-        }
-        if (!isValidLongitude(longitude)) {
-          setLongitudeError("Longitude must be between -180 and 180.");
-        }
       }
+
+      // if (isValidLatitude(latitude) && isValidLongitude(longitude)) {
+      //   setMapPosition([latitude, longitude]);
+      //   setLatitudeError("");
+      //   setLongitudeError("");
+      // } else {
+      //   if (!isValidLatitude(latitude)) {
+      //     setLatitudeError("Latitude must be between -90 and 90.");
+      //   }
+      //   if (!isValidLongitude(longitude)) {
+      //     setLongitudeError("Longitude must be between -180 and 180.");
+      //   }
+      // }
     }
   }, [addRutaData.latitude, addRutaData.longitude]);
 
@@ -81,7 +87,7 @@ const AddRutaModal = ({
     if (name === "latitude") {
       const latitude = parseFloat(value);
       if (!isValidLatitude(latitude)) {
-        setLatitudeError("Latitude must be between -90 and 90.");
+        setLatitudeError("Latitude harus antara -90 and 90.");
       } else {
         setLatitudeError("");
       }
@@ -90,7 +96,7 @@ const AddRutaModal = ({
     if (name === "longitude") {
       const longitude = parseFloat(value);
       if (!isValidLongitude(longitude)) {
-        setLongitudeError("Longitude must be between -180 and 180.");
+        setLongitudeError("Longitude harus antara -180 and 180.");
       } else {
         setLongitudeError("");
       }
@@ -103,6 +109,7 @@ const AddRutaModal = ({
 
     if (name === "kodeRt") setSelectedRt(value);
     if (name === "rw") setSelectedRw(value);
+    if (name === "dusun") setSelectedDusun(value);
     if (name === "klasifikasiKbli") setSelectedKlasifikasi(value);
     if (name === "jenisUmkm") setSelectedJenisUmkm(value);
   };
@@ -239,6 +246,20 @@ const AddRutaModal = ({
                 </Select>
                 <Select
                   size="md"
+                  label="Dusun"
+                  className="w-full"
+                  name="dusun"
+                  placeholder="Pilih Dusun"
+                  onChange={handleSelectChange}
+                >
+                  {daftarDusun.map((item) => (
+                    <SelectItem key={item.key} value={item.label}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Select
+                  size="md"
                   label="Klasifikasi KBLI"
                   className="w-full"
                   name="klasifikasiKbli"
@@ -304,9 +325,13 @@ const AddRutaModal = ({
                         style={{ height: "200px", width: "100%" }}
                         className="border-4 rounded-lg border-slate-300"
                       >
-                        <TileLayer
+                        {/* <TileLayer
                           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        /> */}
+                        <TileLayer
+                          url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                          attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
                         />
                         <MapUpdater position={mapPosition} />
                         <Marker position={mapPosition}>
