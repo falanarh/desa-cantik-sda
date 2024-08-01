@@ -15,13 +15,17 @@ import { useNavigate, useLocation } from "react-router-dom";
 export default function NavbarCustom() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeMenu, setActiveMenu] = useState(location.pathname);
+  const [activeMenu, setActiveMenu] = useState("Beranda");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNestedDropdownOpen, setIsNestedDropdownOpen] = useState(false);
 
   useEffect(() => {
-    setActiveMenu(location.pathname);
+    if (location.pathname === "/" || location.pathname === "/beranda") {
+      setActiveMenu("Beranda");
+    } else {
+      setActiveMenu(location.pathname);
+    }
   }, [location.pathname]);
 
   const handleMenuClick = (route) => {
@@ -99,7 +103,7 @@ export default function NavbarCustom() {
             <div className="absolute top-full left-0 bg-[#e9e8e8] shadow-lg rounded-md mt-3 z-10">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold hover:bg-[#ede8e2] hover:text-[#F7BA74] hover:rounded-md"
+                className="block px-4 py-2 font-assistant font-semibold hover:bg-base hover:text-[#F7BA74] hover:rounded-md"
                 style={{ color: '#D17410' }}
                 onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
@@ -143,7 +147,7 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex px-5">
           <Link
             href="#"
-            className="font-bold font-assistant text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
+            className="font-bold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>
@@ -173,8 +177,9 @@ export default function NavbarCustom() {
             <div className="mt-3">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue"
+                className="block px-4 py-2 font-assistant font-semibold text-porange hover:bg-base hover:text-orange-500"
                 onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
+                onMouseEnter={() => setIsNestedDropdownOpen(true)}
               >
                 Simoanginangin
               </Link>
@@ -182,7 +187,7 @@ export default function NavbarCustom() {
                 <div className="pl-4">
                   <Link
                     href="#"
-                    className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue"
+                    className="block px-4 py-2 font-assistant font-semibold text-[#F7BA74] hover:bg-white hover:text-orange-500"
                     onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
                   >
                     Pemetaan UMKM
@@ -213,7 +218,7 @@ export default function NavbarCustom() {
         <NavbarMenuItem>
           <Link
             href="#"
-            className="font-bold text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
+            className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>
