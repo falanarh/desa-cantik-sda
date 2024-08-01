@@ -3,7 +3,7 @@
 } */
 
 [data-slot="tabList"] {
-    background-color: #ffffffb4 !important;
+  background-color: #ffffffb4 !important;
 }
 
 [data-slot="tabContent"] {
@@ -16,7 +16,9 @@
   /* margin: 2px !important; */
 }
 
-.group[data-focus="true"] .group-data-\[focus\=true\]\:bg-default-100,
+.form-login
+  .group[data-focus="true"]
+  .group-data-\[focus\=true\]\:bg-default-100,
 [data-slot="input-wrapper"]:hover {
   background-color: rgb(241 245 249) !important;
 }
@@ -30,3 +32,66 @@
   color: white !important;
   font-weight: 700 !important;
 }
+
+/* custom swiper */
+.swiperWrapper {
+  position: relative !important;
+}
+
+.swiper-pagination-fraction,
+.swiper-pagination-custom,
+.swiper-horizontal > .swiper-pagination-bullets,
+.swiper-pagination-bullets.swiper-pagination-horizontal {
+  bottom: -5px !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #0b588f !important;
+}
+
+.swiper-button-prev, .swiper-button-next {
+  color: #0b588f !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  background-color: #ffffffb4 !important;
+  border: 3px solid #0b588f !important;
+  margin-top: -12px !important;
+}
+
+.swiper-button-prev {
+  padding-right: 3px;
+}
+
+.swiper-button-next {
+  padding-left: 3px;
+}
+
+/* .swiper-button-prev::after, .swiper-button-next::after {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+} */
+
+.swiper-button-prev::after {
+  content: '' !important;
+  display: inline-block;
+  width: 24px; /* Sesuaikan dengan ukuran SVG Anda */
+  height: 24px;
+  margin-top: 2px;
+  background-image: url('../../public/icon/prev.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.swiper-button-next::after {
+  content: '' !important;
+  display: inline-block;
+  width: 24px; /* Sesuaikan dengan ukuran SVG Anda */
+  height: 24px;
+  margin-top: 2px;
+  background-image: url('../../public/icon/next.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+

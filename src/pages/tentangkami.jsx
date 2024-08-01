@@ -1,12 +1,12 @@
 import React from 'react';
 import TentangKami from "../components/TentangKami";
-import Header from "../components/TentangKami/header";
+import NavbarCustom from "../components/NavbarCustom";
 
 const Buletin = () => {
   return (
     <div>
       <>
-        <Header />
+        <NavbarCustom />
         <TentangKami />
       </>
     </div>

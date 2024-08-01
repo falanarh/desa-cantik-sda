@@ -9,105 +9,29 @@ import {
   Tooltip,
   Input,
   Button,
-  ModalFooter,
-  ModalContent,
-  Modal,
-  ModalHeader,
-  ModalBody,
   useDisclosure,
   Pagination,
 } from "@nextui-org/react";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
-import { columns, daftarRt, daftarRt as initialData } from "./data";
+import { columns } from "./data";
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
 import { FaPlus } from "react-icons/fa6";
-import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload, Popconfirm } from "antd";
-import React, { useState } from "react";
-
-const { Dragger } = Upload;
-const uploadProps = {
-  name: "file",
-  multiple: true,
-  action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
-
-const RtDetail = ({ rt }) => {
-  if (!rt) return null;
-
-  return (
-    <div className="p-4">
-      <table className="w-full overflow-hidden border border-gray-300 rounded-lg">
-        <tbody>
-          <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
-              Kode
-            </th>
-            <td className="p-3 text-right border border-gray-300">{rt.kode}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
-              RT
-            </th>
-            <td className="p-3 text-right border border-gray-300">{rt.rt}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
-              RW
-            </th>
-            <td className="p-3 text-right border border-gray-300">{rt.rw}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
-              Jumlah UMKM
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
-              Jumlah UMKM Tetap
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_tetap}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-bold text-left border border-gray-300">
-              Jumlah UMKM Non Tetap
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_nontetap}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
-};
+import { message, Popconfirm } from "antd";
+import React, { useEffect, useState } from "react";
+import api from "../../utils/api";
+import { Bars } from "react-loader-spinner";
+import GeoJSONUploadModal from "./GeoJSONUploadModal";
+import EditRtModal from "./EditRtModal";
+import DetailRtModal from "./DetailRtModal";
 
 const RtTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRt, setSelectedRt] = useState(null); // State untuk menyimpan RT yang dipilih
-  const [data, setData] = useState(initialData); // State untuk data RT
+  const [selectedRt, setSelectedRt] = useState({}); // State untuk menyimpan RT yang dipilih
+  const [data, setData] = useState([]); // State untuk data RT
+  const [dataGeoJson, setDataGeoJson] = useState([]); // State untuk data GeoJSON
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isAddModalOpen,
@@ -122,6 +46,87 @@ const RtTable = () => {
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
   const [editRtData, setEditRtData] = useState(null);
+  const [loading, setLoading] = useState(true); // State untuk loading
+
+  function getGeoJsonByKode(kode) {
+    for (let collection of dataGeoJson) {
+      for (let feature of collection.features) {
+        if (feature.properties.kode === kode) {
+          return feature;
+        }
+      }
+    }
+    return null; // Return null if no matching feature is found
+  }
+
+  const fetchData = async () => {
+    setLoading(true); // Mulai loading
+    try {
+      // const response = await api.get("/api/rt");
+      const [rtResponse, geojsonResponse] = await Promise.all([
+        api.get("/api/rt"),
+        api.get("/api/rt/all/geojson"),
+      ])
+      setData(rtResponse.data.data); // Update state dengan data dari API
+      setDataGeoJson(geojsonResponse.data.data);
+      console.log("Data fetched:", rtResponse.data.data);
+      console.log("Data GeoJSON fetched:", geojsonResponse.data.data);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false); // Akhiri loading
+    }
+  };
+
+  const deleteData = async (rt) => {
+    setLoading(true);
+    try {
+      await api.delete(`/api/rt/${rt.kode}`);
+      setData(data.filter((item) => item.kode !== rt.kode));
+      message.success(`RT ${rt.rt} berhasil dihapus.`, 5);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch data from API
+    fetchData();
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -133,26 +138,14 @@ const RtTable = () => {
   };
 
   const handleEditClick = (rt) => {
+    console.log("Check editRtData", rt);
     setEditRtData(rt);
     onEditModalOpen();
   };
 
   const handleDelete = (rt) => {
-    setData(data.filter((item) => item.kode !== rt.kode));
-    message.success(`RT ${rt.rt} berhasil dihapus.`);
-  };
-
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditRtData({ ...editRtData, [name]: value });
-  };
-
-  const handleEditSave = () => {
-    setData(
-      data.map((item) => (item.kode === editRtData.kode ? editRtData : item))
-    );
-    message.success(`RT ${editRtData.rt} berhasil diupdate.`);
-    onEditModalOpenChange(false);
+    deleteData(rt);
+    fetchData();
   };
 
   const filteredData = data.filter((rt) =>
@@ -206,7 +199,7 @@ const RtTable = () => {
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 10;
 
-  const pages = Math.ceil(daftarRt.length / rowsPerPage);
+  const pages = Math.ceil(filteredData.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -236,7 +229,7 @@ const RtTable = () => {
           color="success"
           className="text-[14px] font-semibold text-white"
           startContent={<FaPlus className="text-[20px] text-white" />}
-          onClick={onAddModalOpen} // Tambahkan onClick untuk membuka modal tambah
+          onClick={onAddModalOpen}
         >
           Tambah
         </Button>
@@ -280,241 +273,44 @@ const RtTable = () => {
         </TableBody>
       </Table>
 
-      <Modal
+      <DetailRtModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        size="lg"
-        className="font-inter bg-slate-100"
-        classNames={{
-          header: "border-b-[1px] border-slate-300",
-          footer: "border-t-[1px] border-slate-300",
-        }}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Detail Rukun Tetangga (RT)
-              </ModalHeader>
-              <ModalBody className="py-4">
-                <RtDetail rt={selectedRt} />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+        selectedRt={selectedRt}
+        geojsonRt={getGeoJsonByKode(selectedRt.kode)}
+      />
 
-      {/* Modal untuk Tambah */}
-      <Modal
-        isOpen={isAddModalOpen}
-        onOpenChange={onAddModalOpenChange}
-        size="lg"
-        className="bg-slate-100 font-inter max-h-[90%]"
-        classNames={{
-          header: "border-b-[1px] border-slate-300",
-          footer: "border-t-[1px] border-slate-300",
-          body: "overflow-y-auto",
-          wrapper: "overflow-y-hidden",
+      <GeoJSONUploadModal
+        isAddModalOpen={isAddModalOpen}
+        onAddModalOpenChange={onAddModalOpenChange}
+        onSuccessCreate={() => {
+          fetchData();
         }}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Tambah Rukun Tetangga (RT)
-              </ModalHeader>
-              <ModalBody className="py-4">
-                {/* Form atau konten lain untuk menambah RT baru */}
-                <div className="space-y-4">
-                  <Input
-                    label="Kode"
-                    placeholder="Masukkan kode"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RT"
-                    placeholder="Masukkan RT"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RW"
-                    placeholder="Masukkan RW"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM"
-                    placeholder="Masukkan jumlah UMKM"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Tetap"
-                    placeholder="Masukkan jumlah UMKM tetap"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Non Tetap"
-                    placeholder="Masukkan jumlah UMKM non tetap"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <div className="flex flex-col text-pdarkblue font-inter">
-                    <p className="font-semibold text-[14px] ml-3 mb-3">
-                      Upload geoJSON
-                    </p>
-                    <Dragger {...uploadProps}>
-                      <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                      </p>
-                      <p className="ant-upload-text">
-                        Click or drag file to this area to upload
-                      </p>
-                      <p className="ant-upload-hint">
-                        Support for a single or bulk upload. Strictly prohibited
-                        from uploading company data or other banned files.
-                      </p>
-                    </Dragger>
-                  </div>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button
-                  className="bg-[#0B588F] text-white font-inter font-semibold"
-                  onPress={onClose}
-                >
-                  Tambah
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      />
+      
+      <EditRtModal
+        isEditModalOpen={isEditModalOpen}
+        onEditModalOpenChange={onEditModalOpenChange}
+        rt={editRtData}
+        fetchData={fetchData}
+      />
 
-      {/* Modal untuk Edit */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onOpenChange={onEditModalOpenChange}
-        size="lg"
-        className="bg-slate-100 font-inter max-h-[90%]"
-        classNames={{
-          header: "border-b-[1px] border-slate-300",
-          footer: "border-t-[1px] border-slate-300",
-          body: "overflow-y-auto",
-          wrapper: "overflow-y-hidden",
-        }}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Edit Rukun Tetangga (RT)
-              </ModalHeader>
-              <ModalBody className="py-4">
-                {/* Form untuk mengedit RT */}
-                <div className="space-y-4">
-                  <Input
-                    label="Kode"
-                    placeholder="Masukkan kode"
-                    fullWidth
-                    name="kode"
-                    value={editRtData?.kode || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RT"
-                    placeholder="Masukkan RT"
-                    fullWidth
-                    name="rt"
-                    value={editRtData?.rt || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="RW"
-                    placeholder="Masukkan RW"
-                    fullWidth
-                    name="rw"
-                    value={editRtData?.rw || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM"
-                    placeholder="Masukkan jumlah UMKM"
-                    fullWidth
-                    name="jml_umkm"
-                    value={editRtData?.jml_umkm || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Tetap"
-                    placeholder="Masukkan jumlah UMKM tetap"
-                    fullWidth
-                    name="jml_umkm_tetap"
-                    value={editRtData?.jml_umkm_tetap || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Non Tetap"
-                    placeholder="Masukkan jumlah UMKM non tetap"
-                    fullWidth
-                    name="jml_umkm_nontetap"
-                    value={editRtData?.jml_umkm_nontetap || ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <div className="flex flex-col text-pdarkblue font-inter">
-                    <p className="font-semibold text-[14px] ml-3 mb-3">
-                      Upload geoJSON
-                    </p>
-                    <Dragger {...uploadProps}>
-                      <p className="ant-upload-drag-icon">
-                        <InboxOutlined />
-                      </p>
-                      <p className="ant-upload-text">
-                        Click or drag file to this area to upload
-                      </p>
-                      <p className="ant-upload-hint">
-                        Support for a single or bulk upload. Strictly prohibited
-                        from uploading company data or other banned files.
-                      </p>
-                    </Dragger>
-                  </div>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button
-                  className="bg-[#0B588F] text-white font-inter font-semibold"
-                  onPress={handleEditSave}
-                >
-                  Simpan
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {loading && (
+        <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
+          <Bars
+            height="60"
+            width="60"
+            color="#0B588F"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+          <p className="mt-3 font-semibold font-inter text-pdarkblue">
+            Loading
+          </p>
+        </div>
+      )}
     </div>
   );
 };

@@ -10,3 +10,42 @@ thead [role="row"] th:last-child,
 tbody tr td:last-child {
   width: 100px;
 }
+
+.bg-default-100,
+.group[data-focus="true"] .group-data-\[focus\=true\]\:bg-default-100,
+[data-slot="input-wrapper"]:hover {
+  background-color: #ffffff !important;
+}
+
+/* [data-slot="input-wrapper"]:hover,
+[data-slot="input-wrapper"]:focus,
+[data-slot="input-wrapper"]:focus-within,
+[data-slot="input-wrapper"][data-focus="true"] {
+  background-color: #ffffffff !important;
+} */
+
+[data-slot="label"] {
+  color: #0b588f !important;
+  font-size: 16px !important;
+  font-weight: 600;
+  margin: 2px 0 0 2px !important;
+}
+
+[data-slot="input"] {
+  color: #0b588f !important;
+}
+
+.anticon-inbox {
+  color: #0b588f !important;
+}
+.table-detail-ruta th {
+  width: 30% !important;
+}
+
+[aria-label="Close"] {
+  color: white !important;
+}
+
+[role="button"]:hover {
+  color: #475569 !important;
+}

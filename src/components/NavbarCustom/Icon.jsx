@@ -11,7 +11,7 @@ export const ChevronDown = ({fill, size, height, width, ...props}) => {
     >
       <path
         d="m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95"
-        stroke={fill}
+        stroke={fill || "currentColor"}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeMiterlimit={10}
