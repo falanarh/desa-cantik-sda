@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardBody, CardFooter, Image } from "@nextui-org/react";
 
-export default function AplikasiLayanan() {
+export default function SK() {
   const list = [
     {
       title: "Surat Keputusan Desa Cantik Kabupaten Sidoarjo Tahun 2024",
