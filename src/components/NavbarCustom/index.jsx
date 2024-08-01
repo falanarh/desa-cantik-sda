@@ -80,8 +80,8 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/"
-            className={getMenuClasses("/")}
-            onClick={() => handleMenuClick("/")}
+            className={getMenuClasses("Beranda")}
+            onClick={() => handleMenuClick("Beranda")}
           >
             Beranda
           </Link>
@@ -142,8 +142,8 @@ export default function NavbarCustom() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex px-5">
           <Link
-            href="/login"
-            className="font-semibold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-pblue-400"
+            href="#"
+            className="font-bold font-assistant text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>
@@ -153,9 +153,9 @@ export default function NavbarCustom() {
       <NavbarMenu className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`}>
         <NavbarMenuItem>
           <Link
-            href="/"
-            className={getMenuClasses("/")}
-            onClick={() => handleMenuClick("/")}
+            href="/beranda"
+            className={getMenuClasses("Beranda")}
+            onClick={() => handleMenuClick("Beranda")}
           >
             Beranda
           </Link>
@@ -212,9 +212,8 @@ export default function NavbarCustom() {
         </NavbarMenuItem>
         <NavbarMenuItem>
           <Link
-            href="/login"
-            className="font-bold text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400"
-            onClick={() => handleMenuClick("/login")}
+            href="#"
+            className="font-bold text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>
