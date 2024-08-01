@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Navbar,
   NavbarBrand,
@@ -10,18 +10,33 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/react";
 import { ChevronDown } from "./Icon.jsx"; // Ensure correct path
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function NavbarCustom() {
-  const [activeMenu, setActiveMenu] = useState("Beranda");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeMenu, setActiveMenu] = useState(location.pathname);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNestedDropdownOpen, setIsNestedDropdownOpen] = useState(false);
-  const navigate = useNavigate();
 
-  const handleMenuClick = (menu) => {
-    setActiveMenu(menu);
-    navigate(menu.toLowerCase());
+  useEffect(() => {
+    setActiveMenu(location.pathname);
+  }, [location.pathname]);
+
+  const handleMenuClick = (route) => {
+    setActiveMenu(route);
+    setIsMenuOpen(false); // Close the menu after clicking
+    setIsDropdownOpen(false); // Close dropdowns if open
+    setIsNestedDropdownOpen(false); // Close nested dropdowns if open
+    navigate(route);
+  };
+
+  const handleDropdownClick = (route) => {
+    setActiveMenu(route);
+    setIsDropdownOpen(false);
+    setIsNestedDropdownOpen(false);
+    navigate(route);
   };
 
   const getMenuClasses = (menu) => {
@@ -31,7 +46,7 @@ export default function NavbarCustom() {
   };
 
   return (
-    <Navbar className="bg-base sticky" >
+    <Navbar className="bg-base sticky top-0 z-50">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -45,28 +60,28 @@ export default function NavbarCustom() {
               alt="BPS Logo"
               width={45}
               height={45}
-              className="mr-6"
+              className="mr-2"
             />
           </a>
-          <span></span>
           <img
             src="/pict/logo_dc.png"
             alt="Desa Cantik Logo"
             width={48}
             height={48}
+            className="mr-2"
           />
           <p className="font-bold font-inter italic text-[14px] sm:text-[18px] text-pdarkblue ml-3 block xs:inline-block">
-            DESA CANTIK <br />KABUPATEN SIDOARJO
+            DESA CANTIK <br /> KABUPATEN SIDOARJO
           </p>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden gap-4 sm:flex items-center">
+      <NavbarContent className="hidden sm:flex gap-4 items-center">
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/"
-            className={getMenuClasses("Beranda")}
-            onClick={() => handleMenuClick("Beranda")}
+            className={getMenuClasses("/")}
+            onClick={() => handleMenuClick("/")}
           >
             Beranda
           </Link>
@@ -74,28 +89,30 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex relative">
           <Link
             href="#"
-            className={getMenuClasses("PetaTematik")}
+            className={getMenuClasses("/peta-tematik")}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             Peta Tematik
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 bg-white shadow-lg rounded-md mt-3 z-10">
+            <div className="absolute top-full left-0 bg-[#e9e8e8] shadow-lg rounded-md mt-3 z-10">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold hover:bg-white hover:text-[#F7BA74'] hover:rounded-md"
+                className="block px-4 py-2 font-assistant font-semibold hover:bg-[#ede8e2] hover:text-[#F7BA74] hover:rounded-md"
                 style={{ color: '#D17410' }}
+                onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
                 onMouseLeave={() => setIsNestedDropdownOpen(false)}
               >
                 Simoanginangin
                 {isNestedDropdownOpen && (
-                  <div className="absolute top-0 left-full bg-neutral-100 shadow-lg rounded-md mt-0 z-10">
+                  <div className="absolute top-0 left-full bg-white shadow-lg rounded-md mt-0 z-10">
                     <Link
                       href="#"
-                      className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-100 hover:text-[#F7BA74'] hover:rounded-md"
+                      className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-100 hover:text-[#F7BA74] hover:rounded-md"
                       style={{ color: '#D17410' }}
+                      onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
                     >
                       Pemetaan UMKM
                     </Link>
@@ -108,8 +125,8 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/buletin"
-            className={getMenuClasses("Buletin")}
-            onClick={() => handleMenuClick("Buletin")}
+            className={getMenuClasses("/buletin")}
+            onClick={() => handleMenuClick("/buletin")}
           >
             Buletin
           </Link>
@@ -117,86 +134,87 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/tentangkami"
-            className={getMenuClasses("TentangKami")}
-            onClick={() => handleMenuClick("TentangKami")}
+            className={getMenuClasses("/tentangkami")}
+            onClick={() => handleMenuClick("/tentangkami")}
           >
             Tentang Kami
           </Link>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex px-5">
           <Link
-            href="#"
-            className="font-semibold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-pblue-400 hover:outline-0 hover:outline-white"
+            href="/login"
+            className="font-semibold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-pblue-400"
           >
             Login
           </Link>
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarMenu>
-        <NavbarMenuItem className="lg:flex">
+      <NavbarMenu className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`}>
+        <NavbarMenuItem>
           <Link
             href="/"
-            className={getMenuClasses("Beranda")}
-            onClick={() => handleMenuClick("Beranda")}
+            className={getMenuClasses("/")}
+            onClick={() => handleMenuClick("/")}
           >
             Beranda
           </Link>
         </NavbarMenuItem>
-        <NavbarMenuItem className="lg:flex">
+        <NavbarMenuItem>
           <Link
             href="#"
-            className={getMenuClasses("PetaTematik")}
+            className={getMenuClasses("/peta-tematik")}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             Peta Tematik
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
+            <div className="mt-3">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
-                onMouseEnter={() => setIsNestedDropdownOpen(true)}
-                onMouseLeave={() => setIsNestedDropdownOpen(false)}
+                className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue"
+                onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
               >
                 Simoanginangin
-                {isNestedDropdownOpen && (
-                  <div className="absolute top-0 left-full bg-base shadow-lg rounded-md mt-0 z-10">
-                    <Link
-                      href="#"
-                      className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue hover:rounded-md"
-                    >
-                      Pemetaan UMKM
-                    </Link>
-                  </div>
-                )}
               </Link>
+              {isNestedDropdownOpen && (
+                <div className="pl-4">
+                  <Link
+                    href="#"
+                    className="block px-4 py-2 font-assistant font-semibold text-pdarkblue hover:bg-base hover:text-pblue"
+                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
+                  >
+                    Pemetaan UMKM
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </NavbarMenuItem>
-        <NavbarMenuItem className="lg:flex">
+        <NavbarMenuItem>
           <Link
             href="/buletin"
-            className={getMenuClasses("Buletin")}
-            onClick={() => handleMenuClick("Buletin")}
+            className={getMenuClasses("/buletin")}
+            onClick={() => handleMenuClick("/buletin")}
           >
             Buletin
           </Link>
         </NavbarMenuItem>
-        <NavbarMenuItem className="lg:flex">
+        <NavbarMenuItem>
           <Link
             href="/tentangkami"
-            className={getMenuClasses("TentangKami")}
-            onClick={() => handleMenuClick("TentangKami")}
+            className={getMenuClasses("/tentangkami")}
+            onClick={() => handleMenuClick("/tentangkami")}
           >
             Tentang Kami
           </Link>
         </NavbarMenuItem>
-        <NavbarMenuItem className="lg:flex">
+        <NavbarMenuItem>
           <Link
-            href="#"
-            className="font-bold text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400 hover:outline-0 hover:outline-white"
+            href="/login"
+            className="font-bold text-white bg-porange py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-orange-400"
+            onClick={() => handleMenuClick("/login")}
           >
             Login
           </Link>

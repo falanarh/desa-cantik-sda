@@ -9,7 +9,7 @@ const PrevArrow = (props) => {
   const { className, style, onClick } = props;
   return (
     <button
-      className={`absolute left-4 z-10 p-2 rounded-full text-pblue transform -translate-y-1/2 shadow-lg transition duration-300 ease-in-out ${className}`}
+      className={`absolute left-4 z-10 p-2 rounded-full transform -translate-y-1/2 shadow-lg transition duration-300 ease-in-out ${className}`}
       style={{ ...style, display: "block", top: "50%", border: "none", outline: "none", fontSize: "18px" }}
       onClick={onClick}
       aria-label="Previous Slide"
@@ -23,7 +23,7 @@ const NextArrow = (props) => {
   const { className, style, onClick } = props;
   return (
     <button
-      className={`absolute right-7 z-10 p-2 rounded-full  text-pblue transform -translate-y-1/2 shadow-lg  transition duration-300 ease-in-out ${className}`}
+      className={`absolute right-7 z-10 p-2 rounded-full transform -translate-y-1/2 shadow-lg transition duration-300 ease-in-out ${className}`}
       style={{ ...style, display: "block", top: "50%", border: "none", outline: "none", fontSize: "18px" }}
       onClick={onClick}
       aria-label="Next Slide"
@@ -128,8 +128,8 @@ export default function ListDesa() {
     <div className="flex justify-center m-12">
       <Slider {...settings} className="w-full">
         {list.map((item, index) => (
-          <div key={index} className="px-2">
-            <Card className="flex flex-col justify-around h-100 w-70" shadow="sm">
+          <div key={index} className="px-4 py-2"> {/* Added padding here */}
+            <Card className="flex flex-col justify-around bg-neutral-100 h-100 w-70 p-4" shadow="sm"> {/* Added padding here */}
               <CardBody className="p-2 overflow-visible items-center">
                 <Image
                   shadow="sm"
