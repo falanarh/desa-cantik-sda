@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, GeoJSON, LayersControl } from 'react-leaflet';
+import React, { useState, useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, GeoJSON, LayersControl, Marker } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { divIcon } from 'leaflet';
 import { Transition } from '@headlessui/react';
 import { DonutChart } from './Doughnut.jsx';
 import api from '../../utils/api.js';
 import { message } from 'antd'; 
+import CountUp from 'react-countup';
 
 const ExpandableList = () => {
   const [expanded, setExpanded] = useState(false);
@@ -17,57 +18,61 @@ const ExpandableList = () => {
 
   return (
     <div className="container flex flex-col items-start rounded shadow-lg">
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      {expanded && (
-        <div>
-          <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <span className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
-              55
-            </span>
-            <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-          </div>
-          <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <span className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
-              55
-            </span>
-            <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-          </div>
-          {/* Add more items as needed */}
-        </div>
-      )}
-      <button onClick={handleToggle} className="text-gray-400 text-right items-right text-sm mt-4">
-        {expanded ? 'Kembali' : 'Selengkapnya...'}
-      </button>
-    </div>
+    <table className="w-full">
+      <tbody>
+      <tr className="flex items-center mb-2 mr-0 bg-[#101920] rounded-xl w-full">
+          <td className="items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 mr-0 text-left w-100">Pertanian, Kehutanan, Perikanan</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Pertambangan dan Penggalian</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Industri Pengolahan</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Pengadaan Listrik dan Gas</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+        </tr>
+        {expanded && (
+          <>
+            <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+              <td className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+                55
+              </td>
+              <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+            </tr>
+            <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+              <td className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+                55
+              </td>
+              <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+            </tr>
+            {/* Add more items as needed */}
+          </>
+        )}
+      </tbody>
+    </table>
+    <button onClick={handleToggle} className="text-gray-400 text-right items-right text-sm mt-4">
+      {expanded ? 'Kembali' : 'Selengkapnya...'}
+    </button>
+  </div>
   );
 };
 
@@ -92,31 +97,6 @@ const Legenda = () => {
         <span className="text-xs">0</span>
         <span className="text-xs">100+</span>
       </div>
-    </div>
-  );
-};
-
-const Legend = () => {
-  const legendItems = [
-    { color: '#800026', label: '> 1000' },
-    { color: '#BD0026', label: '> 500' },
-    { color: '#E31A1C', label: '> 200' },
-    { color: '#FC4E2A', label: '> 100' },
-    { color: '#FD8D3C', label: '> 50' },
-    { color: '#FEB24C', label: '> 20' },
-    { color: '#FED976', label: '> 10' },
-    { color: '#BD0026', label: '< 10' },
-  ];
-
-  return (
-    <div className="absolute bottom-4 right-4 z-10 bg-white p-4 rounded-lg shadow-md">
-      <h4 className="font-semibold mb-2">Legenda</h4>
-      {legendItems.map((item, index) => (
-        <div key={index} className="flex items-center mb-2">
-          <span className="w-4 h-4" style={{ backgroundColor: item.color }}></span>
-          <span className="ml-2 text-sm">{item.label}</span>
-        </div>
-      ))}
     </div>
   );
 };
@@ -237,8 +217,39 @@ export default function MapSection() {
           density > 10 ? '#FC4E2A' :
             density > 5 ? '#FD8D3C' :
               density > 2 ? '#FEB24C' :
-                density > 1 ? '#FED976' :
+                density > 0 ? '#FED976' :
                   '#000000';
+  };
+
+  const createLabel = (feature) => {
+    let center;
+    if (feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon") {
+      // Mengambil koordinat pusat untuk Polygon dan MultiPolygon
+      center = getPolygonCenter(feature.geometry.coordinates[0]);
+    } else {
+      // Menggunakan koordinat langsung jika tidak Polygon atau MultiPolygon
+      center = feature.geometry.coordinates;
+    }
+
+    return (
+      <Marker
+        key={feature.properties.kode}
+        position={center}
+        icon={divIcon({
+          className: 'custom-label',
+          html: `<div>${feature.properties.label || 'No label'}</div>`
+        })}
+      />
+    );
+  };
+
+  const getPolygonCenter = (coordinates) => {
+    let latSum = 0, lngSum = 0, totalPoints = coordinates.length;
+    coordinates.forEach(coord => {
+      latSum += coord[1];
+      lngSum += coord[0];
+    });
+    return [latSum / totalPoints, lngSum / totalPoints];
   };
 
   const onEachFeature = (feature, layer) => {
@@ -264,6 +275,7 @@ export default function MapSection() {
 
         layer.bindPopup(popupContent).openPopup();
       },
+      
       mouseout: (e) => {
         const layer = e.target;
         layer.setStyle({
@@ -288,6 +300,25 @@ export default function MapSection() {
     });
   };
 
+  function calculateCentroid(multiPolygon) {
+    let totalX = 0, totalY = 0, totalPoints = 0;
+
+    multiPolygon.coordinates.forEach(polygon => {
+        polygon.forEach(ring => {
+            ring.forEach(coordinate => {
+                totalX += coordinate[0];
+                totalY += coordinate[1];
+                totalPoints++;
+            });
+        });
+    });
+
+    const centroidX = totalX / totalPoints;
+    const centroidY = totalY / totalPoints;
+
+    return [centroidY, centroidX]; // Return as an array of floats
+}
+
 
   return (
     <div className="relative w-full h-[89vh] font-sfProDisplay">
@@ -296,30 +327,25 @@ export default function MapSection() {
         <MapContainer
           center={[-7.4388978,112.59942]} // lokasi desa simoanginangin
           zoom={15}
-          scrollWheelZoom={false}
+          scrollWheelZoom={true}
           className="w-full h-full"
+          touchZoom={true}
           whenCreated={setMapInstance}
         >
         <LayersControl position="bottomleft">
-          <LayersControl.BaseLayer name="OpenStreetMap HOT">
+          <LayersControl.BaseLayer checked name="Google Sattelite">
+          <TileLayer
+            url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+            attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+          />
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name="Google Street">
             <TileLayer
-              url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+              attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
             />
           </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer checked name="OpenStreetMap Standard">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OpenStreetMap DE">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OpenStreetMap France">
+          <LayersControl.BaseLayer name="OpenStreetMap">
             <TileLayer
               url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -327,12 +353,27 @@ export default function MapSection() {
           </LayersControl.BaseLayer>
         </LayersControl>
         {data.map((geoJsonData, index) => (
+          <>
         <GeoJSON
-          key={index}
+        key={index}
           data={geoJsonData}
           style={getStyle(geoJsonData)}
           onEachFeature={onEachFeature}
         />
+        <Marker
+        key={geoJsonData.features[0].properties.kode}
+        position={calculateCentroid(geoJsonData.features[0].geometry)}
+        icon={divIcon({
+          className: 'custom-label',
+          html: `<div class="w-[75px] text-white text-[0.8rem] font-bold absolute p-2"
+          style="
+            -webkit-text-stroke-width: 0.1px;
+            -webkit-text-stroke-color: black;
+            text-shadow: 1px 1px #000;
+          ">RT ${geoJsonData.features[0].properties.rt || 'No label'}</div>`
+            })}
+      />
+      </>
         ))}
         </MapContainer>
       )}
@@ -446,12 +487,22 @@ export default function MapSection() {
             </p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{filteredData.features[0].properties.jml_umkm}</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={filteredData.features[0].properties.jml_umkm} duration={3} />
+            </div>
             <p className="text-xm">Pelaku Usaha Mikro</p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{((filteredData.features[0].properties.jml_umkm / filteredData.features[0].properties.jml_ruta) * 100).toFixed(2)}%</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={((filteredData.features[0].properties.jml_umkm / filteredData.features[0].properties.jml_ruta) * 100).toFixed(2)} duration={3} decimals={2} />%
+            </div>
             <p className="text-xm">Rumah Tangga UMKM</p>
+          </div>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <div className="text-2xl font-bold">
+              Rp<CountUp start={0} end={filteredData.features[0].properties.jml_umkm*1000000} duration={3} />
+            </div>
+            <p className="text-xm">Pendapatan UMKM</p>
           </div>
           </>
         ) : (
@@ -462,12 +513,22 @@ export default function MapSection() {
               </p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{dataAgregat.jml_umkm}</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={dataAgregat.jml_umkm} duration={3} />
+            </div>
             <p className="text-xm">Pelaku Usaha Mikro</p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{((dataAgregat.jml_umkm / dataAgregat.jml_ruta) * 100).toFixed(2)}%</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={((dataAgregat.jml_umkm / dataAgregat.jml_ruta) * 100).toFixed(2)} duration={3} decimals={2} />%
+            </div>
             <p className="text-xm">Rumah Tangga UMKM</p>
+          </div>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <div className="text-2xl font-bold">
+              Rp<CountUp start={0} end={dataAgregat.jml_umkm*1000000} duration={3} />
+            </div>
+            <p className="text-xm">Pendapatan UMKM</p>
           </div>
             </>
         )}
