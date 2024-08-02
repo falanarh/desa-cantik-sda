@@ -10,7 +10,6 @@ const TentangKami = () => {
         <NavbarCustom />
         <Tim />
         <SK />
-        <TentangKami />
       </>
     </div>
   );
