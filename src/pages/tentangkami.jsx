@@ -1,16 +1,19 @@
 import React from 'react';
-import TentangKami from "../components/TentangKami";
+import SK from "../components/TentangKami/sk";
+import Tim from "../components/TentangKami/tim";
 import NavbarCustom from "../components/NavbarCustom";
 
-const Buletin = () => {
+const TentangKami = () => {
   return (
     <div>
       <>
         <NavbarCustom />
+        <Tim />
+        <SK />
         <TentangKami />
       </>
     </div>
   );
 };
 
-export default Buletin;
+export default TentangKami;
