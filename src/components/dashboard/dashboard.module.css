@@ -169,3 +169,7 @@ p {
   font-weight: 600;
   font-family: 'Assistant';
 }
+
+.submitButton:hover {
+  background-color: #fb6d17;
+}
