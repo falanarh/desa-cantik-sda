@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, GeoJSON, LayersControl } from 'react-leaflet';
+import React, { useState, useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, GeoJSON, LayersControl, Marker, Popup } from 'react-leaflet';
 import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { divIcon } from 'leaflet';
 import { Transition } from '@headlessui/react';
 import { DonutChart } from './Doughnut.jsx';
 import api from '../../utils/api.js';
 import { message } from 'antd'; 
+import CountUp from 'react-countup';
 
 const ExpandableList = () => {
   const [expanded, setExpanded] = useState(false);
@@ -17,122 +18,82 @@ const ExpandableList = () => {
 
   return (
     <div className="container flex flex-col items-start rounded shadow-lg">
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-        <span className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
-          55
-        </span>
-        <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-      </div>
-      {expanded && (
-        <div>
-          <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <span className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
-              55
-            </span>
-            <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-          </div>
-          <div className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <span className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
-              55
-            </span>
-            <p className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</p>
-          </div>
-          {/* Add more items as needed */}
-        </div>
-      )}
-      <button onClick={handleToggle} className="text-gray-400 text-right items-right text-sm mt-4">
-        {expanded ? 'Kembali' : 'Selengkapnya...'}
-      </button>
-    </div>
-  );
-};
-
-const Legenda = () => {
-  return (
-    <div className="absolute bottom-4 right-4 z-10 w-[8rem] p-2 mr-[8%] bg-white rounded-md shadow-md text-gray-800"
-      style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
-          backdropFilter: 'blur(12px)', // Blur effect
-        }}>
-      <div className="font-semibold text-sm mb-1 text-right">Jumlah UMKM</div>
-      <div className="relative h-6 bg-gradient-to-r from-red-600 to-blue-900 rounded-full">
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)',
-            borderRadius: '99px',
-          }}
-        ></div>
-      </div>
-      <div className="flex justify-between mt-1 px-2">
-        <span className="text-xs">0</span>
-        <span className="text-xs">100+</span>
-      </div>
-    </div>
-  );
-};
-
-const Legend = () => {
-  const legendItems = [
-    { color: '#800026', label: '> 1000' },
-    { color: '#BD0026', label: '> 500' },
-    { color: '#E31A1C', label: '> 200' },
-    { color: '#FC4E2A', label: '> 100' },
-    { color: '#FD8D3C', label: '> 50' },
-    { color: '#FEB24C', label: '> 20' },
-    { color: '#FED976', label: '> 10' },
-    { color: '#BD0026', label: '< 10' },
-  ];
-
-  return (
-    <div className="absolute bottom-4 right-4 z-10 bg-white p-4 rounded-lg shadow-md">
-      <h4 className="font-semibold mb-2">Legenda</h4>
-      {legendItems.map((item, index) => (
-        <div key={index} className="flex items-center mb-2">
-          <span className="w-4 h-4" style={{ backgroundColor: item.color }}></span>
-          <span className="ml-2 text-sm">{item.label}</span>
-        </div>
-      ))}
-    </div>
+    <table className="w-full">
+      <tbody>
+      <tr className="flex items-center mb-2 mr-0 bg-[#101920] rounded-xl w-full">
+          <td className="items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 mr-0 text-left w-100">Pertanian, Kehutanan, Perikanan</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Pertambangan dan Penggalian</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Industri Pengolahan</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Pengadaan Listrik dan Gas</td>
+        </tr>
+        <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+          <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
+            55
+          </td>
+          <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+        </tr>
+        {expanded && (
+          <>
+            <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+              <td className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+                55
+              </td>
+              <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+            </tr>
+            <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
+              <td className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+                55
+              </td>
+              <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+            </tr>
+            {/* Add more items as needed */}
+          </>
+        )}
+      </tbody>
+    </table>
+    <button onClick={handleToggle} className="text-gray-400 text-right items-right text-sm mt-4">
+      {expanded ? 'Kembali' : 'Selengkapnya...'}
+    </button>
+  </div>
   );
 };
 
 export default function MapSection() {
-  // const [geoJsonData, setGeoJsonData] = useState(null);
+  const [selectedClassification, setSelectedClassification] = useState('all');
   const [mapInstance, setMapInstance] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisualizationOpen, setIsVisualizationOpen] = useState(true);
   const [data, setData] = useState([]);
   const [dataAgregat, setDataAgregat] = useState([]);
+  const [dataRumahTangga, setDataRumahTangga] = useState([]);
   const [selectedRT, setSelectedRT] = useState('desa');
   const [loading, setLoading] = useState(false);
   const [filteredData, setFilteredData] = useState(data[0]);
   const [chartData, setChartData] = useState([]);
-
+  const [showRT, setShowRT] = useState(true);
+  const [showIndividu, setIndividu] = useState(true);
+  const [visualization, setVisualization] = useState('umkm');
+  const toggleRT = () => setShowRT(!showRT);
+  const changeVisualization = (type) => setVisualization(type);
+  
   const fetchData = async () => {
     setLoading(true); // Mulai loading
     try {
@@ -191,31 +152,44 @@ export default function MapSection() {
     }
   };
 
+  const fetchDataRumahTangga = async () => {
+    setLoading(true); // Mulai loading
+    try {
+      const response = await api.get("/api/rumahTangga");
+      setDataRumahTangga(response.data.data); // Update state dengan data dari API
+      console.log("Data fetched:", response.data.data);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false); // Akhiri loading
+    }
+  };
+
   useEffect(() => {
     // Fetch data from API
     fetchData();
     fetchDataAgregat();
+    fetchDataRumahTangga();
   }, [  ])
 
   
-  useEffect(() => {
-    if (selectedRT === 'desa') {
-      setFilteredData(data[0]);
-    } else {
-      const filtered = data.find(item => item.features[0].properties.rt === selectedRT);
-      setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
-    }
-  }, [selectedRT, data]);
-
-  useEffect(() => {
-    if (filteredData) {
-      const chartData = {
-        name: filteredData.features[0].properties.rt,
-        value: filteredData.features[0].properties.jml_umkm,
-      };
-      setChartData([chartData]);
-    }
-  }, [filteredData]);
+  
 
   // Function to determine style based on feature properties
   const getStyle = (data) => {
@@ -237,57 +211,172 @@ export default function MapSection() {
           density > 10 ? '#FC4E2A' :
             density > 5 ? '#FD8D3C' :
               density > 2 ? '#FEB24C' :
-                density > 1 ? '#FED976' :
+                density > 0 ? '#FED976' :
                   '#000000';
   };
+
+  const getStyleIncome = (data) => {
+    const densityIncome = data.features[0].properties.total_pendapatan_sebulan_terakhir || 0;
+    return {
+      fillColor: getColorIncome(densityIncome),
+      weight: 2,
+      opacity: 1,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7,
+    };
+  };
+
+  const getColorIncome = (densityIncome) => {
+    return densityIncome > 100000000 ? '#08306B' : // Dark blue
+      densityIncome > 75000000 ? '#08519C' :
+        densityIncome > 50000000 ? '#2171B5' :
+          densityIncome > 20000000 ? '#4292C6' :
+            densityIncome > 1000000 ? '#6BAED6' :
+              densityIncome > 500000 ? '#9ECAE1' :
+                densityIncome > 0 ? '#C6DBEF' :
+                  '#000000'; // Light blue
+  };
+  
+  let selectedLayer = null; // Track the currently selected layer
 
   const onEachFeature = (feature, layer) => {
     layer.on({
       mouseover: (e) => {
         const layer = e.target;
-        layer.setStyle({
-          weight: 5,
-          color: '#666',
-          dashArray: '',
-          fillOpacity: 0.7,
-        });
-
-        // Define the keys you want to display
-        const keysLayer = ['RT', 'RW', 'Dusun', 'Jumlah Rumah Tangga', 'Jumlah UMKM', "UMKM Tetap", "UMKM Non-Tetap"];
-        const keysToShow = ['rt', 'rw', 'dusun', 'jml_ruta', 'jml_umkm','jml_umkm_tetap','jml_umkm_nontetap'];
-
-        // Create a popup with the specified keys
+        if (layer !== selectedLayer) {
+          layer.setStyle({
+            weight: 4,
+            color: '#333',
+            dashArray: '',
+            fillOpacity: 0.85,
+          });
+        }
+  
+        const keysLayer = ['RT', 'RW', 'Dusun', 'Jumlah Rumah Tangga', 'Jumlah UMKM', 'UMKM Tetap', 'UMKM Non-Tetap'];
+        const keysToShow = ['rt', 'rw', 'dusun', 'jml_ruta', 'jml_umkm', 'jml_umkm_tetap', 'jml_umkm_nontetap'];
+  
         const popupContent = `<div>
           <strong>Informasi:</strong><br>
-          ${keysToShow.map((key, index) => `${keysLayer[index]}: ${feature.properties[key]}`).join('<br>')}
+          ${keysToShow.map((key, index) => `${keysLayer[index]}: ${feature.properties[key] || 'N/A'}`).join('<br>')}
         </div>`;
-
+  
         layer.bindPopup(popupContent).openPopup();
       },
+  
       mouseout: (e) => {
         const layer = e.target;
-        layer.setStyle({
-          weight: 2,
-          color: 'white',
-          dashArray: '3',
-          fillOpacity: 0.7,
-        });
-
-        // Close the popup
+        if (layer !== selectedLayer) {
+          layer.setStyle({
+            weight: 2,
+            color: 'white',
+            dashArray: '3',
+            fillOpacity: 0.6,
+          });
+        }
         layer.closePopup();
       },
+  
       click: (e) => {
         const layer = e.target;
-        layer.setStyle({
-          weight: 5,
-          color: '#666',
-          dashArray: '',
-          fillOpacity: 0.7,
-        });
+        if (selectedLayer) {
+          selectedLayer.setStyle({
+            weight: 4,
+            color: '#333',
+            dashArray: '',
+            fillOpacity: 0.85,
+          });
+        }
+        if (selectedLayer === layer) {
+          selectedLayer = null;
+          setSelectedRT('desa');
+        } else {
+          selectedLayer = layer;
+          setSelectedRT(feature.properties.rt);
+          layer.setStyle({
+            weight: 4,
+            color: '#333',
+            dashArray: '',
+            fillOpacity: 0.95,
+          })
+        }
       }
     });
   };
+  
+  
+  useEffect(() => {
+    if (selectedRT === 'desa') {
+      setFilteredData(data[0]);
+    } else {
+      const filtered = data.find(item => item.features[0].properties.rt === selectedRT);
+      setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
+    }
+  }, [selectedRT, data]);
 
+  useEffect(() => {
+    if (filteredData) {
+      const chartData = {
+        name: filteredData.features[0].properties.rt,
+        value: filteredData.features[0].properties.jml_umkm,
+      };
+      setChartData([chartData]);
+    }
+  }, [filteredData]);
+  
+  function capitalizeWords(str) {
+    return str
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+  function calculateCentroid(multiPolygon) {
+    let totalX = 0, totalY = 0, totalPoints = 0;
+
+    multiPolygon.coordinates.forEach(polygon => {
+        polygon.forEach(ring => {
+            ring.forEach(coordinate => {
+                totalX += coordinate[0];
+                totalY += coordinate[1];
+                totalPoints++;
+            });
+        });
+    });
+
+    const centroidX = totalX / totalPoints;
+    const centroidY = totalY / totalPoints;
+
+    return [centroidY, centroidX]; // Return as an array of floats
+  }
+  const classifications = {
+    all: "Seluruh Lapangan Usaha",
+    kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
+    kbli_b: "B. Pertambangan dan Penggalian",
+    kbli_c: "C. Industri Pengolahan",
+    kbli_d: "D. Pengadaan Listrik dan Gas",
+    kbli_e: "E. Pengadaan Air; Pengelolaan Sampah, Limbah, dan Daur Ulang",
+    kbli_f: "F. Konstruksi",
+    kbli_g: "G. Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor",
+    kbli_h: "H. Transportasi dan Pergudangan",
+    kbli_i: "I. Penyediaan Akomodasi dan Makan Minum",
+    kbli_j: "J. Informasi dan Komunikasi",
+    kbli_k: "K. Jasa Keuangan dan Asuransi",
+    kbli_l: "L. Real Estat",
+    kbli_m: "M, N. Jasa Perusahaan",
+    // kbli_n: "M, N. Jasa Perusahaan",
+    kbli_o: "O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",
+    kbli_p: "P. Jasa Pendidikan",
+    kbli_q: "Q. Jasa Kesehatan dan Kegiatan Sosial",
+    kbli_r: "R, S, T, U. Jasa Lainnya",
+    // kbli_s: "R,S, T, U. Jasa Lainnya",
+    // kbli_t: "R,S, T, U. Jasa Lainnya",
+    // kbli_u: "R,S, T, U. Jasa Lainnya"
+  };
+
+  const handleClassificationChange = (event) => {
+    setSelectedClassification(event.target.value);
+  };
 
   return (
     <div className="relative w-full h-[89vh] font-sfProDisplay">
@@ -296,30 +385,25 @@ export default function MapSection() {
         <MapContainer
           center={[-7.4388978,112.59942]} // lokasi desa simoanginangin
           zoom={15}
-          scrollWheelZoom={false}
+          scrollWheelZoom={true}
           className="w-full h-full"
+          touchZoom={true}
           whenCreated={setMapInstance}
         >
         <LayersControl position="bottomleft">
-          <LayersControl.BaseLayer name="OpenStreetMap HOT">
+          <LayersControl.BaseLayer checked name="Google Sattelite">
+          <TileLayer
+            url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+            attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+          />
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name="Google Street">
             <TileLayer
-              url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+              attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
             />
           </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer checked name="OpenStreetMap Standard">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OpenStreetMap DE">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OpenStreetMap France">
+          <LayersControl.BaseLayer name="OpenStreetMap">
             <TileLayer
               url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -327,12 +411,63 @@ export default function MapSection() {
           </LayersControl.BaseLayer>
         </LayersControl>
         {data.map((geoJsonData, index) => (
-        <GeoJSON
-          key={index}
-          data={geoJsonData}
-          style={getStyle(geoJsonData)}
-          onEachFeature={onEachFeature}
-        />
+          <>
+            <GeoJSON
+              key={index}
+              data={geoJsonData}
+              style={visualization === 'umkm' ? getStyle(geoJsonData) : getStyleIncome(geoJsonData)}
+              onEachFeature={onEachFeature}
+            />
+            {showRT && (
+              <Marker
+                key={`marker-${geoJsonData.features[0].properties.kode}`}
+                position={calculateCentroid(geoJsonData.features[0].geometry)}
+                icon={divIcon({
+                  className: 'custom-label',
+                  html: `<div class="w-[75px] text-white text-[0.8rem] font-bold absolute p-2"
+                    style="
+                      -webkit-text-stroke-width: 0.1px;
+                      -webkit-text-stroke-color: black;
+                      text-shadow: 1px 1px #000;
+                    ">RT ${geoJsonData.features[0].properties.rt || 'No label'}</div>`
+                })}
+              />
+            )}
+            {showIndividu && dataRumahTangga
+              .filter(item => selectedClassification === 'all' || item.klasifikasiKbli === selectedClassification)
+              .map((item) => (
+                <Marker
+                  key={`marker-${item._id}`}
+                  position={[parseFloat(item.latitude), parseFloat(item.longitude)]}
+                  icon={divIcon({
+                    className: 'custom-label',
+                    html: `<div style="
+                      border-radius: 50%;
+                      width: 24px;
+                      height: 24px;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                    ">
+                      <span class="material-icons" style="color:#AF282F; font-size=2rem"> location_on </span>
+                    </div>`
+                  })}
+                >
+                  <Popup>
+                    <div>
+                      <strong>Informasi UMKM:</strong><br />
+                      RT: {item.rt}<br />
+                      RW: {item.rw}<br />
+                      Dusun: {item.dusun}<br />
+                      Klasifikasi: {classifications[item.klasifikasiKbli]}<br/>
+                      Jenis UMKM: {capitalizeWords(item.jenisUmkm)}<br/>
+                      Pendapatan per Bulan: Rp{item.pendapatanSebulanTerakhir}<br />
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+
+          </>
         ))}
         </MapContainer>
       )}
@@ -378,31 +513,20 @@ export default function MapSection() {
             </select>
 
             <label className="block text-sm font-medium text-white mt-4">
-              Jenis KBLI
+              Jenis Klasifikasi
             </label>
             <select
               id="jenis-kbli"
               name="jenis-kbli"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              onChange={handleClassificationChange}
+              value={selectedClassification}
             >
-            <option value="all">Semua Lapangan Usaha</option>
-              <option value="A">A. Pertanian, Kehutanan, dan Perikanan</option>
-              <option value="B">B. Pertambangan dan Penggalian</option>
-              <option value="C">C. Industri Pengolahan</option>
-              <option value="D">D. Pengadaan Listrik dan Gas</option>
-              <option value="E">E. Pengadaan Air; Pengelolaan Sampah, Limbah, dan Daur Ulang</option>
-              <option value="F">F. Konstruksi</option>
-              <option value="G">G. Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor</option>
-              <option value="H">H. Transportasi dan Pergudangan</option>
-              <option value="I">I. Penyediaan Akomodasi dan Makan Minum</option>
-              <option value="J">J. Informasi dan Komunikasi</option>
-              <option value="K">K. Jasa Keuangan dan Asuransi</option>
-              <option value="L">L. Real Estat</option>
-              <option value="M">M, N. Jasa Perusahaan</option>
-              <option value="O">O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib</option>
-              <option value="P">P. Jasa Pendidikan</option>
-              <option value="Q">Q. Jasa Kesehatan dan Kegiatan Sosial</option>
-              <option value="R">R,S, T, U. Jasa Lainnya</option>
+              {Object.entries(classifications).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </select>
 
             <label className="block text-sm font-medium text-white mt-4">
@@ -446,12 +570,22 @@ export default function MapSection() {
             </p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{filteredData.features[0].properties.jml_umkm}</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={filteredData.features[0].properties.jml_umkm} duration={3} />
+            </div>
             <p className="text-xm">Pelaku Usaha Mikro</p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{((filteredData.features[0].properties.jml_umkm / filteredData.features[0].properties.jml_ruta) * 100).toFixed(2)}%</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={((filteredData.features[0].properties.jml_umkm / filteredData.features[0].properties.jml_ruta) * 100).toFixed(2)} duration={3} decimals={2} />%
+            </div>
             <p className="text-xm">Rumah Tangga UMKM</p>
+          </div>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <div className="text-2xl font-bold">
+              Rp<CountUp start={0} end={filteredData.features[0].properties.total_pendapatan_sebulan_terakhir} duration={3/2} />
+            </div>
+            <p className="text-xm">Pendapatan UMKM</p>
           </div>
           </>
         ) : (
@@ -462,31 +596,112 @@ export default function MapSection() {
               </p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{dataAgregat.jml_umkm}</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={dataAgregat.jml_umkm} duration={3} />
+            </div>
             <p className="text-xm">Pelaku Usaha Mikro</p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <p className="text-4xl font-bold">{((dataAgregat.jml_umkm / dataAgregat.jml_ruta) * 100).toFixed(2)}%</p>
+            <div className="text-4xl font-bold">
+              <CountUp start={0} end={((dataAgregat.jml_umkm / dataAgregat.jml_ruta) * 100).toFixed(2)} duration={3} decimals={2} />%
+            </div>
             <p className="text-xm">Rumah Tangga UMKM</p>
+          </div>
+          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+            <div className="text-2xl font-bold">
+              Rp<CountUp start={0} end={dataAgregat.total_pendapatan_sebulan_terakhir} duration={3/2} />
+            </div>
+            <p className="text-xm">Pendapatan UMKM</p>
           </div>
             </>
         )}
-          <div>
+          {/* <div>
             <p className="mb-2 text-left font-xl font-semibold">Sebaran Lapangan Usaha UMKM</p>
             <ExpandableList />
-          </div>
-          <div className="p-4 rounded-md mb-4">
+          </div> */}
+          {/* <div className="p-4 rounded-md mb-4">
             <DonutChart data={chartData} />
-          </div>
+          </div> */}
         </>
       ) : (
         <p>Data tidak tersedia</p>
       )}
   </div>
 </Transition>
-
-
-        <Legenda />
+      <div className="absolute bottom-4 right-4 z-10 w-auto p-2 mr-[8%] bg-white rounded-md shadow-md text-gray-800"
+      style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
+        backdropFilter: 'blur(12px)', // Blur effect
+      }}>
+      <div className="flex justify-center items-center">
+      <button
+          className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${showRT ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+          onClick={toggleRT}
+        >
+          {showRT ? (
+            <div className="flex items-center">
+              <span className="material-icons text-xl mr-2">visibility_off</span> RT
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <span className="material-icons text-xl mr-2">visibility</span> RT
+            </div>
+          )}
+        </button>
+        <div className="flex justify-center flex-col space-y-2 mr-4">
+        
+        <button
+          className={`py-1 px-2 rounded-md text-sm ${visualization === 'umkm' ? 'bg-[#BD0026] text-white' : 'bg-gray-200 text-gray-800'}`}
+          onClick={() => changeVisualization('umkm')}
+        >
+          Peta UMKM
+        </button>
+        <button
+          className={`py-1 px-2 rounded-md text-sm ${visualization === 'pendapatan' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+          onClick={() => changeVisualization('pendapatan')}
+        >
+          Peta Pendapatan
+        </button>
+        </div>
+        <div>
+        {visualization === 'umkm' ? (
+          <div className="w-[20vh]">
+            <div className="font-semibold text-sm mb-1 text-right">Jumlah UMKM</div>
+            <div className="relative h-6  rounded-full mb-2">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)',
+                  borderRadius: '99px',
+                }}
+              ></div>
+            </div>
+            <div className="flex justify-between mt-1 px-2">
+              <span className="text-xs">0</span>
+              <span className="text-xs">100+</span>
+            </div>
+          </div>
+        ) : (
+          <div className="w-[20vh]">
+            <div className="font-semibold text-sm mb-1 text-right">Jumlah Pendapatan</div>
+            <div className="relative h-6 rounded-full mb-2">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(to right, #C6DBEF,#9ECAE1, #6BAED6, #4292C6, #2171B5,#08519C, #08306B)',
+                  borderRadius: '99px',
+                }}
+              ></div>
+            </div>
+            <div className="flex justify-between mt-1 px-2">
+              <span className="text-xs">0</span>
+              <span className="text-xs">100 Juta+</span>
+            </div>
+          </div>
+        )}
+      </div>
+      </div>
+    </div>
       </div>
     </div>
   );
