@@ -33,11 +33,16 @@ const isValidLongitude = (longitude) => {
   return !isNaN(longitude) && longitude >= -180 && longitude <= 180;
 };
 
+const isValidPendapatanSebulanTerakhir = (pendapatanSebulanTerakhir) => {
+  return !isNaN(pendapatanSebulanTerakhir) && pendapatanSebulanTerakhir >= 0;
+};
+
 const EditRutaModal = ({
   isEditModalOpen,
   onEditModalOpenChange,
   ruta,
   fetchData,
+  fetchDataAggregate,
   daftarRt,
   daftarRw,
   daftarDusun,
@@ -52,6 +57,7 @@ const EditRutaModal = ({
   const [selectedRw, setSelectedRw] = useState("");
   const [selectedKlasifikasi, setSelectedKlasifikasi] = useState("");
   const [selectedJenisUmkm, setSelectedJenisUmkm] = useState("");
+  const [pendapatanSebulanTerakhirError, setPendapatanSebulanTerakhirError] = useState("");
   const [latitudeError, setLatitudeError] = useState("");
   const [longitudeError, setLongitudeError] = useState("");
 
@@ -86,6 +92,14 @@ const EditRutaModal = ({
     const { name, value } = e.target;
     setEditRutaData((prevValues) => ({ ...prevValues, [name]: value }));
 
+    if (name === "pendapatanSebulanTerakhir") {
+      if (!isValidPendapatanSebulanTerakhir(value)) {
+        setPendapatanSebulanTerakhirError("Pendapatan sebulan terakhir harus positif.");
+      } else {
+        setPendapatanSebulanTerakhirError("");
+      }
+    }
+
     if (name === "latitude") {
       if (!isValidLatitude(value)) {
         setLatitudeError("Latitude harus antara -90 and 90.");
@@ -114,7 +128,7 @@ const EditRutaModal = ({
   };
 
   const handleEditSave = () => {
-    if (latitudeError || longitudeError) {
+    if (latitudeError || longitudeError || pendapatanSebulanTerakhirError) {
       message.error(
         "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
         5
@@ -134,6 +148,10 @@ const EditRutaModal = ({
       console.log(convertedData);
 
       updateData(convertedData);
+      
+      setTimeout(() => {
+        fetchDataAggregate();
+      }, 1000);
     }
   };
 
@@ -263,6 +281,20 @@ const EditRutaModal = ({
                     </SelectItem>
                   ))}
                 </Select>
+                <Input
+                  label="Pendapatan Sebulan Terakhir (Rp)"
+                  placeholder="Masukkan pendapatan sebulan terakhir"
+                  fullWidth
+                  name="pendapatanSebulanTerakhir"
+                  value={editRutaData?.pendapatanSebulanTerakhir ?? ""}
+                  onChange={handleInputChange}
+                  classNames={{ inputWrapper: "shadow" }}
+                />
+                {pendapatanSebulanTerakhirError && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {pendapatanSebulanTerakhirError}
+                  </p>
+                )}
                 <Input
                   label="Latitude"
                   placeholder="Masukkan latitude"

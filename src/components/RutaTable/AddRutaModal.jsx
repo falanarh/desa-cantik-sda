@@ -35,10 +35,15 @@ const isValidLongitude = (longitude) => {
   return !isNaN(longitude) && longitude >= -180 && longitude <= 180;
 };
 
+const isValidPendapatanSebulanTerakhir = (pendapatanSebulanTerakhir) => {
+  return pendapatanSebulanTerakhir >= 0;
+};
+
 const AddRutaModal = ({
   isOpen,
   onClose,
   fetchData,
+  fetchDataAggregate,
   daftarRt,
   daftarRw,
   daftarDusun,
@@ -55,28 +60,16 @@ const AddRutaModal = ({
   const [selectedJenisUmkm, setSelectedJenisUmkm] = useState("");
   const [latitudeError, setLatitudeError] = useState("");
   const [longitudeError, setLongitudeError] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (addRutaData.latitude && addRutaData.longitude) {
       const latitude = parseFloat(addRutaData.latitude);
       const longitude = parseFloat(addRutaData.longitude);
 
-      if (latitudeError == "" && longitudeError == "") {
+      if (errors.latitude === "" && errors.longitude === "") {
         setMapPosition([latitude, longitude]);
       }
-
-      // if (isValidLatitude(latitude) && isValidLongitude(longitude)) {
-      //   setMapPosition([latitude, longitude]);
-      //   setLatitudeError("");
-      //   setLongitudeError("");
-      // } else {
-      //   if (!isValidLatitude(latitude)) {
-      //     setLatitudeError("Latitude must be between -90 and 90.");
-      //   }
-      //   if (!isValidLongitude(longitude)) {
-      //     setLongitudeError("Longitude must be between -180 and 180.");
-      //   }
-      // }
     }
   }, [addRutaData.latitude, addRutaData.longitude]);
 
@@ -84,23 +77,75 @@ const AddRutaModal = ({
     const { name, value } = e.target;
     setAddRutaData((prevValues) => ({ ...prevValues, [name]: value }));
 
-    if (name === "latitude") {
-      const latitude = parseFloat(value);
-      if (!isValidLatitude(latitude)) {
-        setLatitudeError("Latitude harus antara -90 and 90.");
+    if (name === "namaKrt") {
+      if (!value) {
+        errors.namaKrt = "Nama harus diisi.";
       } else {
-        setLatitudeError("");
+        errors.namaKrt = "";
+      }
+    }
+
+    if (name === "pendapatanSebulanTerakhir") {
+      const pendapatanSebulanTerakhir = parseFloat(value);
+      if (value === "") {
+        errors.pendapatanSebulanTerakhir =
+          "Pendapatan sebulan terakhir harus diisi.";
+      } else if (isNaN(value)) {
+        errors.pendapatanSebulanTerakhir =
+          "Pendapatan sebulan terakhir harus berupa angka.";
+      } else if (!isValidPendapatanSebulanTerakhir(pendapatanSebulanTerakhir)) {
+        errors.pendapatanSebulanTerakhir =
+          "Pendapatan sebulan terakhir harus lebih dari 0.";
+      } else {
+        errors.pendapatanSebulanTerakhir = "";
+      }
+    }
+
+    if (name === "latitude") {
+      if (value === "") {
+        errors.latitude = "Latitude harus diisi.";
+      }
+      else if (isNaN(value)) {
+        errors.latitude = "Latitude harus berupa angka.";
+      } else if (!isValidLatitude(parseFloat(value))) {
+        errors.latitude = "Latitude harus antara -90 and 90.";
+      } else {
+        errors.latitude = "";
       }
     }
 
     if (name === "longitude") {
-      const longitude = parseFloat(value);
-      if (!isValidLongitude(longitude)) {
-        setLongitudeError("Longitude harus antara -180 and 180.");
+      if (value === "") {
+        errors.longitude = "Longitude harus diisi.";
+      }
+      else if (isNaN(value)) {
+        errors.longitude = "Longitude harus berupa angka.";
+      } else if (!isValidLongitude(parseFloat(value))) {
+        errors.longitude = "Longitude harus antara -180 and 180.";
       } else {
-        setLongitudeError("");
+        errors.longitude = "";
       }
     }
+
+    // setErrors(newErrors);
+
+    // if (name === "latitude") {
+    //   const latitude = parseFloat(value);
+    //   if (!isValidLatitude(latitude)) {
+    //     setLatitudeError("Latitude harus antara -90 and 90.");
+    //   } else {
+    //     setLatitudeError("");
+    //   }
+    // }
+
+    // if (name === "longitude") {
+    //   const longitude = parseFloat(value);
+    //   if (!isValidLongitude(longitude)) {
+    //     setLongitudeError("Longitude harus antara -180 and 180.");
+    //   } else {
+    //     setLongitudeError("");
+    //   }
+    // }
   };
 
   const handleSelectChange = (e) => {
@@ -114,18 +159,50 @@ const AddRutaModal = ({
     if (name === "jenisUmkm") setSelectedJenisUmkm(value);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validasi setiap field
+    if (!addRutaData.namaKrt) newErrors.namaKrt = "Nama KRT wajib diisi.";
+    if (!addRutaData.kodeRt) newErrors.kodeRt = "RT wajib dipilih.";
+    if (!addRutaData.rw) newErrors.rw = "RW wajib dipilih.";
+    if (!addRutaData.dusun) newErrors.dusun = "Dusun wajib dipilih.";
+    if (!addRutaData.klasifikasiKbli)
+      newErrors.klasifikasiKbli = "Klasifikasi KBLI wajib dipilih.";
+    if (!addRutaData.jenisUmkm)
+      newErrors.jenisUmkm = "Jenis UMKM wajib dipilih.";
+    if (!addRutaData.pendapatanSebulanTerakhir)
+      newErrors.pendapatanSebulanTerakhir =
+        "Pendapatan sebulan terakhir wajib diisi.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const formatNumber = (input) => {
+    // Tambahkan 1 ke input
+    const incrementedValue = input + 1;
+
+    // Konversi angka menjadi string dan format dengan padding 3 digit
+    const formattedString = incrementedValue.toString().padStart(3, "0");
+
+    return formattedString;
+  };
+
   const handleAddSave = async () => {
-    const formatNumber = (input) => {
-      // Tambahkan 1 ke input
-      const incrementedValue = input + 1;
+    if (!validateForm()) {
+      message.error(
+        "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
+        5
+      );
+      return;
+    }
 
-      // Konversi angka menjadi string dan format dengan padding 3 digit
-      const formattedString = incrementedValue.toString().padStart(3, "0");
-
-      return formattedString;
-    };
-
-    if (latitudeError || longitudeError) {
+    if (
+      errors.latitude ||
+      errors.longitude ||
+      errors.pendapatanSebulanTerakhir
+    ) {
       message.error(
         "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
         5
@@ -149,15 +226,25 @@ const AddRutaModal = ({
           ...addRutaData,
           kode: addRutaData.kodeRt + formatNumber(jumlahUmkm), // Pastikan ini sesuai dengan kebutuhan
           rt: addRutaData.kodeRt.slice(-3),
+          pendapatanSebulanTerakhir: parseInt(
+            addRutaData.pendapatanSebulanTerakhir
+          ),
           latitude: parseFloat(addRutaData.latitude),
           longitude: parseFloat(addRutaData.longitude),
-          jumlahUmkm, // Tambahkan jumlah UMKM ke data yang akan disimpan
+          // jumlahUmkm, // Tambahkan jumlah UMKM ke data yang akan disimpan
         };
 
         console.log("Data Ruta", convertedData);
 
         // Lanjutkan dengan penyimpanan data
         await createData(convertedData);
+
+        setAddRutaData({});
+        setErrors({});
+
+        setTimeout(() => {
+          fetchDataAggregate();
+        }, 1000);
       } catch (error) {
         // Tangani kesalahan jika fetch data gagal
         message.error(`Terjadi kesalahan: ${error.message}`, 5);
@@ -212,10 +299,15 @@ const AddRutaModal = ({
                   label="Nama KRT"
                   placeholder="Masukkan Nama KRT"
                   fullWidth
-                  classNames={{ inputWrapper: "shadow" }}
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
                   name="namaKrt"
                   onChange={handleInputChange}
                 />
+                {errors.namaKrt && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.namaKrt}
+                  </p>
+                )}
                 <Select
                   size="md"
                   label="RT"
@@ -230,6 +322,11 @@ const AddRutaModal = ({
                     </SelectItem>
                   ))}
                 </Select>
+                {errors.kodeRt && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.kodeRt}
+                  </p>
+                )}
                 <Select
                   size="md"
                   label="RW"
@@ -244,6 +341,11 @@ const AddRutaModal = ({
                     </SelectItem>
                   ))}
                 </Select>
+                {errors.rw && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.rw}
+                  </p>
+                )}
                 <Select
                   size="md"
                   label="Dusun"
@@ -258,6 +360,11 @@ const AddRutaModal = ({
                     </SelectItem>
                   ))}
                 </Select>
+                {errors.dusun && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.dusun}
+                  </p>
+                )}
                 <Select
                   size="md"
                   label="Klasifikasi KBLI"
@@ -272,6 +379,11 @@ const AddRutaModal = ({
                     </SelectItem>
                   ))}
                 </Select>
+                {errors.klasifikasiKbli && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.klasifikasiKbli}
+                  </p>
+                )}
                 <Select
                   size="md"
                   label="Jenis UMKM"
@@ -286,6 +398,24 @@ const AddRutaModal = ({
                     </SelectItem>
                   ))}
                 </Select>
+                {errors.jenisUmkm && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.jenisUmkm}
+                  </p>
+                )}
+                <Input
+                  label="Pendapatan Sebulan Terakhir (Rp)"
+                  placeholder="Masukkan pendapatan sebulan terakhir"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow" }}
+                  name="pendapatanSebulanTerakhir"
+                  onChange={handleInputChange}
+                />
+                {errors.pendapatanSebulanTerakhir && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.pendapatanSebulanTerakhir}
+                  </p>
+                )}
                 <Input
                   label="Latitude"
                   placeholder="Masukkan nilai latitude"
@@ -294,9 +424,9 @@ const AddRutaModal = ({
                   classNames={{ inputWrapper: "shadow" }}
                   onChange={handleInputChange}
                 />
-                {latitudeError && (
+                {errors.latitude && (
                   <p className="ml-3 text-sm text-red-600 font-inter">
-                    {latitudeError}
+                    {errors.latitude}
                   </p>
                 )}
                 <Input
@@ -307,9 +437,9 @@ const AddRutaModal = ({
                   classNames={{ inputWrapper: "shadow" }}
                   onChange={handleInputChange}
                 />
-                {longitudeError && (
+                {errors.longitude && (
                   <p className="ml-4 text-sm text-red-600 font-inter">
-                    {longitudeError}
+                    {errors.longitude}
                   </p>
                 )}
                 {isValidLatitude(mapPosition[0]) &&
