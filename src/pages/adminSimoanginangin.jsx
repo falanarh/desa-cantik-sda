@@ -53,6 +53,43 @@ const AdminSimoanginangin = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
+  const fetchData = async () => {
+    setLoading(true); // Mulai loading
+    try {
+      // const response = await api.get("/api/rt");
+      const [response] = await Promise.all([
+        api.get("/api/rt/all/aggregate"),
+      ])
+      setData(response.data.data); // Update state dengan data dari API
+      console.log("Data fetched:", response.data.data);
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false); // Akhiri loading
+    }
+  };
+
+  useEffect(() => {
+    // Fetch data from API
+    fetchData();
+  }, []);
+
   const dataCard = [
     {
       title: "Jumlah UMKM",
@@ -212,46 +249,9 @@ const AdminSimoanginangin = () => {
     {
       id: "rumah-tangga-umkm",
       label: "Rumah Tangga UMKM",
-      content: <RutaTable />,
+      content: <RutaTable fetchDataAggregate={fetchData} />,
     },
   ];
-
-  const fetchData = async () => {
-    setLoading(true); // Mulai loading
-    try {
-      // const response = await api.get("/api/rt");
-      const [response] = await Promise.all([
-        api.get("/api/rt/all/aggregate"),
-      ])
-      setData(response.data.data); // Update state dengan data dari API
-      console.log("Data fetched:", response.data.data);
-    } catch (error) {
-      // Cek jika error memiliki respons body
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(
-          `Terjadi kesalahan: ${error.response.data.message}`,
-          5
-        );
-      } else {
-        // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(
-          `Terjadi kesalahan: ${error.message}`,
-          5
-        );
-      }
-    } finally {
-      setLoading(false); // Akhiri loading
-    }
-  };
-
-  useEffect(() => {
-    // Fetch data from API
-    fetchData();
-  }, []);
   
   return (
     <>
@@ -302,11 +302,11 @@ const AdminSimoanginangin = () => {
                   spaceBetween: 20,
                 },
                 640: {
-                  slidesPerView: 2,
+                  slidesPerView: 3,
                   spaceBetween: 20,
                 },
                 768: {
-                  slidesPerView: 2,
+                  slidesPerView: 3,
                   spaceBetween: 20,
                 },
                 1024: {

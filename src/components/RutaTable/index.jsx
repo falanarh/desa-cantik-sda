@@ -33,7 +33,7 @@ import AddRutaModal from "./AddRutaModal";
 import DetailRutaModal from "./DetailRutaModal";
 import EditRutaModal from "./EditRutaModal";
 
-const RutaTable = () => {
+const RutaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRuta, setSelectedRuta] = useState(null);
   const [dataRuta, setDataRuta] = useState([]);
@@ -140,9 +140,10 @@ const RutaTable = () => {
   const handleDelete = (ruta) => {
     deleteData(ruta);
     fetchData();
+    setTimeout(() => {
+      fetchDataAggregate();
+    }, 500);
   };
-
-
 
   const filteredData = dataRuta.filter((ruta) =>
     Object.values(ruta).some((value) =>
@@ -286,6 +287,7 @@ const RutaTable = () => {
         daftarKlasifikasi={daftarKlasifikasi}
         daftarJenisUmkm={daftarJenisUmkm}
         fetchData={fetchData}
+        fetchDataAggregate={fetchDataAggregate}
       />
 
       <EditRutaModal
@@ -293,6 +295,7 @@ const RutaTable = () => {
         onEditModalOpenChange={onEditModalOpenChange}
         ruta={editRutaData}
         fetchData={fetchData}
+        fetchDataAggregate={fetchDataAggregate}
         daftarRt={dataRt}
         daftarRw={daftarRw}
         daftarDusun={daftarDusun}

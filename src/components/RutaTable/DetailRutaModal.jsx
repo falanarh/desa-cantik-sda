@@ -17,6 +17,24 @@ const getKbliLabel = (key) => {
   return klasifikasi ? klasifikasi.label : "Unknown";
 };
 
+function formatNumber(num) {
+  if (typeof num !== 'number' || isNaN(num)) {
+      throw new Error('Input must be a valid number');
+  }
+
+  // Convert number to string
+  let numStr = num.toFixed(2); // Ensure that the number has 2 decimal places if it's a float
+
+  // Split integer part and decimal part
+  let [integerPart, decimalPart] = numStr.split('.');
+
+  // Use regular expression to add thousands separators
+  let formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  // Combine integer part and decimal part (if any)
+  return decimalPart ? `${formattedIntegerPart},${decimalPart}` : formattedIntegerPart;
+}
+
 const RutaDetail = ({ ruta }) => {
   if (!ruta) return null;
 
@@ -82,6 +100,14 @@ const RutaDetail = ({ ruta }) => {
           </tr>
           <tr className="bg-white/70">
             <th className="p-3 font-semibold text-left border border-gray-300">
+              Pendapatan Sebulan Terakhir (Rp)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {ruta.pendapatanSebulanTerakhir? ruta.pendapatanSebulanTerakhir.toLocaleString('id-ID') : "-"}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
               Latitude
             </th>
             <td className="p-3 text-right border border-gray-300">
@@ -131,7 +157,7 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      size="lg"
+      size="xl"
       className="bg-slate-100 font-inter max-h-[90%]"
       classNames={{
         header: "border-b-[1px] border-slate-300",

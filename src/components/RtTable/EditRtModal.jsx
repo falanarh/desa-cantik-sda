@@ -63,6 +63,10 @@ const EditRtModal = ({
         jml_umkm_kbli_s: parseInt(editRtData.jml_umkm_kbli_s, 10) || 0,
         jml_umkm_kbli_t: parseInt(editRtData.jml_umkm_kbli_t, 10) || 0,
         jml_umkm_kbli_u: parseInt(editRtData.jml_umkm_kbli_u, 10) || 0,
+        total_pendapatan_sebulan_terakhir:
+          parseInt(editRtData.total_pendapatan_sebulan_terakhir, 10) || 0, // Convert to integer
+        rata2_pendapatan_sebulan_terakhir:
+          parseInt(editRtData.rata2_pendapatan_sebulan_terakhir, 10) || 0, // Convert to integer
       };
 
       updateData(convertedData);
@@ -364,6 +368,24 @@ const EditRtModal = ({
                     fullWidth
                     name="jml_umkm_kbli_u"
                     value={editRtData?.jml_umkm_kbli_u ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Total Pendapatan UMKM Sebulan Terakhir (Rp)"
+                    placeholder="Masukkan total pendapatan UMKM sebulan terakhir"
+                    fullWidth
+                    name="total_pendapatan_sebulan_terakhir"
+                    value={editRtData?.total_pendapatan_sebulan_terakhir ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Rata-rata Pendapatan UMKM Sebulan Terakhir (Rp)"
+                    placeholder="Masukkan rata-rata pendapatan UMKM sebulan terakhir"
+                    fullWidth
+                    name="rata2_pendapatan_sebulan_terakhir"
+                    value={editRtData?.rata2_pendapatan_sebulan_terakhir ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />

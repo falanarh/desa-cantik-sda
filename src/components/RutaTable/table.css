@@ -31,15 +31,15 @@ tbody tr td:last-child {
   margin: 2px 0 0 2px !important;
 }
 
-[data-slot="input"] {
+/* [data-slot="input"] {
   color: #0b588f !important;
-}
+} */
 
 .anticon-inbox {
   color: #0b588f !important;
 }
 .table-detail-ruta th {
-  width: 30% !important;
+  width: 55% !important;
 }
 
 [aria-label="Close"] {

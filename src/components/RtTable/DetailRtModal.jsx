@@ -41,7 +41,7 @@ const RtDetail = ({ rt, geojson = null }) => {
           const label = feature.properties.label; // Assuming feature.properties.name contains the label text
           const labelIcon = L.divIcon({
             className: "geojson-label",
-            html: `<div class="font-inter font-bold text-black text-center w-full">${label}</div>`,
+            html: `<div class="font-inter font-bold text-white text-center w-full">${label}</div>`,
             iconSize: [300, 40], // Adjust size as needed
           });
           L.marker(layer.getBounds().getCenter(), { icon: labelIcon }).addTo(
@@ -285,6 +285,22 @@ const RtDetail = ({ rt, geojson = null }) => {
               {rt.jml_umkm_kbli_u}
             </td>
           </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Total Pendapatan UMKM Sebulan Terakhir (Rp)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.total_pendapatan_sebulan_terakhir.toLocaleString('id-ID')}
+            </td>
+          </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Rata-rata Pendapatan UMKM Sebulan Terakhir (Rp)
+            </th>
+            <td className="p-3 text-right border border-gray-300">
+              {rt.rata2_pendapatan_sebulan_terakhir.toLocaleString('id-ID')}
+            </td>
+          </tr>
         </tbody>
       </table>
       {geojson && (
@@ -322,7 +338,7 @@ const DetailRtModal = ({ isOpen, onOpenChange, selectedRt, geojsonRt }) => {
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      size="lg"
+      size="xl"
       className="font-inter bg-slate-100 max-h-[90%]"
       classNames={{
         header: "border-b-[1px] border-slate-300",
