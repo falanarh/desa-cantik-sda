@@ -52,6 +52,8 @@ const RutaTable = ({ fetchDataAggregate }) => {
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
   const [editRutaData, setEditRutaData] = useState(null);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [isSatuan, setIsSatuan] = useState(true);
   const [loading, setLoading] = useState(true); // State untuk loading
 
   const fetchData = async () => {
@@ -72,16 +74,10 @@ const RutaTable = ({ fetchDataAggregate }) => {
         error.response.data &&
         error.response.data.message
       ) {
-        message.error(
-          `Terjadi kesalahan: ${error.response.data.message}`,
-          5
-        );
+        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
       } else {
         // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(
-          `Terjadi kesalahan: ${error.message}`,
-          5
-        );
+        message.error(`Terjadi kesalahan: ${error.message}`, 5);
       }
     } finally {
       setLoading(false); // Akhiri loading
@@ -116,7 +112,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     // Fetch data from API
     fetchData();
@@ -207,6 +203,15 @@ const RutaTable = ({ fetchDataAggregate }) => {
     return filteredData.slice(start, end);
   }, [page, filteredData]);
 
+  const handleSatuanAddModal = () => {
+    onAddModalOpen();
+    setIsSatuan(true);
+  }
+  const handleKumpulanAddModal = () => {
+    onAddModalOpen();
+    setIsSatuan(false);
+  }
+
   return (
     <div className="p-4 bg-[#ffffffb4] rounded-xl">
       <div className="flex justify-between">
@@ -224,14 +229,39 @@ const RutaTable = ({ fetchDataAggregate }) => {
           onChange={handleSearchChange}
           className="mb-4 w-[50%]"
         />
-        <Button
-          color="success"
-          className="text-[14px] font-semibold text-white"
-          startContent={<FaPlus className="text-[20px] text-white" />}
-          onClick={onAddModalOpen} // Tambahkan onClick untuk membuka modal tambah
+        <div
+          className="relative"
+          onMouseLeave={() => setDropdownVisible(false)}
         >
-          Tambah
-        </Button>
+          <Button
+            color="success"
+            className="text-[14px] font-semibold text-white"
+            startContent={<FaPlus className="text-[20px] text-white" />}
+            onMouseEnter={() => setDropdownVisible(true)}
+          >
+            Tambah
+          </Button>
+          {dropdownVisible && (
+            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
+              <div className="py-1">
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                  onClick={handleSatuanAddModal}
+                >
+                  Satuan
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                  onClick={handleKumpulanAddModal}
+                >
+                  Kumpulan
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <Table
         aria-label="Example table with custom cells"
@@ -281,6 +311,8 @@ const RutaTable = ({ fetchDataAggregate }) => {
       <AddRutaModal
         isOpen={isAddModalOpen}
         onClose={onAddModalOpenChange}
+        isSatuan={isSatuan}
+        dataRuta={dataRuta}
         daftarRt={dataRt}
         daftarRw={daftarRw}
         daftarDusun={daftarDusun}

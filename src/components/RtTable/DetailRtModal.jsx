@@ -290,7 +290,7 @@ const RtDetail = ({ rt, geojson = null }) => {
               Total Pendapatan UMKM Sebulan Terakhir (Rp)
             </th>
             <td className="p-3 text-right border border-gray-300">
-              {rt.total_pendapatan_sebulan_terakhir.toLocaleString('id-ID')}
+              {rt.total_pendapatan_sebulan_terakhir.toLocaleString("id-ID")}
             </td>
           </tr>
           <tr className="bg-white/70">
@@ -298,7 +298,7 @@ const RtDetail = ({ rt, geojson = null }) => {
               Rata-rata Pendapatan UMKM Sebulan Terakhir (Rp)
             </th>
             <td className="p-3 text-right border border-gray-300">
-              {rt.rata2_pendapatan_sebulan_terakhir.toLocaleString('id-ID')}
+              {rt.rata2_pendapatan_sebulan_terakhir.toLocaleString("id-ID")}
             </td>
           </tr>
         </tbody>
@@ -323,8 +323,8 @@ const RtDetail = ({ rt, geojson = null }) => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             /> */}
             <TileLayer
-              url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
-              attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              attribution="Tiles © Esri"
             />
           </MapContainer>
         </div>

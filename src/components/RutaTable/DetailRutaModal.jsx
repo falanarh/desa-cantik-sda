@@ -18,21 +18,30 @@ const getKbliLabel = (key) => {
 };
 
 function formatNumber(num) {
-  if (typeof num !== 'number' || isNaN(num)) {
-      throw new Error('Input must be a valid number');
+  if (typeof num !== "number" || isNaN(num)) {
+    throw new Error("Input must be a valid number");
   }
 
   // Convert number to string
   let numStr = num.toFixed(2); // Ensure that the number has 2 decimal places if it's a float
 
   // Split integer part and decimal part
-  let [integerPart, decimalPart] = numStr.split('.');
+  let [integerPart, decimalPart] = numStr.split(".");
 
   // Use regular expression to add thousands separators
-  let formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  let formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   // Combine integer part and decimal part (if any)
-  return decimalPart ? `${formattedIntegerPart},${decimalPart}` : formattedIntegerPart;
+  return decimalPart
+    ? `${formattedIntegerPart},${decimalPart}`
+    : formattedIntegerPart;
+}
+
+function capitalizeFirstLetter(string) {
+  if (typeof string !== 'string' || string.length === 0) {
+    return '';
+  }
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 const RutaDetail = ({ ruta }) => {
@@ -70,6 +79,12 @@ const RutaDetail = ({ ruta }) => {
             </th>
             <td className="p-3 text-right border border-gray-300">{ruta.rw}</td>
           </tr>
+          <tr className="bg-white/70">
+            <th className="p-3 font-semibold text-left border border-gray-300">
+              Dusun
+            </th>
+            <td className="p-3 text-right border border-gray-300">{capitalizeFirstLetter(ruta.dusun)}</td>
+          </tr>
           {/* <tr className="bg-white/70">
               <th className="p-3 font-semibold text-left border border-gray-300">
                 Dusun
@@ -103,7 +118,9 @@ const RutaDetail = ({ ruta }) => {
               Pendapatan Sebulan Terakhir (Rp)
             </th>
             <td className="p-3 text-right border border-gray-300">
-              {ruta.pendapatanSebulanTerakhir? ruta.pendapatanSebulanTerakhir.toLocaleString('id-ID') : "-"}
+              {ruta.pendapatanSebulanTerakhir
+                ? ruta.pendapatanSebulanTerakhir.toLocaleString("id-ID")
+                : "-"}
             </td>
           </tr>
           <tr className="bg-white/70">
@@ -141,8 +158,8 @@ const RutaDetail = ({ ruta }) => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             /> */}
             <TileLayer
-              url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
-              attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              attribution="Tiles © Esri"
             />
             <Marker position={[ruta.latitude, ruta.longitude]}></Marker>
           </MapContainer>
@@ -165,6 +182,9 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
         body: "overflow-y-auto",
         wrapper: "overflow-y-hidden",
       }}
+      isDismissable={false}
+      isKeyboardDismissDisabled={true}
+      hideCloseButton={true}
     >
       <ModalContent className="font-inter text-pdarkblue">
         {() => (

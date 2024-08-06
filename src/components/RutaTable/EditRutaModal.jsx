@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -34,7 +35,7 @@ const isValidLongitude = (longitude) => {
 };
 
 const isValidPendapatanSebulanTerakhir = (pendapatanSebulanTerakhir) => {
-  return !isNaN(pendapatanSebulanTerakhir) && pendapatanSebulanTerakhir >= 0;
+  return pendapatanSebulanTerakhir >= 0;
 };
 
 const EditRutaModal = ({
@@ -51,19 +52,19 @@ const EditRutaModal = ({
 }) => {
   // Initialize state with default values
   const [editRutaData, setEditRutaData] = useState({});
+  const [oldRutaData, setOldRutaData] = useState({});
   const [loading, setLoading] = useState(false);
   const [mapPosition, setMapPosition] = useState([0, 0]); // Initialize map position
   const [selectedRt, setSelectedRt] = useState("");
   const [selectedRw, setSelectedRw] = useState("");
   const [selectedKlasifikasi, setSelectedKlasifikasi] = useState("");
   const [selectedJenisUmkm, setSelectedJenisUmkm] = useState("");
-  const [pendapatanSebulanTerakhirError, setPendapatanSebulanTerakhirError] = useState("");
-  const [latitudeError, setLatitudeError] = useState("");
-  const [longitudeError, setLongitudeError] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (ruta) {
       setEditRutaData(ruta);
+      setOldRutaData(ruta);
       setSelectedRt(ruta.kodeRt);
       setSelectedRw(ruta.rw);
       setSelectedKlasifikasi(ruta.klasifikasiKbli);
@@ -74,15 +75,16 @@ const EditRutaModal = ({
   // Update mapPosition when ruta changes
   useEffect(() => {
     if (ruta && ruta.latitude && ruta.longitude) {
-      if (latitudeError == "" && longitudeError == "") {
-        setMapPosition([ruta.latitude, ruta.longitude]);
-      }
+      setMapPosition([ruta.latitude, ruta.longitude]);
     }
   }, [ruta]);
 
   useEffect(() => {
-    if (editRutaData && editRutaData.latitude && editRutaData.longitude) {
-      if (latitudeError == "" && longitudeError == "") {
+    if (editRutaData.latitude && editRutaData.longitude) {
+      if (
+        (!errors.latitude && !errors.longitude) ||
+        (errors.latitude === "" && errors.longitude === "")
+      ) {
         setMapPosition([editRutaData.latitude, editRutaData.longitude]);
       }
     }
@@ -92,27 +94,77 @@ const EditRutaModal = ({
     const { name, value } = e.target;
     setEditRutaData((prevValues) => ({ ...prevValues, [name]: value }));
 
-    if (name === "pendapatanSebulanTerakhir") {
-      if (!isValidPendapatanSebulanTerakhir(value)) {
-        setPendapatanSebulanTerakhirError("Pendapatan sebulan terakhir harus positif.");
+    if (name === "namaKrt") {
+      if (!value) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Nama harus diisi.",
+        }));
       } else {
-        setPendapatanSebulanTerakhirError("");
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+      }
+    }
+
+    if (name === "pendapatanSebulanTerakhir") {
+      if (value === "") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Pendapatan sebulan terakhir harus diisi.",
+        }));
+      } else if (isNaN(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Pendapatan sebulan terakhir harus angka.",
+        }));
+      } else if (!isValidPendapatanSebulanTerakhir(parseFloat(value))) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Pendapatan sebulan terakhir harus positif.",
+        }));
+      } else {
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
       }
     }
 
     if (name === "latitude") {
-      if (!isValidLatitude(value)) {
-        setLatitudeError("Latitude harus antara -90 and 90.");
+      if (value === "") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Latitude harus diisi.",
+        }));
+      } else if (isNaN(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Latitude harus angka.",
+        }));
+      } else if (!isValidLatitude(parseFloat(value))) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Latitude harus antara -90 and 90.",
+        }));
       } else {
-        setLatitudeError("");
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
       }
     }
 
     if (name === "longitude") {
-      if (!isValidLongitude(value)) {
-        setLongitudeError("Longitude harus antara -180 and 180.");
+      if (value === "") {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Longitude harus diisi.",
+        }));
+      } else if (isNaN(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Longitude harus angka.",
+        }));
+      } else if (!isValidLongitude(parseFloat(value))) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Longitude harus antara -180 and 180.",
+        }));
       } else {
-        setLongitudeError("");
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
       }
     }
   };
@@ -127,8 +179,40 @@ const EditRutaModal = ({
     if (name === "jenisUmkm") setSelectedJenisUmkm(value);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Validasi setiap field
+    if (!editRutaData.namaKrt) newErrors.namaKrt = "Nama KRT wajib diisi.";
+    if (!editRutaData.kodeRt) newErrors.kodeRt = "RT wajib dipilih.";
+    if (!editRutaData.rw) newErrors.rw = "RW wajib dipilih.";
+    if (!editRutaData.dusun) newErrors.dusun = "Dusun wajib dipilih.";
+    if (!editRutaData.klasifikasiKbli)
+      newErrors.klasifikasiKbli = "Klasifikasi KBLI wajib dipilih.";
+    if (!editRutaData.jenisUmkm)
+      newErrors.jenisUmkm = "Jenis UMKM wajib dipilih.";
+    if (!editRutaData.pendapatanSebulanTerakhir)
+      newErrors.pendapatanSebulanTerakhir =
+        "Pendapatan sebulan terakhir wajib diisi.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleEditSave = () => {
-    if (latitudeError || longitudeError || pendapatanSebulanTerakhirError) {
+    if (!validateForm()) {
+      message.error(
+        "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
+        5
+      );
+      return;
+    }
+
+    if (
+      errors.latitude ||
+      errors.longitude ||
+      errors.pendapatanSebulanTerakhir
+    ) {
       message.error(
         "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
         5
@@ -148,7 +232,7 @@ const EditRutaModal = ({
       console.log(convertedData);
 
       updateData(convertedData);
-      
+
       setTimeout(() => {
         fetchDataAggregate();
       }, 1000);
@@ -177,6 +261,19 @@ const EditRutaModal = ({
     }
   };
 
+  const handleCloseButton = () => {
+    setErrors({});
+    setEditRutaData(oldRutaData);
+    onEditModalOpenChange(false);
+  };
+
+  function capitalizeFirstLetter(string) {
+    if (typeof string !== 'string' || string.length === 0) {
+      return '';
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   return (
     <Modal
       isOpen={isEditModalOpen}
@@ -189,6 +286,9 @@ const EditRutaModal = ({
         body: "overflow-y-auto",
         wrapper: "overflow-y-hidden",
       }}
+      isDismissable={false}
+      isKeyboardDismissDisabled={true}
+      hideCloseButton={true}
     >
       <ModalContent className="font-inter text-pdarkblue">
         {(onClose) => (
@@ -206,7 +306,7 @@ const EditRutaModal = ({
                   value={editRutaData?.kode ?? ""}
                   onChange={handleInputChange}
                   classNames={{ inputWrapper: "shadow" }}
-                  isDisabled
+                  readOnly
                 />
                 <Input
                   label="Nama KRT"
@@ -217,7 +317,19 @@ const EditRutaModal = ({
                   onChange={handleInputChange}
                   classNames={{ inputWrapper: "shadow" }}
                 />
-                <Select
+                {errors.namaKrt && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.namaKrt}
+                  </p>
+                )}
+                <Input
+                  label="RT"
+                  fullWidth
+                  value={"RT" + editRutaData?.rt ?? ""}
+                  classNames={{ inputWrapper: "shadow" }}
+                  readOnly
+                />
+                {/* <Select
                   size="md"
                   label="RT"
                   className="w-full"
@@ -232,8 +344,15 @@ const EditRutaModal = ({
                       {"RT" + item.rt}
                     </SelectItem>
                   ))}
-                </Select>
-                <Select
+                </Select> */}
+                <Input
+                  label="RW"
+                  fullWidth
+                  value={"RW" + editRutaData?.rw ?? ""}
+                  classNames={{ inputWrapper: "shadow" }}
+                  readOnly
+                />
+                {/* <Select
                   size="md"
                   label="RW"
                   className="w-full"
@@ -248,7 +367,14 @@ const EditRutaModal = ({
                       {"RW" + item.label}
                     </SelectItem>
                   ))}
-                </Select>
+                </Select> */}
+                <Input
+                  label="Dusun"
+                  fullWidth
+                  value={capitalizeFirstLetter(editRutaData?.dusun ?? "")}
+                  classNames={{ inputWrapper: "shadow" }}
+                  readOnly
+                />
                 <Select
                   size="md"
                   label="Klasifikasi UMKM"
@@ -290,9 +416,9 @@ const EditRutaModal = ({
                   onChange={handleInputChange}
                   classNames={{ inputWrapper: "shadow" }}
                 />
-                {pendapatanSebulanTerakhirError && (
+                {errors.pendapatanSebulanTerakhir && (
                   <p className="ml-3 text-sm text-red-600 font-inter">
-                    {pendapatanSebulanTerakhirError}
+                    {errors.pendapatanSebulanTerakhir}
                   </p>
                 )}
                 <Input
@@ -304,9 +430,9 @@ const EditRutaModal = ({
                   onChange={handleInputChange}
                   classNames={{ inputWrapper: "shadow" }}
                 />
-                {latitudeError && (
+                {errors.latitude && (
                   <p className="ml-3 text-sm text-red-600 font-inter">
-                    {latitudeError}
+                    {errors.latitude}
                   </p>
                 )}
                 <Input
@@ -318,9 +444,9 @@ const EditRutaModal = ({
                   onChange={handleInputChange}
                   classNames={{ inputWrapper: "shadow" }}
                 />
-                {longitudeError && (
+                {errors.longitude && (
                   <p className="ml-4 text-sm text-red-600 font-inter">
-                    {longitudeError}
+                    {errors.longitude}
                   </p>
                 )}
                 {editRutaData &&
@@ -338,12 +464,12 @@ const EditRutaModal = ({
                         className="border-4 rounded-lg border-slate-300"
                       >
                         {/* <TileLayer
-                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        /> */}
-                        <TileLayer
                           url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
                           attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+                        /> */}
+                        <TileLayer
+                          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                          attribution="Tiles © Esri"
                         />
                         <MapUpdater position={mapPosition} />
                         <Marker position={mapPosition}>
@@ -355,7 +481,11 @@ const EditRutaModal = ({
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
+              <Button
+                variant="light"
+                color="danger"
+                onPress={handleCloseButton}
+              >
                 Tutup
               </Button>
               <Button
