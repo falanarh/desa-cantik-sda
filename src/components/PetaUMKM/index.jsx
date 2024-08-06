@@ -351,7 +351,7 @@ export default function MapSection() {
   }
   const classifications = {
     all: "Seluruh Lapangan Usaha",
-    kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
+    // kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
     kbli_b: "B. Pertambangan dan Penggalian",
     kbli_c: "C. Industri Pengolahan",
     kbli_d: "D. Pengadaan Listrik dan Gas",
@@ -365,10 +365,10 @@ export default function MapSection() {
     kbli_l: "L. Real Estat",
     kbli_m: "M, N. Jasa Perusahaan",
     // kbli_n: "M, N. Jasa Perusahaan",
-    kbli_o: "O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",
+    // kbli_o: "O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",
     kbli_p: "P. Jasa Pendidikan",
     kbli_q: "Q. Jasa Kesehatan dan Kegiatan Sosial",
-    kbli_r: "R, S, T, U. Jasa Lainnya",
+    kbli_r: "R, S, dan Jasa Lainnya",
     // kbli_s: "R,S, T, U. Jasa Lainnya",
     // kbli_t: "R,S, T, U. Jasa Lainnya",
     // kbli_u: "R,S, T, U. Jasa Lainnya"
@@ -501,19 +501,43 @@ export default function MapSection() {
           className="absolute top-16 right-[10%] z-10 w-64 p-4 bg-[#101920] rounded-md shadow-md text-white"
         >
           <div>
-            <label className="block text-sm font-medium text-white">
-              Tahun
-            </label>
-            <select
-              id="tahun"
-              name="tahun"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="2024">2024</option>
-            </select>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-white">
+                Tahun
+              </label>
+              <select
+                id="tahun"
+                name="tahun"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              >
+                <option value="2024">2024</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-white">
+                RT
+              </label>
+              <select
+                id="rt"
+                name="rt"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                value={selectedRT}
+                onChange={(e) => setSelectedRT(e.target.value)}
+              >
+                <option value="desa">Semua RT</option>
+                {data.map((item, index) => (
+                  <option key={index} value={item.features[0].properties.rt}>
+                    {item.features[0].properties.rt}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
 
             <label className="block text-sm font-medium text-white mt-4">
-              Jenis Klasifikasi
+              Jenis Kategori
             </label>
             <select
               id="jenis-kbli"
@@ -530,20 +554,33 @@ export default function MapSection() {
             </select>
 
             <label className="block text-sm font-medium text-white mt-4">
-              RT
+              Tempat Usaha
             </label>
-            <select 
-              id="rt"
-              name="rt"
+            <select
+              id="tUsaha"
+              name="tUsaha"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              value={selectedRT}
-              onChange={(e) => setSelectedRT(e.target.value)}>
-              <option value="desa">Semua RT</option>
-              {data.map((item, index) => (
-                <option key={index} value={item.features[0].properties.rt}>
-                  {item.features[0].properties.rt}
-                </option>
-              ))}
+            >
+              <option value="all_tUsaha">Semua Tempat Usaha</option>
+              <option value="bangunan_khusus_usaha">Bangunan Khusus Usaha</option>
+              <option value="bangunan_campuran">Bangunan Campuran</option>
+              <option value="kaki_lima">Kaki Lima</option>
+              <option value="keliling">Keliling</option>
+              <option value="online">Didalam bangunan tempat tinggal/Online</option>
+            </select>
+
+            <label className="block text-sm font-medium text-white mt-4">
+              Status UMKM
+            </label>
+            <select
+              id="status"
+              name="status"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="bangunan_khusus_usaha">Semua UMKM</option>
+              <option value="bangunan_campuran">Mikro</option>
+              <option value="kaki_lima">Kecil</option>
+              <option value="keliling">Menengah</option>
             </select>
           </div>
         </Transition>
@@ -573,33 +610,33 @@ export default function MapSection() {
             <div className="text-4xl font-bold">
               <CountUp start={0} end={filteredData.features[0].properties.jml_umkm} duration={3} />
             </div>
-            <p className="text-xm">Pelaku Usaha Mikro</p>
+            <p className="text-xm">Pelaku UMKM</p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
             <div className="text-4xl font-bold">
               <CountUp start={0} end={((filteredData.features[0].properties.jml_umkm / filteredData.features[0].properties.jml_ruta) * 100).toFixed(2)} duration={3} decimals={2} />%
             </div>
-            <p className="text-xm">Rumah Tangga UMKM</p>
+            <p className="text-xm">Keluarga UMKM</p>
           </div>
-          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+          {/* <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
             <div className="text-2xl font-bold">
               Rp<CountUp start={0} end={filteredData.features[0].properties.total_pendapatan_sebulan_terakhir} duration={3/2} />
             </div>
             <p className="text-xm">Pendapatan UMKM</p>
-          </div>
+          </div> */}
           </>
         ) : (
             <>
           <div className="mb-4">
             <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
-              <span className="text-sm material-icons mr-1">location_on</span> Desa Simoanginangin
+              <span className="text-sm material-icons mr-1">location_on</span> Desa Simoangin Angin
               </p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
             <div className="text-4xl font-bold">
               <CountUp start={0} end={dataAgregat.jml_umkm} duration={3} />
             </div>
-            <p className="text-xm">Pelaku Usaha Mikro</p>
+            <p className="text-xm">Pelaku UMKM</p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
             <div className="text-4xl font-bold">
@@ -607,12 +644,12 @@ export default function MapSection() {
             </div>
             <p className="text-xm">Rumah Tangga UMKM</p>
           </div>
-          <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+          {/* <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
             <div className="text-2xl font-bold">
               Rp<CountUp start={0} end={dataAgregat.total_pendapatan_sebulan_terakhir} duration={3/2} />
             </div>
             <p className="text-xm">Pendapatan UMKM</p>
-          </div>
+          </div> */}
             </>
         )}
           {/* <div>
@@ -635,7 +672,7 @@ export default function MapSection() {
       }}>
       <div className="flex justify-center items-center">
       <button
-          className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${showRT ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
+          className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${showRT ? 'bg-[#BD0026] text-white' : 'bg-gray-200 text-gray-800'}`}
           onClick={toggleRT}
         >
           {showRT ? (
@@ -648,7 +685,7 @@ export default function MapSection() {
             </div>
           )}
         </button>
-        <div className="flex justify-center flex-col space-y-2 mr-4">
+        {/* <div className="flex justify-center flex-col space-y-2 mr-4">
         
         <button
           className={`py-1 px-2 rounded-md text-sm ${visualization === 'umkm' ? 'bg-[#BD0026] text-white' : 'bg-gray-200 text-gray-800'}`}
@@ -662,7 +699,7 @@ export default function MapSection() {
         >
           Peta Pendapatan
         </button>
-        </div>
+        </div> */}
         <div>
         {visualization === 'umkm' ? (
           <div className="w-[20vh]">
