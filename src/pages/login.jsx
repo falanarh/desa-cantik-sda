@@ -1,12 +1,12 @@
 import React from 'react';
 import LoginPage from "../components/Login";
-import Header from "../components/Login/header";
+import NavbarCustom from "../components/NavbarCustom";
 
 const Login = () => {
   return (
     <div>
       <>
-        <Header />
+        <NavbarCustom />
         <LoginPage />
       </>
     </div>

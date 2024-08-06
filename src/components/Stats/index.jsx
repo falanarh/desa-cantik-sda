@@ -1,9 +1,7 @@
-import React from "react";
-
 const StatCard = ({ num, label }) => (
   <div className="w-full max-w-[200px] h-[160px] px-10 py-5 rounded-xl flex flex-col justify-center items-center bg-gradient-to-b from-[#E63900] to-[#F3A853] text-white shadow-xl">
     <b className="text-3xl">{num}</b>
-    <p className="font-medium font-assistant text-2xl mt-2">{label}</p>
+    <p className="font-medium font-assistant text-2xl text-white mt-2">{label}</p>
   </div>
 );
 

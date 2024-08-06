@@ -100,10 +100,10 @@ export default function NavbarCustom() {
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 bg-[#e9e8e8] shadow-lg rounded-md mt-3 z-10">
+            <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold hover:bg-base hover:text-[#F7BA74] hover:rounded-md"
+                className="block px-4 py-2 font-assistant font-semibold hover:bg-[#e9e8e8] hover:text-[#F7BA74] hover:rounded-md"
                 style={{ color: '#D17410' }}
                 onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
@@ -111,10 +111,10 @@ export default function NavbarCustom() {
               >
                 Simoanginangin
                 {isNestedDropdownOpen && (
-                  <div className="absolute top-0 left-full bg-white shadow-lg rounded-md mt-0 z-10">
+                  <div className="absolute top-0 left-full bg-neutral-50 shadow-lg rounded-md mt-0 z-10">
                     <Link
                       href="#"
-                      className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-100 hover:text-[#F7BA74] hover:rounded-md"
+                      className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-00 hover:text-[#F7BA74] hover:rounded-md"
                       style={{ color: '#D17410' }}
                       onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
                     >
@@ -146,7 +146,7 @@ export default function NavbarCustom() {
         </NavbarItem>
         <NavbarItem className="hidden lg:flex px-5">
           <Link
-            href="#"
+            href="/login"
             className="font-bold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
           >
             Login
@@ -217,7 +217,7 @@ export default function NavbarCustom() {
         </NavbarMenuItem>
         <NavbarMenuItem>
           <Link
-            href="#"
+            href="/login"
             className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
           >
             Login
