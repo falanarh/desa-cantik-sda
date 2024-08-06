@@ -1,0 +1,72 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 100vh;
+    background-color: #c46024;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #ecf0f1;
+  }
+  
+  .logo {
+    margin-bottom: 20px;
+  }
+  
+  .navMenu {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .button {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  
+  .icon {
+    margin-right: 20px;
+    font-size: 20px;
+  }
+  
+  .text {
+    font-size: 18px;
+    font-weight: 400;
+  }
+  
+  .buttonHover {
+    background-color: #f08619;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .activeMenu {
+    background-color: #f2a250;
+  }
+  
+  .tooltip {
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .button:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    background-color: #fb6d17;
+  }
+  

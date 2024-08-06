@@ -8,6 +8,8 @@ import Login from "./pages/login";
 import { NextUIProvider } from "@nextui-org/system";
 import PetaUMKMSimonaginagin from "./pages/petaUMKMSimoanginagin";
 import ProtectedRoute from "./hooks/ProtectedRoute";
+import Admin from "./pages/admin";
+import BuletinAd from "./pages/buletinAdmin";
 
 function App() {
   const navigate = useNavigate();
@@ -32,6 +34,8 @@ function App() {
           path="/peta-umkm-simoanginangin"
           element={<PetaUMKMSimonaginagin />}
         />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/buletin" element={<BuletinAd />} />
       </Routes>
     </NextUIProvider>
   );

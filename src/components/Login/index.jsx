@@ -21,7 +21,7 @@ const BottomEllipse = () => {
 
 const Login = () => {
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-[#CAF4FF]">
+    <div className="relative flex items-center justify-center min-h-screen bg-gray-200">
       <TopEllipse />
       <BottomEllipse />
       <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-sm p-8 m-5 bg-white shadow-md rounded-xl md:max-w-md">
