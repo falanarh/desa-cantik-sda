@@ -35,14 +35,14 @@ const NextArrow = (props) => {
 export default function ListDesa() {
   const list = [
     {
-      title: "Simoketawang",
-      img: "/pict/simoketawang.png",
-      desc: "Simoketawang adalah desa di Kecamatan Wonoayu, Kabupaten Sidoarjo, dengan luas 96,53 hektar."
-    },
-    {
       title: "Simoanginangin",
       img: "/pict/simoanginagin.jpg",
       desc: "Simoanginangin adalah desa di Kecamatan Wonoayu, Kabupaten Sidoarjo, dengan luas 42 hektar."
+    },
+    {
+      title: "Simoketawang",
+      img: "/pict/simoketawang.png",
+      desc: "Simoketawang adalah desa di Kecamatan Wonoayu, Kabupaten Sidoarjo, dengan luas 96,53 hektar."
     },
     {
       title: "Grogol",
