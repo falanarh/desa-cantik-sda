@@ -20,13 +20,12 @@ export default function WelcomeBanner() {
 
     typewriter1
       .typeString("Selamat Datang di Desa Cantik Kabupaten Sidoarjo")
-      .pauseFor(3000)
+      .pauseFor(2500)
       .start()
       .callFunction(() => {
         typewriter2
           .typeString("Badan Pusat Statistik (BPS) Kabupaten Sidoarjo")
           .pauseFor(2500)
-          .deleteAll()
           .start();
       });
 
@@ -62,7 +61,7 @@ export default function WelcomeBanner() {
       <div
         className="absolute inset-0"
         style={{
-          background: 'rgba(255, 201, 146, 0.3)', // Adjusted transparency
+          background: 'rgba(255, 201, 146, 0.4)', // Adjusted transparency
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -76,7 +75,7 @@ export default function WelcomeBanner() {
         }}
       >
         <div ref={typewriterRef1}></div>
-        <div ref={typewriterRef2} style={{ marginTop: '0.7rem', fontFamily: "'Assistant', sans-serif", fontSize: "1.5rem", fontWeight: "lighter", textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", textAlign: "center", color: "white"}}></div>
+        <div ref={typewriterRef2} style={{ marginTop: '0.7rem', fontFamily: "'Assistant', sans-serif", fontSize: "1.5rem", fontWeight: "normal", textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", textAlign: "center", color: "white"}}></div>
       </div>
     </div>
   );
