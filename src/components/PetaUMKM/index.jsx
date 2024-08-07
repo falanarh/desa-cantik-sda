@@ -24,52 +24,52 @@ const ExpandableList = () => {
           <td className="items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
             55
           </td>
-          <td className="text-sm ml-2 mr-0 text-left w-100">Pertanian, Kehutanan, Perikanan</td>
+          <td className="ml-2 mr-0 text-sm text-left w-100">Pertanian, Kehutanan, Perikanan</td>
         </tr>
         <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
           <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
             55
           </td>
-          <td className="text-sm ml-2 text-left">Pertambangan dan Penggalian</td>
+          <td className="ml-2 text-sm text-left">Pertambangan dan Penggalian</td>
         </tr>
         <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
           <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
             55
           </td>
-          <td className="text-sm ml-2 text-left">Industri Pengolahan</td>
+          <td className="ml-2 text-sm text-left">Industri Pengolahan</td>
         </tr>
         <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
           <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
             55
           </td>
-          <td className="text-sm ml-2 text-left">Pengadaan Listrik dan Gas</td>
+          <td className="ml-2 text-sm text-left">Pengadaan Listrik dan Gas</td>
         </tr>
         <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
           <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
             55
           </td>
-          <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+          <td className="ml-2 text-sm text-left">Pertanian, Kehutanan, Perikanan</td>
         </tr>
         {expanded && (
           <>
             <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-              <td className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+              <td className="flex items-center justify-center w-8 h-8 p-2 font-bold text-white bg-blue-600 rounded-xl">
                 55
               </td>
-              <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+              <td className="ml-2 text-sm text-left">Pertanian, Kehutanan, Perikanan</td>
             </tr>
             <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-              <td className="flex items-center justify-center font-bold w-8 h-8 bg-blue-600 text-white rounded-xl p-2">
+              <td className="flex items-center justify-center w-8 h-8 p-2 font-bold text-white bg-blue-600 rounded-xl">
                 55
               </td>
-              <td className="text-sm ml-2 text-left">Pertanian, Kehutanan, Perikanan</td>
+              <td className="ml-2 text-sm text-left">Pertanian, Kehutanan, Perikanan</td>
             </tr>
             {/* Add more items as needed */}
           </>
         )}
       </tbody>
     </table>
-    <button onClick={handleToggle} className="text-gray-400 text-right items-right text-sm mt-4">
+    <button onClick={handleToggle} className="mt-4 text-sm text-right text-gray-400 items-right">
       {expanded ? 'Kembali' : 'Selengkapnya...'}
     </button>
   </div>
@@ -86,7 +86,7 @@ export default function MapSection() {
   const [dataRumahTangga, setDataRumahTangga] = useState([]);
   const [selectedRT, setSelectedRT] = useState('desa');
   const [loading, setLoading] = useState(false);
-  const [filteredData, setFilteredData] = useState(data[0]);
+  const [filteredData, setFilteredData] = useState(data ? (data.length > 0 ? data[0] : {}) : {});
   const [chartData, setChartData] = useState([]);
   const [showRT, setShowRT] = useState(true);
   const [showIndividu, setIndividu] = useState(true);
@@ -478,7 +478,7 @@ export default function MapSection() {
           className="absolute top-4 right-[10%] z-10 px-11 py-2 bg-[#AF282F] text-white rounded-xl shadow-md flex items-center"
           onClick={() => setIsFilterOpen(!isFilterOpen)}
         >
-          <span className="material-icons mr-2">filter_list</span>
+          <span className="mr-2 material-icons">filter_list</span>
           Filter
         </button>
 
@@ -486,7 +486,7 @@ export default function MapSection() {
           className="absolute top-4 left-[10%] z-10 px-12 py-2 bg-[#AF282F] text-white rounded-xl shadow-md flex items-center"
           onClick={() => setIsVisualizationOpen(!isVisualizationOpen)}
         >
-          <span className="material-icons mr-2">analytics</span>
+          <span className="mr-2 material-icons">analytics</span>
           Visualisasi
         </button>
 
@@ -536,7 +536,7 @@ export default function MapSection() {
           </div>
 
 
-            <label className="block text-sm font-medium text-white mt-4">
+            <label className="block mt-4 text-sm font-medium text-white">
               Jenis Kategori
             </label>
             <select
@@ -553,7 +553,7 @@ export default function MapSection() {
               ))}
             </select>
 
-            <label className="block text-sm font-medium text-white mt-4">
+            <label className="block mt-4 text-sm font-medium text-white">
               Tempat Usaha
             </label>
             <select
@@ -569,7 +569,7 @@ export default function MapSection() {
               <option value="online">Didalam bangunan tempat tinggal/Online</option>
             </select>
 
-            <label className="block text-sm font-medium text-white mt-4">
+            <label className="block mt-4 text-sm font-medium text-white">
               Status UMKM
             </label>
             <select
@@ -603,7 +603,7 @@ export default function MapSection() {
           <>
           <div className="mb-4">
             <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
-              <span className="text-sm material-icons mr-1">location_on</span> RT {filteredData.features[0].properties.rt} RW {filteredData.features[0].properties.rw} Dsn {filteredData.features[0].properties.dusun}
+              <span className="mr-1 text-sm material-icons">location_on</span> RT {filteredData.features[0].properties.rt} RW {filteredData.features[0].properties.rw} Dsn {filteredData.features[0].properties.dusun}
             </p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
@@ -629,7 +629,7 @@ export default function MapSection() {
             <>
           <div className="mb-4">
             <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
-              <span className="text-sm material-icons mr-1">location_on</span> Desa Simoangin Angin
+              <span className="mr-1 text-sm material-icons">location_on</span> Desa Simoangin Angin
               </p>
           </div>
           <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
@@ -653,10 +653,10 @@ export default function MapSection() {
             </>
         )}
           {/* <div>
-            <p className="mb-2 text-left font-xl font-semibold">Sebaran Lapangan Usaha UMKM</p>
+            <p className="mb-2 font-semibold text-left font-xl">Sebaran Lapangan Usaha UMKM</p>
             <ExpandableList />
           </div> */}
-          {/* <div className="p-4 rounded-md mb-4">
+          {/* <div className="p-4 mb-4 rounded-md">
             <DonutChart data={chartData} />
           </div> */}
         </>
@@ -670,22 +670,22 @@ export default function MapSection() {
         backgroundColor: 'rgba(255, 255, 255, 0.7)', // Semi-transparent background
         backdropFilter: 'blur(12px)', // Blur effect
       }}>
-      <div className="flex justify-center items-center">
+      <div className="flex items-center justify-center">
       <button
           className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${showRT ? 'bg-[#BD0026] text-white' : 'bg-gray-200 text-gray-800'}`}
           onClick={toggleRT}
         >
           {showRT ? (
             <div className="flex items-center">
-              <span className="material-icons text-xl mr-2">visibility_off</span> RT
+              <span className="mr-2 text-xl material-icons">visibility_off</span> RT
             </div>
           ) : (
             <div className="flex items-center">
-              <span className="material-icons text-xl mr-2">visibility</span> RT
+              <span className="mr-2 text-xl material-icons">visibility</span> RT
             </div>
           )}
         </button>
-        {/* <div className="flex justify-center flex-col space-y-2 mr-4">
+        {/* <div className="flex flex-col justify-center mr-4 space-y-2">
         
         <button
           className={`py-1 px-2 rounded-md text-sm ${visualization === 'umkm' ? 'bg-[#BD0026] text-white' : 'bg-gray-200 text-gray-800'}`}
@@ -703,8 +703,8 @@ export default function MapSection() {
         <div>
         {visualization === 'umkm' ? (
           <div className="w-[20vh]">
-            <div className="font-semibold text-sm mb-1 text-right">Jumlah UMKM</div>
-            <div className="relative h-6  rounded-full mb-2">
+            <div className="mb-1 text-sm font-semibold text-right">Jumlah UMKM</div>
+            <div className="relative h-6 mb-2 rounded-full">
               <div
                 className="absolute inset-0"
                 style={{
@@ -713,15 +713,15 @@ export default function MapSection() {
                 }}
               ></div>
             </div>
-            <div className="flex justify-between mt-1 px-2">
+            <div className="flex justify-between px-2 mt-1">
               <span className="text-xs">0</span>
               <span className="text-xs">100+</span>
             </div>
           </div>
         ) : (
           <div className="w-[20vh]">
-            <div className="font-semibold text-sm mb-1 text-right">Jumlah Pendapatan</div>
-            <div className="relative h-6 rounded-full mb-2">
+            <div className="mb-1 text-sm font-semibold text-right">Jumlah Pendapatan</div>
+            <div className="relative h-6 mb-2 rounded-full">
               <div
                 className="absolute inset-0"
                 style={{
@@ -730,7 +730,7 @@ export default function MapSection() {
                 }}
               ></div>
             </div>
-            <div className="flex justify-between mt-1 px-2">
+            <div className="flex justify-between px-2 mt-1">
               <span className="text-xs">0</span>
               <span className="text-xs">100 Juta+</span>
             </div>
