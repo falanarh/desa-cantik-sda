@@ -67,7 +67,7 @@ export default function WelcomeBanner() {
           justifyContent: 'center',
           alignItems: 'center',
           color: "white",
-          fontSize: "2rem",
+          fontSize: "2.25rem",
           fontWeight: "bold",
           fontFamily: "'Inter', sans-serif",
           textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
@@ -75,7 +75,7 @@ export default function WelcomeBanner() {
         }}
       >
         <div ref={typewriterRef1}></div>
-        <div ref={typewriterRef2} style={{ marginTop: '0.7rem', fontFamily: "'Assistant', sans-serif", fontSize: "1.5rem", fontWeight: "normal", textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", textAlign: "center", color: "white"}}></div>
+        <div ref={typewriterRef2} style={{ marginTop: '0.7rem', fontFamily: "'Assistant', sans-serif", fontSize: "1.75rem", fontWeight: "normal", textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", textAlign: "center", color: "white"}}></div>
       </div>
     </div>
   );
