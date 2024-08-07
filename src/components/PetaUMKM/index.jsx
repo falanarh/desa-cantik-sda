@@ -104,6 +104,7 @@ export default function MapSection() {
   const [mapInstance, setMapInstance] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisualizationOpen, setIsVisualizationOpen] = useState(true);
+  const [isFetched, setIsFetched] = useState(false);
   const [data, setData] = useState([]);
   const [dataAgregat, setDataAgregat] = useState([]);
   const [dataRumahTangga, setDataRumahTangga] = useState([]);
@@ -188,12 +189,24 @@ export default function MapSection() {
     }
   };
 
+  // useEffect(() => {
+  //   // Fetch data from API
+  //   fetchData();
+  //   fetchDataAgregat();
+  //   fetchDataRumahTangga();
+  // }, []);
+
   useEffect(() => {
-    // Fetch data from API
-    fetchData();
-    fetchDataAgregat();
-    fetchDataRumahTangga();
-  }, []);
+    if (!isFetched) {
+      fetchData().then(() => {
+        fetchDataAgregat().then(() => {
+          fetchDataRumahTangga().then(() => {
+            setIsFetched(true); // Set isFetched to true after all data is fetched
+          });
+        });
+      });
+    }
+  }, [isFetched]);
 
   // Function to determine style based on feature properties
   const getStyle = (data) => {
