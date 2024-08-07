@@ -8,6 +8,7 @@ import { DonutChart } from './Doughnut.jsx';
 import api from '../../utils/api.js';
 import { message } from 'antd'; 
 import CountUp from 'react-countup';
+import { BeatLoader } from 'react-spinners';
 
 const ExpandableList = () => {
   const [expanded, setExpanded] = useState(false);
@@ -382,96 +383,102 @@ export default function MapSection() {
   return (
     <div className="relative w-full h-[89vh] font-sfProDisplay">
       <div className="absolute top-0 left-0 z-0 w-full h-full">
-      {data.length > 0 && (
-        <MapContainer
-          center={[-7.4388978,112.59942]} // lokasi desa simoanginangin
-          zoom={15}
-          scrollWheelZoom={true}
-          className="w-full h-full"
-          touchZoom={true}
-          whenCreated={setMapInstance}
-        >
-        <LayersControl position="bottomleft">
-          <LayersControl.BaseLayer checked name="Google Sattelite">
-          <TileLayer
-            url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
-            attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
-          />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="Google Street">
-            <TileLayer
-              url="https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
-              attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
-            />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OpenStreetMap">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-          </LayersControl.BaseLayer>
-        </LayersControl>
-        {data.map((geoJsonData, index) => (
-          <>
-            <GeoJSON
-              key={index}
-              data={geoJsonData}
-              style={visualization === 'umkm' ? getStyle(geoJsonData) : getStyleIncome(geoJsonData)}
-              onEachFeature={onEachFeature}
-            />
-            {showRT && (
-              <Marker
-                key={`marker-${geoJsonData.features[0].properties.kode}`}
-                position={calculateCentroid(geoJsonData.features[0].geometry)}
-                icon={divIcon({
-                  className: 'custom-label',
-                  html: `<div class="w-[75px] text-white text-[0.8rem] font-bold absolute p-2"
-                    style="
-                      -webkit-text-stroke-width: 0.1px;
-                      -webkit-text-stroke-color: black;
-                      text-shadow: 1px 1px #000;
-                    ">RT ${geoJsonData.features[0].properties.rt || 'No label'}</div>`
-                })}
+        {data ? (
+          data.length > 0 && (
+            <MapContainer
+              center={[-7.4388978,112.59942]} // lokasi desa simoanginangin
+              zoom={15}
+              scrollWheelZoom={true}
+              className="w-full h-full"
+              touchZoom={true}
+              whenCreated={setMapInstance}
+            >
+            <LayersControl position="bottomleft">
+              <LayersControl.BaseLayer checked name="Google Sattelite">
+              <TileLayer
+                url="https://mt.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
               />
-            )}
-            {showIndividu && dataRumahTangga
-              .filter(item => selectedClassification === 'all' || item.klasifikasiKbli === selectedClassification)
-              .map((item) => (
-                <Marker
-                  key={`marker-${item._id}`}
-                  position={[parseFloat(item.latitude), parseFloat(item.longitude)]}
-                  icon={divIcon({
-                    className: 'custom-label',
-                    html: `<div style="
-                      border-radius: 50%;
-                      width: 24px;
-                      height: 24px;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                    ">
-                      <span class="material-icons" style="color:#AF282F; font-size=2rem"> location_on </span>
-                    </div>`
-                  })}
-                >
-                  <Popup>
-                    <div>
-                      <strong>Informasi UMKM:</strong><br />
-                      RT: {item.rt}<br />
-                      RW: {item.rw}<br />
-                      Dusun: {item.dusun}<br />
-                      Klasifikasi: {classifications[item.klasifikasiKbli]}<br/>
-                      Jenis UMKM: {capitalizeWords(item.jenisUmkm)}<br/>
-                      Pendapatan per Bulan: Rp{item.pendapatanSebulanTerakhir}<br />
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
-
-          </>
-        ))}
-        </MapContainer>
-      )}
+              </LayersControl.BaseLayer>
+              <LayersControl.BaseLayer name="Google Street">
+                <TileLayer
+                  url="https://mt.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+                  attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+                />
+              </LayersControl.BaseLayer>
+              <LayersControl.BaseLayer name="OpenStreetMap">
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+              </LayersControl.BaseLayer>
+            </LayersControl>
+            {data.map((geoJsonData, index) => (
+              <>
+                <GeoJSON
+                  key={index}
+                  data={geoJsonData}
+                  style={visualization === 'umkm' ? getStyle(geoJsonData) : getStyleIncome(geoJsonData)}
+                  onEachFeature={onEachFeature}
+                />
+                {showRT && (
+                  <Marker
+                    key={`marker-${geoJsonData.features[0].properties.kode}`}
+                    position={calculateCentroid(geoJsonData.features[0].geometry)}
+                    icon={divIcon({
+                      className: 'custom-label',
+                      html: `<div class="w-[75px] text-white text-[0.8rem] font-bold absolute p-2"
+                        style="
+                          -webkit-text-stroke-width: 0.1px;
+                          -webkit-text-stroke-color: black;
+                          text-shadow: 1px 1px #000;
+                        ">RT ${geoJsonData.features[0].properties.rt || 'No label'}</div>`
+                    })}
+                  />
+                )}
+                {showIndividu && dataRumahTangga
+                  .filter(item => selectedClassification === 'all' || item.klasifikasiKbli === selectedClassification)
+                  .map((item) => (
+                    <Marker
+                      key={`marker-${item._id}`}
+                      position={[parseFloat(item.latitude), parseFloat(item.longitude)]}
+                      icon={divIcon({
+                        className: 'custom-label',
+                        html: `<div style="
+                          border-radius: 50%;
+                          width: 24px;
+                          height: 24px;
+                          display: flex;
+                          justify-content: center;
+                          align-items: center;
+                        ">
+                          <span class="material-icons" style="color:#AF282F; font-size=2rem"> location_on </span>
+                        </div>`
+                      })}
+                    >
+                      <Popup>
+                        <div>
+                          <strong>Informasi UMKM:</strong><br />
+                          RT: {item.rt}<br />
+                          RW: {item.rw}<br />
+                          Dusun: {item.dusun}<br />
+                          Klasifikasi: {classifications[item.klasifikasiKbli]}<br/>
+                          Jenis UMKM: {capitalizeWords(item.jenisUmkm)}<br/>
+                          Pendapatan per Bulan: Rp{item.pendapatanSebulanTerakhir}<br />
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ))}
+    
+              </>
+            ))}
+            </MapContainer>
+          )
+        ) : (
+          <div className="flex items-center justify-center w-full h-full">
+            <BeatLoader />
+          </div>
+        )}
       </div>
 
       <div className="mx-[10%] font-sfProDisplay">
