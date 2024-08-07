@@ -344,17 +344,34 @@ export default function MapSection() {
     });
   };
 
+  // useEffect(() => {
+  //   if (selectedRT === "desa") {
+  //     setFilteredData(data[0]);
+  //   } else {
+  //     const filtered = data.find(
+  //       (item) => item.features[0].properties.rt === selectedRT
+  //     );
+  //     setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
+  //   }
+  // }, [selectedRT, data]);
+
   useEffect(() => {
-    if (selectedRT === "desa") {
-      setFilteredData(data[0]);
+    if (data && data.length > 0) { // Periksa apakah data ada dan tidak kosong
+      if (selectedRT === "desa") {
+        setFilteredData(data[0]);
+      } else {
+        const filtered = data.find(
+          (item) => item.features[0].properties.rt === selectedRT
+        );
+        setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
+      }
     } else {
-      const filtered = data.find(
-        (item) => item.features[0].properties.rt === selectedRT
-      );
-      setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
+      // Jika data tidak ada atau kosong, Anda bisa mengatur filteredData ke nilai default
+      setFilteredData(null); // Atau data default lainnya jika diperlukan
     }
   }, [selectedRT, data]);
-
+  
+  
   useEffect(() => {
     if (filteredData) {
       const chartData = {
