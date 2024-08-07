@@ -317,8 +317,9 @@ export default function MapSection() {
   useEffect(() => {
     if (filteredData) {
       const chartData = {
-        name: filteredData.features[0].properties.rt,
-        value: filteredData.features[0].properties.jml_umkm,
+        name: filteredData ? (filteredData.features ? ( filteredData.features.length > 0 ? (filteredData.features[0].properties.rt) : '') : '') : '',
+        value: filteredData ? (filteredData.features ? ( filteredData.features.length > 0 ? (filteredData.features[0].properties.jml_umkm) : 0) : 0) : 0,
+        // value: filteredData.features[0].properties.jml_umkm,
       };
       setChartData([chartData]);
     }
