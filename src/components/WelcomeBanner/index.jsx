@@ -23,7 +23,7 @@ export default function WelcomeBanner() {
       .start()
       .callFunction(() => {
         typewriter2
-          .typeString("Badan Pusat Statistik (BPS) Kabupaten Sidoarjo")
+          .typeString("Badan Pusat Statistik Kabupaten Sidoarjo")
           .pauseFor(2500)
           .start();
       });
@@ -38,7 +38,7 @@ export default function WelcomeBanner() {
     <div
       className="welcome-banner"
       style={{
-        position: 'relative',
+        // position: 'relative',
         overflow: 'hidden',
         width: '100%',
         height: '100vh',
@@ -49,7 +49,7 @@ export default function WelcomeBanner() {
         alt="Sidoarjo"
         style={{
           width: "100%",
-          height: "100%",
+          height: "100vh",
           objectFit: "cover",
           position: "absolute",
           top: 0,
@@ -58,7 +58,7 @@ export default function WelcomeBanner() {
         }}
       />
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 flex items-center justify-center -top-[64px]"
         style={{
           background: 'rgba(255, 201, 146, 0.4)', // Adjusted transparency
           display: 'flex',
@@ -74,7 +74,7 @@ export default function WelcomeBanner() {
         <div
           ref={typewriterRef1}
           style={{
-            marginTop: '9.5rem', // Move the first typewriter effect up
+            // marginTop: '15%', // Move the first typewriter effect up
             fontFamily: "Inter",
             fontSize: "3rem",
             fontWeight: "bold",

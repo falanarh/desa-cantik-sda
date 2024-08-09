@@ -50,7 +50,7 @@ export default function NavbarCustom() {
   };
 
   return (
-    <Navbar className="bg-base sticky top-0 z-50">
+    <Navbar className="sticky top-0 z-50 bg-base">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -80,7 +80,7 @@ export default function NavbarCustom() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4 items-center">
+      <NavbarContent className="items-center hidden gap-4 sm:flex">
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/"
@@ -90,7 +90,7 @@ export default function NavbarCustom() {
             Beranda
           </Link>
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex relative">
+        <NavbarItem className="relative hidden lg:flex">
           <Link
             href="#"
             className={getMenuClasses("/peta-tematik")}
@@ -100,7 +100,7 @@ export default function NavbarCustom() {
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
+            <div className="absolute left-0 z-10 mt-3 rounded-md shadow-lg top-full bg-base">
               <Link
                 href="#"
                 className="block px-4 py-2 font-assistant font-semibold hover:bg-[#e9e8e8] hover:text-[#F7BA74] hover:rounded-md"
@@ -111,7 +111,7 @@ export default function NavbarCustom() {
               >
                 Simoanginangin
                 {isNestedDropdownOpen && (
-                  <div className="absolute top-0 left-full bg-neutral-50 shadow-lg rounded-md mt-0 z-10">
+                  <div className="absolute top-0 z-10 mt-0 rounded-md shadow-lg left-full bg-neutral-50">
                     <Link
                       href="#"
                       className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-00 hover:text-[#F7BA74] hover:rounded-md"
@@ -144,10 +144,10 @@ export default function NavbarCustom() {
             Tentang Kami
           </Link>
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex px-5">
+        <NavbarItem className="hidden px-5 lg:flex">
           <Link
             href="/login"
-            className="font-bold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
+            className="px-4 py-2 font-bold text-white transition-colors duration-100 rounded-lg font-assistant bg-pdarkblue hover:bg-sky-700 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>
@@ -177,7 +177,7 @@ export default function NavbarCustom() {
             <div className="mt-3">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold text-porange hover:bg-base hover:text-orange-500"
+                className="block px-4 py-2 font-semibold font-assistant text-porange hover:bg-base hover:text-orange-500"
                 onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
               >
@@ -218,7 +218,7 @@ export default function NavbarCustom() {
         <NavbarMenuItem>
           <Link
             href="/login"
-            className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
+            className="px-4 py-2 font-bold text-white transition-colors duration-100 rounded-lg bg-pdarkblue hover:bg-sky-700 hover:outline-0 hover:outline-white"
           >
             Login
           </Link>
