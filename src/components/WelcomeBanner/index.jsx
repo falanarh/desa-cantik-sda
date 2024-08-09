@@ -9,7 +9,6 @@ export default function WelcomeBanner() {
     const typewriter1 = new Typewriter(typewriterRef1.current, {
       loop: false,
       delay: 75,
-      cursor: null,
     });
 
     const typewriter2 = new Typewriter(typewriterRef2.current, {
@@ -19,7 +18,7 @@ export default function WelcomeBanner() {
     });
 
     typewriter1
-      .typeString("Selamat Datang di Desa Cantik Kabupaten Sidoarjo")
+      .typeString("Desa Cantik Kabupaten Sidoarjo")
       .pauseFor(2500)
       .start()
       .callFunction(() => {
@@ -64,18 +63,37 @@ export default function WelcomeBanner() {
           background: 'rgba(255, 201, 146, 0.4)', // Adjusted transparency
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
           color: "white",
-          fontSize: "2.25rem",
+          fontSize: "3rem",
           fontWeight: "bold",
           fontFamily: "'Inter', sans-serif",
           textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
           textAlign: "center",
         }}
       >
-        <div ref={typewriterRef1}></div>
-        <div ref={typewriterRef2} style={{ marginTop: '0.7rem', fontFamily: "'Assistant', sans-serif", fontSize: "1.75rem", fontWeight: "normal", textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", textAlign: "center", color: "white"}}></div>
+        <div
+          ref={typewriterRef1}
+          style={{
+            marginTop: '9.5rem', // Move the first typewriter effect up
+            fontFamily: "Inter",
+            fontSize: "3rem",
+            fontWeight: "bold",
+            textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
+            textAlign: "center",
+            color: "white"
+          }}
+        ></div>
+        <div
+          ref={typewriterRef2}
+          style={{
+            fontFamily: "Assistant",
+            fontSize: "2rem",
+            fontWeight: "600",
+            textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
+            textAlign: "center",
+            color: "white"
+          }}
+        ></div>
       </div>
     </div>
   );
