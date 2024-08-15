@@ -30,9 +30,9 @@ export default function NavbarCustom() {
 
   const handleMenuClick = (route) => {
     setActiveMenu(route);
-    setIsMenuOpen(false); // Close the menu after clicking
-    setIsDropdownOpen(false); // Close dropdowns if open
-    setIsNestedDropdownOpen(false); // Close nested dropdowns if open
+    setIsMenuOpen(false);
+    setIsDropdownOpen(false);
+    setIsNestedDropdownOpen(false);
     navigate(route);
   };
 
@@ -45,12 +45,12 @@ export default function NavbarCustom() {
 
   const getMenuClasses = (menu) => {
     return activeMenu === menu
-      ? "font-bold font-inter text-[14px] text-white bg-porange py-2 px-4 rounded-full transition-colors duration-800"
-      : "font-bold font-inter text-[14px] text-porange transition-colors duration-200";
+      ? "font-bold font-inter text-sm text-white bg-porange py-2 px-4 rounded-full transition-colors duration-300"
+      : "font-bold font-inter text-sm text-porange transition-colors duration-200";
   };
 
   return (
-    <Navbar className="bg-base sticky top-0 z-50">
+    <Navbar className="bg-base sticky top-0 z-50 shadow-md">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -74,7 +74,7 @@ export default function NavbarCustom() {
             height={48}
             className="mr-2"
           />
-          <p className="font-bold font-inter italic text-[14px] sm:text-[18px] text-pdarkblue ml-3 block xs:inline-block">
+          <p className="font-bold font-inter italic text-[14px] sm:text-[18px] text-pdarkblue ml-3">
             DESA CANTIK <br /> KABUPATEN SIDOARJO
           </p>
         </NavbarBrand>
@@ -100,29 +100,27 @@ export default function NavbarCustom() {
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 bg-base shadow-lg rounded-md mt-3 z-10">
-              <Link
+            <div className="absolute top-full left-0 bg-base border border-gray-300 shadow-xl rounded-lg mt-4 z-10">
+              <div
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold hover:bg-[#e9e8e8] hover:text-[#F7BA74] hover:rounded-md"
-                style={{ color: '#D17410' }}
-                onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
+                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md"
+                // onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
                 onMouseLeave={() => setIsNestedDropdownOpen(false)}
               >
                 Simoanginangin
                 {isNestedDropdownOpen && (
-                  <div className="absolute top-0 left-full bg-neutral-50 shadow-lg rounded-md mt-0 z-10">
-                    <Link
-                      href="#"
-                      className="block px-4 py-2 font-assistant font-semibold hover:bg-neutral-00 hover:text-[#F7BA74] hover:rounded-md"
-                      style={{ color: '#D17410' }}
-                      onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
-                    >
-                      Pemetaan UMKM
-                    </Link>
-                  </div>
-                )}
-              </Link>
+                <div className="absolute top-0 left-full bg-neutral-50 border border-gray-300 shadow-lg rounded-lg mt-0 ml-0 z-10">
+                  <Link
+                    href="https://desa-cantik-sda.vercel.app/peta-umkm-simoanginangin"
+                    className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
+                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
+                  >
+                    Pemetaan UMKM
+                  </Link>
+                </div>
+              )}
+              </div>
             </div>
           )}
         </NavbarItem>
@@ -147,14 +145,14 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden lg:flex px-5">
           <Link
             href="/login"
-            className="font-bold font-assistant text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
+            className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700"
           >
             Login
           </Link>
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarMenu className={`${isMenuOpen ? 'block' : 'hidden'} sm:hidden`}>
+      <NavbarMenu className={`${isMenuOpen ? "block" : "hidden"} sm:hidden`}>
         <NavbarMenuItem>
           <Link
             href="/beranda"
@@ -174,10 +172,10 @@ export default function NavbarCustom() {
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="mt-3">
+            <div className="mt-3 border border-gray-200 shadow-md rounded-md">
               <Link
                 href="#"
-                className="block px-4 py-2 font-assistant font-semibold text-porange hover:bg-base hover:text-orange-500"
+                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-base hover:text-orange-500"
                 onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
                 onMouseEnter={() => setIsNestedDropdownOpen(true)}
               >
@@ -187,7 +185,7 @@ export default function NavbarCustom() {
                 <div className="pl-4">
                   <Link
                     href="#"
-                    className="block px-4 py-2 font-assistant font-semibold text-[#F7BA74] hover:bg-white hover:text-orange-500"
+                    className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-orange-500"
                     onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
                   >
                     Pemetaan UMKM
@@ -218,7 +216,7 @@ export default function NavbarCustom() {
         <NavbarMenuItem>
           <Link
             href="/login"
-            className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700 hover:outline-0 hover:outline-white"
+            className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700"
           >
             Login
           </Link>
