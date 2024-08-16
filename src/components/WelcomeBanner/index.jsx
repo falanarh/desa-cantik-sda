@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Typewriter from "typewriter-effect/dist/core";
 
 export default function WelcomeBanner() {
   const typewriterRef1 = useRef(null);
   const typewriterRef2 = useRef(null);
+  const [showTypewriter2, setShowTypewriter2] = useState(false);
 
   useEffect(() => {
     const typewriter1 = new Typewriter(typewriterRef1.current, {
@@ -13,7 +14,7 @@ export default function WelcomeBanner() {
 
     const typewriter2 = new Typewriter(typewriterRef2.current, {
       loop: false,
-      delay: 75,
+      delay: 70,
       cursor: null,
     });
 
@@ -22,9 +23,10 @@ export default function WelcomeBanner() {
       .pauseFor(2500)
       .start()
       .callFunction(() => {
+        setShowTypewriter2(true); // Show the second typewriter when starting
         typewriter2
           .typeString("Badan Pusat Statistik Kabupaten Sidoarjo")
-          .pauseFor(2500)
+          .pauseFor(2200)
           .start();
       });
 
@@ -57,41 +59,47 @@ export default function WelcomeBanner() {
           zIndex: -1,
         }}
       />
+      {/* Orange transparent overlay */}
       <div
         className="absolute inset-0 flex items-center justify-center -top-[64px]"
         style={{
-          background: 'rgba(255, 201, 146, 0.4)', // Adjusted transparency
-          display: 'flex',
-          flexDirection: 'column',
-          color: "white",
-          fontSize: "3rem",
-          fontWeight: "bold",
-          fontFamily: "'Inter', sans-serif",
+          backgroundColor: 'rgba(285, 201, 146, 0.4)', // Orange transparent background
+          zIndex: 0,
+        }}
+      ></div>
+      <div
+        className="flex flex-col items-center justify-center text-white text-3xl font-bold"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          marginTop: '15%',
           textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
-          textAlign: "center",
         }}
       >
         <div
           ref={typewriterRef1}
+          className="text-5xl"
           style={{
-            // marginTop: '15%', // Move the first typewriter effect up
             fontFamily: "Inter",
-            fontSize: "3rem",
             fontWeight: "bold",
-            textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
             textAlign: "center",
-            color: "white"
+            marginBottom: "1rem",
           }}
         ></div>
         <div
           ref={typewriterRef2}
+          className="text-2xl"
           style={{
             fontFamily: "Assistant",
-            fontSize: "2rem",
             fontWeight: "600",
-            textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
             textAlign: "center",
-            color: "white"
+            backgroundColor: "#f27c35", // Transparent background for the second text
+            padding: "6px 18px",
+            borderRadius: "20px",
+            display: "inline-block",
+            textShadow: "none",
+            opacity: showTypewriter2 ? 1 : 0, // Control visibility
+            transition: "opacity 0.5s ease-in-out", // Smooth transition
           }}
         ></div>
       </div>
