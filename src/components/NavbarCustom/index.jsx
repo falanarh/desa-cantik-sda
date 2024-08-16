@@ -50,7 +50,7 @@ export default function NavbarCustom() {
   };
 
   return (
-    <Navbar className="bg-base sticky top-0 z-50 shadow-md">
+    <Navbar className="sticky top-0 z-50 shadow-md bg-base">
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -100,7 +100,7 @@ export default function NavbarCustom() {
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute top-full left-0 bg-base border border-gray-300 shadow-xl rounded-lg mt-4 z-10">
+            <div className="absolute left-0 z-10 mt-4 border border-gray-300 rounded-lg shadow-xl top-full bg-base">
               <div
                 href="#"
                 className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md"
@@ -110,9 +110,9 @@ export default function NavbarCustom() {
               >
                 Simoanginangin
                 {isNestedDropdownOpen && (
-                <div className="absolute top-0 left-full bg-neutral-50 border border-gray-300 shadow-lg rounded-lg mt-0 ml-0 z-10">
+                <div className="absolute top-0 z-10 mt-0 ml-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
                   <Link
-                    href="https://desa-cantik-sda.vercel.app/peta-umkm-simoanginangin"
+                    href="peta-umkm-simoanginangin"
                     className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
                     onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
                   >
@@ -145,7 +145,7 @@ export default function NavbarCustom() {
         <NavbarItem className="hidden px-5 lg:flex">
           <Link
             href="/login"
-            className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700"
+            className="px-4 py-2 font-bold text-white transition-colors duration-100 rounded-lg bg-pdarkblue hover:bg-sky-700"
           >
             Login
           </Link>
@@ -172,7 +172,7 @@ export default function NavbarCustom() {
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="mt-3 border border-gray-200 shadow-md rounded-md">
+            <div className="mt-3 border border-gray-200 rounded-md shadow-md">
               <Link
                 href="#"
                 className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-base hover:text-orange-500"
@@ -216,7 +216,7 @@ export default function NavbarCustom() {
         <NavbarMenuItem>
           <Link
             href="/login"
-            className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700"
+            className="px-4 py-2 font-bold text-white transition-colors duration-100 rounded-lg bg-pdarkblue hover:bg-sky-700"
           >
             Login
           </Link>
