@@ -80,7 +80,7 @@ export default function NavbarCustom() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4 items-center">
+      <NavbarContent className="items-center hidden gap-4 sm:flex">
         <NavbarItem className="hidden lg:flex">
           <Link
             href="/"
@@ -90,7 +90,7 @@ export default function NavbarCustom() {
             Beranda
           </Link>
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex relative">
+        <NavbarItem className="relative hidden lg:flex">
           <Link
             href="#"
             className={getMenuClasses("/peta-tematik")}
@@ -142,7 +142,7 @@ export default function NavbarCustom() {
             Tentang Kami
           </Link>
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex px-5">
+        <NavbarItem className="hidden px-5 lg:flex">
           <Link
             href="/login"
             className="font-bold text-white bg-pdarkblue py-2 px-4 rounded-lg transition-colors duration-100 hover:bg-sky-700"

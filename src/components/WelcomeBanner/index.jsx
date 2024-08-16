@@ -40,7 +40,7 @@ export default function WelcomeBanner() {
     <div
       className="welcome-banner"
       style={{
-        position: 'relative',
+        // position: 'relative',
         overflow: 'hidden',
         width: '100%',
         height: '100vh',
@@ -51,7 +51,7 @@ export default function WelcomeBanner() {
         alt="Sidoarjo"
         style={{
           width: "100%",
-          height: "100%",
+          height: "100vh",
           objectFit: "cover",
           position: "absolute",
           top: 0,
@@ -61,7 +61,7 @@ export default function WelcomeBanner() {
       />
       {/* Orange transparent overlay */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 flex items-center justify-center -top-[64px]"
         style={{
           backgroundColor: 'rgba(285, 201, 146, 0.4)', // Orange transparent background
           zIndex: 0,
