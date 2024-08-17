@@ -262,7 +262,7 @@ const RtTable = () => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items}>
+        <TableBody items={items} emptyContent={"Tidak ada data."}>
           {(item) => (
             <TableRow key={item.kode}>
               {(columnKey) => (

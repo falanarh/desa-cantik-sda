@@ -26,7 +26,7 @@ export default function WelcomeBanner() {
         setShowTypewriter2(true); // Show the second typewriter when starting
         typewriter2
           .typeString("Badan Pusat Statistik Kabupaten Sidoarjo")
-          .pauseFor(2200)
+          // .pauseFor(2200)
           .start();
       });
 
@@ -41,9 +41,9 @@ export default function WelcomeBanner() {
       className="welcome-banner"
       style={{
         // position: 'relative',
-        overflow: 'hidden',
-        width: '100%',
-        height: '100vh',
+        overflow: "hidden",
+        width: "100%",
+        height: "100vh",
       }}
     >
       <img
@@ -63,19 +63,22 @@ export default function WelcomeBanner() {
       <div
         className="absolute inset-0 flex items-center justify-center -top-[64px]"
         style={{
-          backgroundColor: 'rgba(285, 201, 146, 0.4)', // Orange transparent background
+          backgroundColor: "rgba(285, 201, 146, 0.4)", // Orange transparent background
           zIndex: 0,
         }}
       ></div>
       <div
-        className="flex flex-col items-center justify-center text-white text-3xl font-bold"
+        className="flex flex-col items-center justify-center gap-4 text-3xl font-bold text-white"
         style={{
           position: "relative",
           zIndex: 1,
-          marginTop: '15%',
+          marginTop: "15%",
           textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
         }}
       >
+        <h1 className="text-3xl">
+          Selamat datang di
+        </h1>
         <div
           ref={typewriterRef1}
           className="text-5xl"
@@ -83,7 +86,7 @@ export default function WelcomeBanner() {
             fontFamily: "Inter",
             fontWeight: "bold",
             textAlign: "center",
-            marginBottom: "1rem",
+            // marginBottom: "1rem",
           }}
         ></div>
         <div
