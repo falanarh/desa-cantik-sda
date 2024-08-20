@@ -192,7 +192,7 @@ const RtTable = ({ fetchDataAggregate }) => {
   };
 
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 25;
 
   const pages = Math.ceil(filteredData.length / rowsPerPage);
 
