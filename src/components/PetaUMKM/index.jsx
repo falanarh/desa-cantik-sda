@@ -402,9 +402,10 @@ export default function MapSection() {
 
   function capitalizeWords(str) {
     return str
-      .split(" ")
+      .split(/[-/]/) // Pisahkan berdasarkan "-" dan "/"
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .join(" ")
+      .replace(/\s\/\s/, "/"); // Gabungkan kembali "/" tanpa spasi
   }
 
   function calculateCentroid(multiPolygon) {
@@ -427,6 +428,13 @@ export default function MapSection() {
 
     return [centroidY, centroidX]; // Return as an array of floats
   }
+
+  const tempatUsaha = {
+    all: "Semua Tempat Usaha",
+    "bangunan-khusus-usaha": "Bangunan Khusus Usaha",
+    "bangunan-campuran": "Bangunan Campuran",
+    "didalam-bangunan-tempat-tinggal/online": "Didalam Bangunan Tempat Tinggal/Online",
+  };
   const classifications = {
     all: "Seluruh Lapangan Usaha",
     // kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
@@ -525,7 +533,7 @@ export default function MapSection() {
                     .filter(
                       (item) =>
                         selectedClassification === "all" ||
-                        item.klasifikasiKbli === selectedClassification
+                        item.kategori_usaha === selectedClassification
                     )
                     .map((item) => (
                       <Marker
@@ -551,20 +559,17 @@ export default function MapSection() {
                         <Popup>
                           <div>
                             <strong>Informasi UMKM:</strong>
+                            {console.log("Check items ", item)}
                             <br />
-                            RT: {item.rt}
+                            <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{item.nama_usaha} </span>
                             <br />
-                            RW: {item.rw}
+                            {item.rt_rw_dusun} 
                             <br />
-                            Dusun: {item.dusun}
+                            <b>Kategori: </b><br />{classifications[item.kategori_usaha]}
                             <br />
-                            Klasifikasi: {classifications[item.klasifikasiKbli]}
+                            <b>Tempat Usaha: </b><br />{capitalizeWords(item.lokasi_tempat_usaha)}
                             <br />
-                            Jenis UMKM: {capitalizeWords(item.jenisUmkm)}
-                            <br />
-                            Pendapatan per Bulan: Rp
-                            {item.pendapatanSebulanTerakhir}
-                            <br />
+                            <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)}
                           </div>
                         </Popup>
                       </Marker>
