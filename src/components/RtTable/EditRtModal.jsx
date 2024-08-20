@@ -217,8 +217,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI A)"
-                    placeholder="Masukkan jumlah UMKM KBLI A"
+                    label="Jumlah UMKM Ketegori A"
+                    placeholder="Masukkan jumlah UMKM kategori A"
                     fullWidth
                     name="jml_umkm_kbli_a"
                     value={editRtData?.jml_umkm_kbli_a ?? ""}
@@ -226,8 +226,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI B)"
-                    placeholder="Masukkan jumlah UMKM KBLI B"
+                    label="Jumlah UMKM Kategori B"
+                    placeholder="Masukkan jumlah UMKM kategori B"
                     fullWidth
                     name="jml_umkm_kbli_b"
                     value={editRtData?.jml_umkm_kbli_b ?? ""}
@@ -235,8 +235,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI C)"
-                    placeholder="Masukkan jumlah UMKM KBLI C"
+                    label="Jumlah UMKM Kategori C"
+                    placeholder="Masukkan jumlah UMKM kategori C"
                     fullWidth
                     name="jml_umkm_kbli_c"
                     value={editRtData?.jml_umkm_kbli_c ?? ""}
@@ -244,8 +244,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI D)"
-                    placeholder="Masukkan jumlah UMKM KBLI D"
+                    label="Jumlah UMKM Kategori D"
+                    placeholder="Masukkan jumlah UMKM kategori D"
                     fullWidth
                     name="jml_umkm_kbli_d"
                     value={editRtData?.jml_umkm_kbli_d ?? ""}
@@ -253,8 +253,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI E)"
-                    placeholder="Masukkan jumlah UMKM KBLI E"
+                    label="Jumlah UMKM Kategori E"
+                    placeholder="Masukkan jumlah UMKM kategori E"
                     fullWidth
                     name="jml_umkm_kbli_e"
                     value={editRtData?.jml_umkm_kbli_e ?? ""}
@@ -262,8 +262,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI F)"
-                    placeholder="Masukkan jumlah UMKM KBLI F"
+                    label="Jumlah UMKM Kategori F"
+                    placeholder="Masukkan jumlah UMKM kategori F"
                     fullWidth
                     name="jml_umkm_kbli_f"
                     value={editRtData?.jml_umkm_kbli_f ?? ""}
@@ -271,7 +271,7 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI G)"
+                    label="Jumlah UMKM Kategori G"
                     placeholder="Masukkan jumlah UMKM KBLI G"
                     fullWidth
                     name="jml_umkm_kbli_g"
@@ -280,8 +280,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI H)"
-                    placeholder="Masukkan jumlah UMKM KBLI H"
+                    label="Jumlah UMKM Kategori H"
+                    placeholder="Masukkan jumlah UMKM kategori H"
                     fullWidth
                     name="jml_umkm_kbli_h"
                     value={editRtData?.jml_umkm_kbli_h ?? ""}
@@ -289,8 +289,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI I)"
-                    placeholder="Masukkan jumlah UMKM KBLI I"
+                    label="Jumlah UMKM Kategori I"
+                    placeholder="Masukkan jumlah UMKM kategori I"
                     fullWidth
                     name="jml_umkm_kbli_i"
                     value={editRtData?.jml_umkm_kbli_i ?? ""}
@@ -298,8 +298,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI J)"
-                    placeholder="Masukkan jumlah UMKM KBLI J"
+                    label="Jumlah UMKM Kategori J"
+                    placeholder="Masukkan jumlah UMKM kategori J"
                     fullWidth
                     name="jml_umkm_kbli_j"
                     value={editRtData?.jml_umkm_kbli_j ?? ""}
@@ -307,8 +307,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI K)"
-                    placeholder="Masukkan jumlah UMKM KBLI K"
+                    label="Jumlah UMKM Kategori K"
+                    placeholder="Masukkan jumlah UMKM kategori K"
                     fullWidth
                     name="jml_umkm_kbli_k"
                     value={editRtData?.jml_umkm_kbli_k ?? ""}
@@ -316,8 +316,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI L)"
-                    placeholder="Masukkan jumlah UMKM KBLI L"
+                    label="Jumlah UMKM Kategori L"
+                    placeholder="Masukkan jumlah UMKM kategori L"
                     fullWidth
                     name="jml_umkm_kbli_l"
                     value={editRtData?.jml_umkm_kbli_l ?? ""}
@@ -325,8 +325,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI M)"
-                    placeholder="Masukkan jumlah UMKM KBLI M"
+                    label="Jumlah UMKM Kategori M"
+                    placeholder="Masukkan jumlah UMKM kategori M"
                     fullWidth
                     name="jml_umkm_kbli_m"
                     value={editRtData?.jml_umkm_kbli_m ?? ""}
@@ -334,8 +334,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI N)"
-                    placeholder="Masukkan jumlah UMKM KBLI N"
+                    label="Jumlah UMKM Kategori N"
+                    placeholder="Masukkan jumlah UMKM kategori N"
                     fullWidth
                     name="jml_umkm_kbli_n"
                     value={editRtData?.jml_umkm_kbli_n ?? ""}
@@ -343,8 +343,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI O)"
-                    placeholder="Masukkan jumlah UMKM KBLI O"
+                    label="Jumlah UMKM Kategori O"
+                    placeholder="Masukkan jumlah UMKM kategori O"
                     fullWidth
                     name="jml_umkm_kbli_o"
                     value={editRtData?.jml_umkm_kbli_o ?? ""}
@@ -352,8 +352,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI P)"
-                    placeholder="Masukkan jumlah UMKM KBLI P"
+                    label="Jumlah UMKM Kategori P"
+                    placeholder="Masukkan jumlah UMKM kategori P"
                     fullWidth
                     name="jml_umkm_kbli_p"
                     value={editRtData?.jml_umkm_kbli_p ?? ""}
@@ -361,8 +361,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI Q)"
-                    placeholder="Masukkan jumlah UMKM KBLI Q"
+                    label="Jumlah UMKM Kategori Q"
+                    placeholder="Masukkan jumlah UMKM kategori Q"
                     fullWidth
                     name="jml_umkm_kbli_q"
                     value={editRtData?.jml_umkm_kbli_q ?? ""}
@@ -370,8 +370,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI R)"
-                    placeholder="Masukkan jumlah UMKM KBLI R"
+                    label="Jumlah UMKM Kategori R"
+                    placeholder="Masukkan jumlah UMKM kategori R"
                     fullWidth
                     name="jml_umkm_kbli_r"
                     value={editRtData?.jml_umkm_kbli_r ?? ""}
@@ -379,8 +379,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI S)"
-                    placeholder="Masukkan jumlah UMKM KBLI S"
+                    label="Jumlah UMKM Kategori S"
+                    placeholder="Masukkan jumlah UMKM kategori S"
                     fullWidth
                     name="jml_umkm_kbli_s"
                     value={editRtData?.jml_umkm_kbli_s ?? ""}
@@ -388,8 +388,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI T)"
-                    placeholder="Masukkan jumlah UMKM KBLI T"
+                    label="Jumlah UMKM Kategori T"
+                    placeholder="Masukkan jumlah UMKM kategori T"
                     fullWidth
                     name="jml_umkm_kbli_t"
                     value={editRtData?.jml_umkm_kbli_t ?? ""}
@@ -397,8 +397,8 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Jumlah UMKM (KBLI U)"
-                    placeholder="Masukkan jumlah UMKM KBLI U"
+                    label="Jumlah UMKM Kategori U"
+                    placeholder="Masukkan jumlah UMKM kategori U"
                     fullWidth
                     name="jml_umkm_kbli_u"
                     value={editRtData?.jml_umkm_kbli_u ?? ""}
