@@ -1,4 +1,5 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
+import { Link } from "react-router-dom";
 
 export default function NavbarPeta() {
   return (
@@ -21,18 +22,18 @@ export default function NavbarPeta() {
             <p className="font-sfProDisplay font-semibold text-[#0F1820] leading-tight">
               PETA TEMATIK UMKM
               <br />
-              <span className="font-sfProDisplay text-lg font-bold">DESA SIMOANGINANGIN</span>
+              <span className="text-lg font-bold font-sfProDisplay">DESA SIMOANGINANGIN</span>
             </p>
           </div>
         </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarContent className="hidden gap-4 sm:flex" justify="center">
           {/* Add other NavbarItems if needed */}
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
           <Link
-            to="#"
-            className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base"
+            to="/login-simoanginangin"
+            className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base cursor-pointer"
           >
             <span className="hidden md:inline">Masuk</span>
             <span className="md:hidden material-icons">account_circle</span>
