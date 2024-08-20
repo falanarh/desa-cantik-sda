@@ -237,7 +237,7 @@ const AdminSimoanginangin = () => {
     {
       id: "sls",
       label: "Satuan Lingkungan Setempat (SLS)",
-      content: <RtTable />,
+      content: <RtTable fetchDataAggregate={fetchData} />,
     },
     {
       id: "keluarga-umkm",
@@ -248,12 +248,12 @@ const AdminSimoanginangin = () => {
 
   const StatComponent = ({ label = "Jumlah UMKM", value = 100 }) => {
     return (
-      <div className="flex p-2 border-2 border-dashed border-pdarkblue rounded-xl font-inter text-pdarkblue w-fit">
-        <div className="flex justify-between w-[380px] mr-1 text-[14px]">
+      <div className="flex items-center justify-between w-full p-2 border-2 border-dashed border-pdarkblue rounded-xl font-inter text-pdarkblue">
+        <div className="flex justify-between items-center w-full text-[14px]">
           <span className="font-semibold text-[14px]">{label}</span>
-          <span className="font-semibold text-[14px]">: </span>
+          {/* <span className="font-semibold text-[14px]">: </span> */}
+          <span className="ml-2">{value}</span>
         </div>
-        {value}
       </div>
     );
   };
@@ -345,7 +345,7 @@ const AdminSimoanginangin = () => {
               ))}
             </Swiper>
           </div> */}
-          <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {data
               ? dataLabels.map(({ key, label }) => {
                   // Dapatkan nilai dari dataAgregat berdasarkan key
