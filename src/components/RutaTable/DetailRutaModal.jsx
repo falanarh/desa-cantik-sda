@@ -10,11 +10,18 @@ import {
   Button,
 } from "@nextui-org/react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import { daftarKlasifikasi } from "./data";
+import {
+  bentuk_badan_usaha,
+  jenis_kelamin,
+  kategori_usaha,
+  lokasi_tempat_usaha,
+  pendidikan_terakhir,
+  skala_usaha,
+} from "./data";
 
-const getKbliLabel = (key) => {
-  const klasifikasi = daftarKlasifikasi.find((item) => item.key === key);
-  return klasifikasi ? klasifikasi.label : "Unknown";
+const getLabelByKey = (key, array) => {
+  const item = array.find((obj) => obj.key === key);
+  return item ? item.label : "Label not found";
 };
 
 function formatNumber(num) {
@@ -38,132 +45,90 @@ function formatNumber(num) {
 }
 
 function capitalizeFirstLetter(string) {
-  if (typeof string !== 'string' || string.length === 0) {
-    return '';
+  if (typeof string !== "string" || string.length === 0) {
+    return "";
   }
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+const TableRow = ({ label, value }) => (
+  <tr className="bg-white/70">
+    <th className="p-3 font-semibold text-left border border-gray-300">
+      {label}
+    </th>
+    <td className="p-3 text-right border border-gray-300">{value}</td>
+  </tr>
+);
+
+const RutaMap = ({ latitude, longitude }) => (
+  <div className="my-4">
+    <p className="text-[14px] font-semibold ml-3 my-2 text-pdarkblue">
+      Titik lokasi Rumah Tangga UMKM
+    </p>
+    <MapContainer
+      center={[latitude, longitude]}
+      zoom={18}
+      scrollWheelZoom={false}
+      style={{ height: "200px", width: "100%" }}
+      className="border-4 rounded-lg border-slate-300"
+    >
+      <TileLayer
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        attribution="Tiles © Esri"
+      />
+      <Marker position={[latitude, longitude]} />
+    </MapContainer>
+  </div>
+);
+
 const RutaDetail = ({ ruta }) => {
   if (!ruta) return null;
+
+  const rows = [
+    { label: "Kode", value: ruta.kode },
+    { label: "Identitas SLS", value: ruta.rt_rw_dusun },
+    { label: "No. Urut Bangunan", value: ruta.no_urut_bangunan },
+    { label: "Nama Kepala Keluarga", value: ruta.nama_kepala_keluarga },
+    {
+      label: "Nama Pemilik/Penanggungjawab",
+      value: ruta.nama_pemilik_penanggungjawab,
+    },
+    {
+      label: "Jenis Kelamin",
+      value: getLabelByKey(ruta.jenis_kelamin, jenis_kelamin),
+    },
+    { label: "Tanggal Lahir", value: ruta.tanggal_lahir },
+    { label: "NIK", value: ruta.nik },
+    { label: "No. HP", value: ruta.no_hp },
+    {
+      label: "Pendidikan Terakhir",
+      value: getLabelByKey(ruta.pendidikan_terakhir, pendidikan_terakhir),
+    },
+    { label: "Nama Usaha", value: ruta.nama_usaha },
+    { label: "Kegiatan Utama Usaha", value: ruta.kegiatan_utama_usaha },
+    {
+      label: "Kategori Usaha",
+      value: getLabelByKey(ruta.kategori_usaha, kategori_usaha),
+    },
+    { label: "Bentuk Badan Usaha", value: getLabelByKey(ruta.bentuk_badan_usaha, bentuk_badan_usaha) },
+    { label: "Lokasi Tempat Usaha", value: getLabelByKey(ruta.lokasi_tempat_usaha, lokasi_tempat_usaha) },
+    { label: "Skala Usaha", value: getLabelByKey(ruta.skala_usaha, skala_usaha) },
+    { label: "Alamat", value: ruta.alamat },
+    { label: "Latitude", value: ruta.latitude },
+    { label: "Longitude", value: ruta.longitude },
+  ];
 
   return (
     <div className="p-4">
       <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-auto table-detail-ruta">
         <tbody className="text-[14px]">
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Kode
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.kode}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Nama KRT
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.namaKrt}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              RT
-            </th>
-            <td className="p-3 text-right border border-gray-300">{ruta.rt}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              RW
-            </th>
-            <td className="p-3 text-right border border-gray-300">{ruta.rw}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Dusun
-            </th>
-            <td className="p-3 text-right border border-gray-300">{capitalizeFirstLetter(ruta.dusun)}</td>
-          </tr>
-          {/* <tr className="bg-white/70">
-              <th className="p-3 font-semibold text-left border border-gray-300">
-                Dusun
-              </th>
-              <td className="p-3 text-right border border-gray-300">
-                {ruta.dusun}
-              </td>
-            </tr> */}
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Klasifikasi KBLI
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {getKbliLabel(ruta.klasifikasiKbli)}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jenis UMKM
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.jenisUmkm === "tetap"
-                ? "Tetap"
-                : ruta.jenisUmkm === "nontetap"
-                ? "Non Tetap"
-                : ruta.jenisUmkm}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Pendapatan Sebulan Terakhir (Rp)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.pendapatanSebulanTerakhir
-                ? ruta.pendapatanSebulanTerakhir.toLocaleString("id-ID")
-                : "-"}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Latitude
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.latitude}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Longitude
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {ruta.longitude}
-            </td>
-          </tr>
+          {rows.map((row, index) => (
+            <TableRow key={index} label={row.label} value={row.value} />
+          ))}
         </tbody>
       </table>
       {ruta.latitude && ruta.longitude && (
-        <div className="my-4">
-          <p className="text-[14px] font-semibold ml-3 my-2">
-            Titik lokasi Rumah Tangga UMKM
-          </p>
-          <MapContainer
-            center={[ruta.latitude, ruta.longitude]}
-            zoom={18}
-            scrollWheelZoom={false}
-            style={{ height: "200px", width: "100%" }}
-            className="border-4 rounded-lg border-slate-300"
-          >
-            {/* <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            /> */}
-            <TileLayer
-              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-              attribution="Tiles © Esri"
-            />
-            <Marker position={[ruta.latitude, ruta.longitude]}></Marker>
-          </MapContainer>
-        </div>
+        <RutaMap latitude={ruta.latitude} longitude={ruta.longitude} />
       )}
     </div>
   );

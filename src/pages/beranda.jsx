@@ -17,7 +17,7 @@ const Beranda = () => {
   }, []);
 
   return (
-    <div className='flex flex-col'>
+    <div className='relative flex flex-col'>
       <NavbarCustom />
       <div data-aos="fade-down">
        <WelcomeBanner />

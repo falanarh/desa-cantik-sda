@@ -1,31 +1,32 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Typewriter from "typewriter-effect/dist/core";
 
 export default function WelcomeBanner() {
   const typewriterRef1 = useRef(null);
   const typewriterRef2 = useRef(null);
+  const [showTypewriter2, setShowTypewriter2] = useState(false);
 
   useEffect(() => {
     const typewriter1 = new Typewriter(typewriterRef1.current, {
       loop: false,
       delay: 75,
-      cursor: null,
     });
 
     const typewriter2 = new Typewriter(typewriterRef2.current, {
       loop: false,
-      delay: 75,
+      delay: 70,
       cursor: null,
     });
 
     typewriter1
-      .typeString("Selamat Datang di Desa Cantik Kabupaten Sidoarjo")
+      .typeString("Desa Cantik Kabupaten Sidoarjo")
       .pauseFor(2500)
       .start()
       .callFunction(() => {
+        setShowTypewriter2(true); // Show the second typewriter when starting
         typewriter2
-          .typeString("Badan Pusat Statistik (BPS) Kabupaten Sidoarjo")
-          .pauseFor(2500)
+          .typeString("Badan Pusat Statistik Kabupaten Sidoarjo")
+          // .pauseFor(2200)
           .start();
       });
 
@@ -39,10 +40,10 @@ export default function WelcomeBanner() {
     <div
       className="welcome-banner"
       style={{
-        position: 'relative',
-        overflow: 'hidden',
-        width: '100%',
-        height: '100vh',
+        // position: 'relative',
+        overflow: "hidden",
+        width: "100%",
+        height: "100vh",
       }}
     >
       <img
@@ -50,7 +51,7 @@ export default function WelcomeBanner() {
         alt="Sidoarjo"
         style={{
           width: "100%",
-          height: "100%",
+          height: "100vh",
           objectFit: "cover",
           position: "absolute",
           top: 0,
@@ -58,24 +59,52 @@ export default function WelcomeBanner() {
           zIndex: -1,
         }}
       />
+      {/* Orange transparent overlay */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 flex items-center justify-center -top-[64px]"
         style={{
-          background: 'rgba(255, 201, 146, 0.4)', // Adjusted transparency
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          color: "white",
-          fontSize: "2.25rem",
-          fontWeight: "bold",
-          fontFamily: "'Inter', sans-serif",
+          backgroundColor: "rgba(285, 201, 146, 0.4)", // Orange transparent background
+          zIndex: 0,
+        }}
+      ></div>
+      <div
+        className="flex flex-col items-center justify-center gap-4 text-3xl font-bold text-white"
+        style={{
+          position: "relative",
+          zIndex: 1,
+          marginTop: "15%",
           textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
-          textAlign: "center",
         }}
       >
-        <div ref={typewriterRef1}></div>
-        <div ref={typewriterRef2} style={{ marginTop: '0.7rem', fontFamily: "'Assistant', sans-serif", fontSize: "1.75rem", fontWeight: "normal", textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", textAlign: "center", color: "white"}}></div>
+        <h1 className="text-3xl">
+          Selamat datang di
+        </h1>
+        <div
+          ref={typewriterRef1}
+          className="text-5xl"
+          style={{
+            fontFamily: "Inter",
+            fontWeight: "bold",
+            textAlign: "center",
+            // marginBottom: "1rem",
+          }}
+        ></div>
+        <div
+          ref={typewriterRef2}
+          className="text-2xl"
+          style={{
+            fontFamily: "Assistant",
+            fontWeight: "600",
+            textAlign: "center",
+            backgroundColor: "#f27c35", // Transparent background for the second text
+            padding: "6px 18px",
+            borderRadius: "20px",
+            display: "inline-block",
+            textShadow: "none",
+            opacity: showTypewriter2 ? 1 : 0, // Control visibility
+            transition: "opacity 0.5s ease-in-out", // Smooth transition
+          }}
+        ></div>
       </div>
     </div>
   );

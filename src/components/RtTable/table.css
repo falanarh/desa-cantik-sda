@@ -40,5 +40,9 @@ tbody tr td:last-child {
 }
 
 .table-detail-rt th {
-  width: 48% !important;
+  width: 60% !important;
+}
+
+[data-slot="input"] {
+  color: #000000 !important;
 }

@@ -2,10 +2,8 @@ const columns = [
   { name: "Kode", uid: "kode" },
   { name: "RT", uid: "rt" },
   { name: "RW", uid: "rw" },
-//   { name: "Jumlah Ruta", uid: "jml_ruta" },
-  { name: "Jml UMKM", uid: "jml_umkm" },
-  { name: "Jml UMKM Tetap", uid: "jml_umkm_tetap" },
-  { name: "Jml UMKM Non Tetap", uid: "jml_umkm_nontetap" },
+  { name: "Dusun", uid: "dusun" },
+  { name: "Jumlah UMKM", uid: "jml_umkm" },
   { name: "Aksi", uid: "aksi" },
 ];
 

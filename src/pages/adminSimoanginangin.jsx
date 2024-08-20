@@ -242,13 +242,13 @@ const AdminSimoanginangin = () => {
 
   let tabs = [
     {
-      id: "rukun-tetangga",
-      label: "Rukun Tetangga (RT)",
+      id: "sls",
+      label: "Satuan Lingkungan Setempat (SLS)",
       content: <RtTable />,
     },
     {
-      id: "rumah-tangga-umkm",
-      label: "Rumah Tangga UMKM",
+      id: "keluarga-umkm",
+      label: "Keluarga UMKM",
       content: <RutaTable fetchDataAggregate={fetchData} />,
     },
   ];
@@ -349,7 +349,7 @@ const AdminSimoanginangin = () => {
           )}
         </Tabs>
         
-        {loading && (
+        {/* {loading && (
         <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
           <Bars
             height="60"
@@ -364,7 +364,7 @@ const AdminSimoanginangin = () => {
             Loading
           </p>
         </div>
-      )}
+      )} */}
       </div>
     </>
   );
