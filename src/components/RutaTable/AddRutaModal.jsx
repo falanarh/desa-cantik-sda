@@ -303,28 +303,30 @@ const AddRutaModal = ({
   function incrementLastThreeDigits(code) {
     // Memastikan panjang string yang valid
     if (code.length < 3) {
-        throw new Error('String must be at least 3 characters long');
+      throw new Error("String must be at least 3 characters long");
     }
 
     // Pisahkan string menjadi dua bagian
     const lastThreeDigits = code.slice(-3); // Ambil tiga digit terakhir
     const remainingString = code.slice(0, -3); // Ambil string sisanya
 
-    console.log('Last Three Digits:', lastThreeDigits);
-    console.log('Remaining String:', remainingString);
+    console.log("Last Three Digits:", lastThreeDigits);
+    console.log("Remaining String:", remainingString);
 
     // Tambahkan satu pada tiga digit terakhir
-    const incrementedLastThree = (parseInt(lastThreeDigits, 10) + 1).toString().padStart(3, '0');
-    
-    console.log('Incremented Last Three Digits:', incrementedLastThree);
+    const incrementedLastThree = (parseInt(lastThreeDigits, 10) + 1)
+      .toString()
+      .padStart(3, "0");
+
+    console.log("Incremented Last Three Digits:", incrementedLastThree);
 
     // Gabungkan string sisanya dengan tiga digit terakhir yang diperbarui
     const finalCode = remainingString + incrementedLastThree;
-    
-    console.log('Final Code:', finalCode);
+
+    console.log("Final Code:", finalCode);
 
     return finalCode;
-}
+  }
 
   function incrementLargestCodeByKodeRt(array, kodeRt) {
     // Filter objek berdasarkan kodeRt
@@ -334,7 +336,7 @@ const AddRutaModal = ({
     // Jika tidak ada objek yang memenuhi kriteria, kembalikan null atau penanganan error
     if (filteredArray.length === 0) {
       console.log("No objects found for the given kodeRt");
-      return null; // Atau Anda bisa menggunakan throw new Error('No objects found for the given kodeRt');
+      return incrementLastThreeDigits(kodeRt + "000"); // Atau Anda bisa menggunakan throw new Error('No objects found for the given kodeRt');
     }
 
     // Temukan kode string terbesar di antara objek yang sudah difilter
