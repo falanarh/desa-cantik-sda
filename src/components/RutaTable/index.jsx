@@ -15,11 +15,13 @@ import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import {
+  bentuk_badan_usaha,
   columns,
-  daftarKlasifikasi,
-  daftarJenisUmkm,
-  daftarRw,
-  daftarDusun,
+  jenis_kelamin,
+  kategori_usaha,
+  lokasi_tempat_usaha,
+  pendidikan_terakhir,
+  skala_usaha,
 } from "./data";
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
@@ -89,7 +91,12 @@ const RutaTable = ({ fetchDataAggregate }) => {
     try {
       await api.delete(`/api/rumahTangga/${ruta.kode}`);
       setDataRuta(dataRuta.filter((item) => item.kode !== ruta.kode));
-      message.success(`Rumah Tangga ${ruta.namaKrt} berhasil dihapus.`, 5);
+      message.success(
+        `UMKM ${ruta.nama_pemilik_penanggungjawab} berhasil dihapus.`,
+        5
+      );
+      fetchData();
+      fetchDataAggregate();
     } catch (error) {
       // Cek jika error memiliki respons body
       if (
@@ -135,10 +142,6 @@ const RutaTable = ({ fetchDataAggregate }) => {
 
   const handleDelete = (ruta) => {
     deleteData(ruta);
-    fetchData();
-    setTimeout(() => {
-      fetchDataAggregate();
-    }, 500);
   };
 
   const filteredData = dataRuta.filter((ruta) =>
@@ -172,8 +175,8 @@ const RutaTable = ({ fetchDataAggregate }) => {
             </Tooltip>
             <Tooltip color="danger" content="Hapus">
               <Popconfirm
-                title="Hapus Rumah Tangga"
-                description="Anda yakin menghapus Rumah tangga ini?"
+                title="Hapus Data UMKM"
+                description="Anda yakin menghapus data UMKM ini?"
                 onConfirm={() => handleDelete(ruta)}
                 onOpenChange={() => console.log("open change")}
               >
@@ -206,11 +209,11 @@ const RutaTable = ({ fetchDataAggregate }) => {
   const handleSatuanAddModal = () => {
     onAddModalOpen();
     setIsSatuan(true);
-  }
+  };
   const handleKumpulanAddModal = () => {
     onAddModalOpen();
     setIsSatuan(false);
-  }
+  };
 
   return (
     <div className="p-4 bg-[#ffffffb4] rounded-xl">
@@ -267,6 +270,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
         aria-label="Example table with custom cells"
         shadow="none"
         className="shadow rounded-xl font-inter"
+        classNames={{ loadingWrapper: "mx-auto" }}
         bottomContent={
           <div className="flex justify-center w-full">
             <Pagination
@@ -291,7 +295,14 @@ const RutaTable = ({ fetchDataAggregate }) => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items}>
+        <TableBody
+          items={items}
+          emptyContent={"Tidak ada data."}
+          isLoading={loading}
+          loadingContent={
+            <Bars width="50" height="50" color="#0B588F" className="mx-auto" />
+          }
+        >
           {(item) => (
             <TableRow key={item.kode}>
               {(columnKey) => (
@@ -314,10 +325,12 @@ const RutaTable = ({ fetchDataAggregate }) => {
         isSatuan={isSatuan}
         dataRuta={dataRuta}
         daftarRt={dataRt}
-        daftarRw={daftarRw}
-        daftarDusun={daftarDusun}
-        daftarKlasifikasi={daftarKlasifikasi}
-        daftarJenisUmkm={daftarJenisUmkm}
+        jenis_kelamin={jenis_kelamin}
+        pendidikan_terakhir={pendidikan_terakhir}
+        kategori_usaha={kategori_usaha}
+        bentuk_badan_usaha={bentuk_badan_usaha}
+        lokasi_tempat_usaha={lokasi_tempat_usaha}
+        skala_usaha={skala_usaha}
         fetchData={fetchData}
         fetchDataAggregate={fetchDataAggregate}
       />
@@ -329,13 +342,15 @@ const RutaTable = ({ fetchDataAggregate }) => {
         fetchData={fetchData}
         fetchDataAggregate={fetchDataAggregate}
         daftarRt={dataRt}
-        daftarRw={daftarRw}
-        daftarDusun={daftarDusun}
-        daftarKlasifikasi={daftarKlasifikasi}
-        daftarJenisUmkm={daftarJenisUmkm}
+        jenis_kelamin={jenis_kelamin}
+        pendidikan_terakhir={pendidikan_terakhir}
+        kategori_usaha={kategori_usaha}
+        bentuk_badan_usaha={bentuk_badan_usaha}
+        lokasi_tempat_usaha={lokasi_tempat_usaha}
+        skala_usaha={skala_usaha}
       />
 
-      {loading && (
+      {/* {loading && (
         <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
           <Bars
             height="60"
@@ -350,7 +365,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
             Loading
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

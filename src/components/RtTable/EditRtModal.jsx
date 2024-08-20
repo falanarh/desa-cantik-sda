@@ -40,8 +40,6 @@ const EditRtModal = ({
         ...editRtData,
         jml_ruta: parseInt(editRtData.jml_ruta, 10) || 0,
         jml_umkm: parseInt(editRtData.jml_umkm, 10) || 0,
-        jml_umkm_tetap: parseInt(editRtData.jml_umkm_tetap, 10) || 0,
-        jml_umkm_nontetap: parseInt(editRtData.jml_umkm_nontetap, 10) || 0,
         jml_umkm_kbli_a: parseInt(editRtData.jml_umkm_kbli_a, 10) || 0,
         jml_umkm_kbli_b: parseInt(editRtData.jml_umkm_kbli_b, 10) || 0,
         jml_umkm_kbli_c: parseInt(editRtData.jml_umkm_kbli_c, 10) || 0,
@@ -63,10 +61,6 @@ const EditRtModal = ({
         jml_umkm_kbli_s: parseInt(editRtData.jml_umkm_kbli_s, 10) || 0,
         jml_umkm_kbli_t: parseInt(editRtData.jml_umkm_kbli_t, 10) || 0,
         jml_umkm_kbli_u: parseInt(editRtData.jml_umkm_kbli_u, 10) || 0,
-        total_pendapatan_sebulan_terakhir:
-          parseInt(editRtData.total_pendapatan_sebulan_terakhir, 10) || 0, // Convert to integer
-        rata2_pendapatan_sebulan_terakhir:
-          parseInt(editRtData.rata2_pendapatan_sebulan_terakhir, 10) || 0, // Convert to integer
       };
 
       updateData(convertedData);
@@ -101,7 +95,7 @@ const EditRtModal = ({
       <Modal
         isOpen={isEditModalOpen}
         onOpenChange={onEditModalOpenChange}
-        size="lg"
+        size="xl"
         className="bg-slate-100 font-inter max-h-[90%]"
         classNames={{
           header: "border-b-[1px] border-slate-300",
@@ -136,6 +130,7 @@ const EditRtModal = ({
                     value={editRtData?.rt ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
+                    disabled
                   />
                   <Input
                     label="RW"
@@ -145,6 +140,17 @@ const EditRtModal = ({
                     value={editRtData?.rw ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
+                    disabled
+                  />
+                  <Input
+                    label="Dusun"
+                    placeholder="Masukkan Dusun"
+                    fullWidth
+                    name="dusun"
+                    value={editRtData?.dusun ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                    disabled
                   />
                   <Input
                     label="Jumlah Ruta"
@@ -161,24 +167,6 @@ const EditRtModal = ({
                     fullWidth
                     name="jml_umkm"
                     value={editRtData?.jml_umkm ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Tetap"
-                    placeholder="Masukkan jumlah UMKM tetap"
-                    fullWidth
-                    name="jml_umkm_tetap"
-                    value={editRtData?.jml_umkm_tetap ?? ""}
-                    onChange={handleEditChange}
-                    classNames={{ inputWrapper: "shadow" }}
-                  />
-                  <Input
-                    label="Jumlah UMKM Non Tetap"
-                    placeholder="Masukkan jumlah UMKM non tetap"
-                    fullWidth
-                    name="jml_umkm_nontetap"
-                    value={editRtData?.jml_umkm_nontetap ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
@@ -372,20 +360,101 @@ const EditRtModal = ({
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Total Pendapatan UMKM Sebulan Terakhir (Rp)"
-                    placeholder="Masukkan total pendapatan UMKM sebulan terakhir"
+                    label="Jumlah UMKM Bangunan Khusus Usaha"
+                    placeholder="Masukkan jumlah UMKM bangunan khusus usaha"
                     fullWidth
-                    name="total_pendapatan_sebulan_terakhir"
-                    value={editRtData?.total_pendapatan_sebulan_terakhir ?? ""}
+                    name="jml_umkm_lokasi_bangunan_khusus_usaha"
+                    value={editRtData?.jml_umkm_lokasi_bangunan_khusus_usaha ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />
                   <Input
-                    label="Rata-rata Pendapatan UMKM Sebulan Terakhir (Rp)"
-                    placeholder="Masukkan rata-rata pendapatan UMKM sebulan terakhir"
+                    label="Jumlah UMKM Bangunan Campuran"
+                    placeholder="Masukkan jumlah UMKM bangunan campuran"
                     fullWidth
-                    name="rata2_pendapatan_sebulan_terakhir"
-                    value={editRtData?.rata2_pendapatan_sebulan_terakhir ?? ""}
+                    name="jml_umkm_lokasi_bangunan_campuran"
+                    value={editRtData?.jml_umkm_lokasi_bangunan_campuran ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM Kaki Lima"
+                    placeholder="Masukkan jumlah UMKM kaki lima"
+                    fullWidth
+                    name="jml_umkm_lokasi_kaki_lima"
+                    value={editRtData?.jml_umkm_lokasi_kaki_lima ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM Keliling"
+                    placeholder="Masukkan jumlah UMKM keliling"
+                    fullWidth
+                    name="jml_umkm_lokasi_keliling"
+                    value={editRtData?.jml_umkm_lokasi_keliling ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM di Dalam Bangunan Tempat Tinggal atau Online"
+                    placeholder="Masukkan jumlah UMKM di dalam bangunan tempat tinggal atau online"
+                    fullWidth
+                    name="jml_umkm_lokasi_didalam_bangunan_tempat_tinggal_online"
+                    value={editRtData?.jml_umkm_lokasi_didalam_bangunan_tempat_tinggal_online ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM PT/Persero/Sejenisnya"
+                    placeholder="Masukkan jumlah UMKM PT/Persero/Sejenisnya"
+                    fullWidth
+                    name="jml_umkm_bentuk_pt_persero_sejenisnya"
+                    value={editRtData?.jml_umkm_bentuk_pt_persero_sejenisnya ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM Ijin Desa atau Ijin Lainnya"
+                    placeholder="Masukkan jumlah UMKM ijin desa atau ijin lainnya"
+                    fullWidth
+                    name="jml_umkm_bentuk_ijin_desa_ijin_lainnya"
+                    value={editRtData?.jml_umkm_bentuk_ijin_desa_ijin_lainnya ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM Tidak Berbadan Hukum"
+                    placeholder="Masukkan jumlah UMKM tidak berbadan hukum"
+                    fullWidth
+                    name="jml_umkm_bentuk_tidak_berbadan_hukum"
+                    value={editRtData?.jml_umkm_bentuk_tidak_berbadan_hukum ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM Mikro"
+                    placeholder="Masukkan jumlah UMKM mikro"
+                    fullWidth
+                    name="jml_umkm_skala_usaha_mikro"
+                    value={editRtData?.jml_umkm_skala_usaha_mikro ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM Kecil"
+                    placeholder="Masukkan jumlah UMKM kecil"
+                    fullWidth
+                    name="jml_umkm_skala_usaha_kecil"
+                    value={editRtData?.jml_umkm_skala_usaha_kecil ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Jumlah UMKM Menengah"
+                    placeholder="Masukkan jumlah UMKM menengah"
+                    fullWidth
+                    name="jml_umkm_skala_usaha_menengah"
+                    value={editRtData?.jml_umkm_skala_usaha_menengah ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />

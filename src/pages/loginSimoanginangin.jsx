@@ -134,7 +134,11 @@ const LoginSimoanginangin = () => {
               onClick={togglePasswordVisibility}
               className="absolute transform -translate-y-1/2 right-2 top-10"
             >
-              {passwordType === "password" ? <AiFillEye className="text-pdarkblue" /> : <AiFillEyeInvisible className="text-pdarkblue" />}
+              {passwordType === "password" ? (
+                <AiFillEye className="text-pdarkblue" />
+              ) : (
+                <AiFillEyeInvisible className="text-pdarkblue" />
+              )}
             </button>
           </div>
           {error && (
@@ -144,14 +148,19 @@ const LoginSimoanginangin = () => {
             <Button
               type="submit"
               className="w-full font-bold font-nunito bg-[#0B588F] text-white my-2"
+              disabled={loading}
             >
-              Masuk
+              {loading ? (
+                <Bars width="25" height="25" color="#ffffff" />
+              ) : (
+                "Masuk"
+              )}
             </Button>
           </div>
         </form>
       </div>
 
-      {loading && (
+      {/* {loading && (
         <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
           <Bars
             height="60"
@@ -164,7 +173,7 @@ const LoginSimoanginangin = () => {
           />
           <p className="mt-3 font-semibold font-inter text-pdarkblue">Loading</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

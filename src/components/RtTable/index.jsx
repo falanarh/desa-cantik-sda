@@ -26,6 +26,7 @@ import { Bars } from "react-loader-spinner";
 import GeoJSONUploadModal from "./GeoJSONUploadModal";
 import EditRtModal from "./EditRtModal";
 import DetailRtModal from "./DetailRtModal";
+import { useAsyncList } from "@react-stately/data";
 
 const RtTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -66,7 +67,7 @@ const RtTable = () => {
       const [rtResponse, geojsonResponse] = await Promise.all([
         api.get("/api/rt"),
         api.get("/api/rt/all/geojson"),
-      ])
+      ]);
       setData(rtResponse.data.data); // Update state dengan data dari API
       setDataGeoJson(geojsonResponse.data.data);
       console.log("Data fetched:", rtResponse.data.data);
@@ -78,16 +79,10 @@ const RtTable = () => {
         error.response.data &&
         error.response.data.message
       ) {
-        message.error(
-          `Terjadi kesalahan: ${error.response.data.message}`,
-          5
-        );
+        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
       } else {
         // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(
-          `Terjadi kesalahan: ${error.message}`,
-          5
-        );
+        message.error(`Terjadi kesalahan: ${error.message}`, 5);
       }
     } finally {
       setLoading(false); // Akhiri loading
@@ -208,6 +203,48 @@ const RtTable = () => {
     return filteredData.slice(start, end);
   }, [page, filteredData]);
 
+  let list = useAsyncList({
+    async sort({ items, sortDescriptor }) {
+      console.log("Before sorting:", items);
+
+      let sortedItems = items.sort((a, b) => {
+        let first = a[sortDescriptor.column];
+        let second = b[sortDescriptor.column];
+
+        // Log the values being compared
+        console.log(`Comparing "${first}" with "${second}"`);
+
+        // Convert to numbers if possible, or keep as strings
+        let firstValue = parseInt(first) || first;
+        let secondValue = parseInt(second) || second;
+
+        let cmp =
+          firstValue < secondValue ? -1 : firstValue > secondValue ? 1 : 0;
+
+        // Log comparison result
+        console.log(`Comparison result: ${cmp}`);
+
+        // Adjust for sort direction
+        if (sortDescriptor.direction === "descending") {
+          cmp *= -1;
+        }
+
+        // Log the final comparison result after direction adjustment
+        console.log(
+          `Final comparison result (after direction adjustment): ${cmp}`
+        );
+
+        return cmp;
+      });
+
+      console.log("After sorting:", sortedItems);
+
+      return {
+        items: sortedItems,
+      };
+    },
+  });
+
   return (
     <div className="p-4 bg-[#ffffffb4] rounded-xl">
       <div className="flex justify-between">
@@ -238,6 +275,7 @@ const RtTable = () => {
         aria-label="Example table with custom cells"
         shadow="none"
         className="shadow rounded-xl font-inter"
+        classNames={{ loadingWrapper: "mx-auto" }}
         bottomContent={
           <div className="flex justify-center w-full">
             <Pagination
@@ -251,18 +289,28 @@ const RtTable = () => {
             />
           </div>
         }
+        // sortDescriptor={list.sortDescriptor}
+        // onSortChange={list.sort}
       >
         <TableHeader columns={columns} className="font-inter text-pdarkblue">
           {(column) => (
             <TableColumn
               key={column.uid}
               align={column.uid === "aksi" ? "center" : "start"}
+              // allowsSorting={column.uid === "jml_umkm" ? true : false}
             >
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items} emptyContent={"Tidak ada data."}>
+        <TableBody
+          items={items}
+          emptyContent={"Tidak ada data."}
+          isLoading={loading}
+          loadingContent={
+            <Bars width="50" height="50" color="#0B588F" className="mx-auto" />
+          }
+        >
           {(item) => (
             <TableRow key={item.kode}>
               {(columnKey) => (
@@ -287,7 +335,7 @@ const RtTable = () => {
           fetchData();
         }}
       />
-      
+
       <EditRtModal
         isEditModalOpen={isEditModalOpen}
         onEditModalOpenChange={onEditModalOpenChange}
@@ -295,7 +343,7 @@ const RtTable = () => {
         fetchData={fetchData}
       />
 
-      {loading && (
+      {/* {loading && (
         <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
           <Bars
             height="60"
@@ -310,7 +358,7 @@ const RtTable = () => {
             Loading
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

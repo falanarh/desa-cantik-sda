@@ -16,6 +16,7 @@ const RtDetail = ({ rt, geojson = null }) => {
   const mapRef = useRef();
 
   console.log("RtDetail: ", rt, geojson);
+
   if (geojson && mapRef.current) {
     const map = mapRef.current;
     console.log("Map reference:", map);
@@ -38,15 +39,13 @@ const RtDetail = ({ rt, geojson = null }) => {
 
         // Add label
         if (feature.properties && feature.properties.label) {
-          const label = feature.properties.label; // Assuming feature.properties.name contains the label text
+          const label = feature.properties.label;
           const labelIcon = L.divIcon({
             className: "geojson-label",
             html: `<div class="font-inter font-bold text-white text-center w-full">${label}</div>`,
-            iconSize: [300, 40], // Adjust size as needed
+            iconSize: [300, 40],
           });
-          L.marker(layer.getBounds().getCenter(), { icon: labelIcon }).addTo(
-            map
-          );
+          L.marker(layer.getBounds().getCenter(), { icon: labelIcon }).addTo(map);
         }
       },
     });
@@ -55,252 +54,62 @@ const RtDetail = ({ rt, geojson = null }) => {
     console.log("Fitting bounds:", geoJsonLayer.getBounds());
   }
 
+  // Table columns configuration
+  const tableColumns = [
+    { label: 'Kode', value: rt.kode },
+    { label: 'RT', value: rt.rt },
+    { label: 'RW', value: rt.rw },
+    { label: 'Dusun', value: rt.dusun },
+    { label: 'Jumlah Ruta', value: rt.jml_ruta },
+    { label: 'Jumlah UMKM', value: rt.jml_umkm },
+    { label: 'Jumlah UMKM Ketegori A', value: rt.jml_umkm_kbli_a },
+    { label: 'Jumlah UMKM Ketegori B', value: rt.jml_umkm_kbli_b },
+    { label: 'Jumlah UMKM Ketegori C', value: rt.jml_umkm_kbli_c },
+    { label: 'Jumlah UMKM Ketegori D', value: rt.jml_umkm_kbli_d },
+    { label: 'Jumlah UMKM Ketegori E', value: rt.jml_umkm_kbli_e },
+    { label: 'Jumlah UMKM Ketegori F', value: rt.jml_umkm_kbli_f },
+    { label: 'Jumlah UMKM Ketegori G', value: rt.jml_umkm_kbli_g },
+    { label: 'Jumlah UMKM Ketegori H', value: rt.jml_umkm_kbli_h },
+    { label: 'Jumlah UMKM Ketegori I', value: rt.jml_umkm_kbli_i },
+    { label: 'Jumlah UMKM Ketegori J', value: rt.jml_umkm_kbli_j },
+    { label: 'Jumlah UMKM Ketegori K', value: rt.jml_umkm_kbli_k },
+    { label: 'Jumlah UMKM Ketegori L', value: rt.jml_umkm_kbli_l },
+    { label: 'Jumlah UMKM Ketegori M', value: rt.jml_umkm_kbli_m },
+    { label: 'Jumlah UMKM Ketegori N', value: rt.jml_umkm_kbli_n },
+    { label: 'Jumlah UMKM Ketegori O', value: rt.jml_umkm_kbli_o },
+    { label: 'Jumlah UMKM Ketegori P', value: rt.jml_umkm_kbli_p },
+    { label: 'Jumlah UMKM Ketegori Q', value: rt.jml_umkm_kbli_q },
+    { label: 'Jumlah UMKM Ketegori R', value: rt.jml_umkm_kbli_r },
+    { label: 'Jumlah UMKM Ketegori S', value: rt.jml_umkm_kbli_s },
+    { label: 'Jumlah UMKM Ketegori T', value: rt.jml_umkm_kbli_t },
+    { label: 'Jumlah UMKM Ketegori U', value: rt.jml_umkm_kbli_u },
+    { label: 'Jumlah UMKM Bangunan Khusus Usaha', value: rt.jml_umkm_lokasi_bangunan_khusus_usaha },
+    { label: 'Jumlah UMKM Bangunan Campuran', value: rt.jml_umkm_lokasi_bangunan_campuran },
+    { label: 'Jumlah UMKM Kaki Lima', value: rt.jml_umkm_lokasi_kaki_lima },
+    { label: 'Jumlah UMKM Keliling', value: rt.jml_umkm_lokasi_keliling },
+    { label: 'Jumlah UMKM di Dalam Bangunan Tempat Tinggal atau Online', value: rt.jml_umkm_lokasi_didalam_bangunan_tempat_tinggal_online },
+    { label: 'Jumlah UMKM PT/Persero/Sejenisnya', value: rt.jml_umkm_bentuk_pt_persero_sejenisnya },
+    { label: 'Jumlah UMKM Ijin Desa atau Ijin Lainnya', value: rt.jml_umkm_bentuk_ijin_desa_ijin_lainnya },
+    { label: 'Jumlah UMKM Tidak Berbadan Hukum', value: rt.jml_umkm_bentuk_tidak_berbadan_hukum },
+    { label: 'Jumlah UMKM Mikro', value: rt.jml_umkm_skala_usaha_mikro },
+    { label: 'Jumlah UMKM Kecil', value: rt.jml_umkm_skala_usaha_kecil },
+    { label: 'Jumlah UMKM Menengah', value: rt.jml_umkm_skala_usaha_menengah },
+  ];
+
   return (
     <div className="p-4">
       <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-detail-rt">
         <tbody className="text-[14px]">
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Kode
-            </th>
-            <td className="p-3 text-right border border-gray-300">{rt.kode}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              RT
-            </th>
-            <td className="p-3 text-right border border-gray-300">{rt.rt}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              RW
-            </th>
-            <td className="p-3 text-right border border-gray-300">{rt.rw}</td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Dusun
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.dusun}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah Ruta
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_ruta}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM Tetap
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_tetap}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM Non Tetap
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_nontetap}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI A)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_a}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI B)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_b}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI C)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_c}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI D)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_d}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI E)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_e}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI F)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_f}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI G)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_g}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI H)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_h}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI I)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_i}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI J)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_j}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI K)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_k}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI L)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_l}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI M)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_m}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI N)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_n}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI O)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_o}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI P)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_p}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI Q)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_q}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI R)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_r}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI S)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_s}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI T)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_t}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Jumlah UMKM (KBLI U)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.jml_umkm_kbli_u}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Total Pendapatan UMKM Sebulan Terakhir (Rp)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.total_pendapatan_sebulan_terakhir.toLocaleString("id-ID")}
-            </td>
-          </tr>
-          <tr className="bg-white/70">
-            <th className="p-3 font-semibold text-left border border-gray-300">
-              Rata-rata Pendapatan UMKM Sebulan Terakhir (Rp)
-            </th>
-            <td className="p-3 text-right border border-gray-300">
-              {rt.rata2_pendapatan_sebulan_terakhir.toLocaleString("id-ID")}
-            </td>
-          </tr>
+          {tableColumns.map((column, index) => (
+            <tr key={index} className="bg-white/70">
+              <th className="p-3 font-semibold text-left border border-gray-300">
+                {column.label}
+              </th>
+              <td className="p-3 text-right border border-gray-300">
+                {column.value}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
       {geojson && (
@@ -318,10 +127,6 @@ const RtDetail = ({ rt, geojson = null }) => {
               mapRef.current = mapInstance;
             }}
           >
-            {/* <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            /> */}
             <TileLayer
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               attribution="Tiles © Esri"

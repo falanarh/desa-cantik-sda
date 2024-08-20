@@ -49,3 +49,19 @@ tbody tr td:last-child {
 [role="button"]:hover {
   color: #475569 !important;
 }
+
+.ant-picker-input input {
+  height: 36px !important;
+  position: absolute;
+  font-size: 14px;
+  left: 2px;
+  top: 8px;
+}
+
+.ant-picker-input input::placeholder {
+  color: #71717A !important;
+}
+
+.ant-popover-content {
+  font-family: 'Inter', sans-serif !important;
+}
