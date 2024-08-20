@@ -45,6 +45,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import api from "../utils/api";
 import { useEffect, useState } from "react";
 import { Bars } from "react-loader-spinner";
+import { dataLabels } from "./data";
 
 const username = localStorage.getItem("username");
 const formatter = (value) => <CountUp end={value} separator="," />;
@@ -57,9 +58,7 @@ const AdminSimoanginangin = () => {
     setLoading(true); // Mulai loading
     try {
       // const response = await api.get("/api/rt");
-      const [response] = await Promise.all([
-        api.get("/api/rt/all/aggregate"),
-      ])
+      const [response] = await Promise.all([api.get("/api/rt/all/aggregate")]);
       setData(response.data.data); // Update state dengan data dari API
       console.log("Data fetched:", response.data.data);
     } catch (error) {
@@ -69,16 +68,10 @@ const AdminSimoanginangin = () => {
         error.response.data &&
         error.response.data.message
       ) {
-        message.error(
-          `Terjadi kesalahan: ${error.response.data.message}`,
-          5
-        );
+        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
       } else {
         // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(
-          `Terjadi kesalahan: ${error.message}`,
-          5
-        );
+        message.error(`Terjadi kesalahan: ${error.message}`, 5);
       }
     } finally {
       setLoading(false); // Akhiri loading
@@ -252,7 +245,19 @@ const AdminSimoanginangin = () => {
       content: <RutaTable fetchDataAggregate={fetchData} />,
     },
   ];
-  
+
+  const StatComponent = ({ label = "Jumlah UMKM", value = 100 }) => {
+    return (
+      <div className="flex p-2 border-2 border-dashed border-pdarkblue rounded-xl font-inter text-pdarkblue w-fit">
+        <div className="flex justify-between w-[380px] mr-1 text-[14px]">
+          <span className="font-semibold text-[14px]">{label}</span>
+          <span className="font-semibold text-[14px]">: </span>
+        </div>
+        {value}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="flex justify-between items-center absolute border-b-1 border-[#bed5e3] w-full px-[10%] 2xl:px-[20%] font-inter text-pdarkblue py-[16px]">
@@ -264,10 +269,10 @@ const AdminSimoanginangin = () => {
       </div>
       <div className="flex flex-col items-center w-full min-h-screen bg-[#eefcff] px-[10%] 2xl:px-[20%] font-inter text-pdarkblue">
         <h1 className="font-semibold text-[16px] mt-[90px] mb-[12px] bg-white py-2 px-3 w-fit rounded-xl">
-          Ringkasan Statistik Desa Simoanginangin
+          Ringkasan Statistik UMKM Desa Simoanginangin
         </h1>
-        <div className="flex flex-col w-full gap-0 pt-5 pb-3 bg-white rounded-xl">
-          <div className="flex justify-between gap-6 px-[50px]">
+        <div className="flex flex-col w-full gap-0 p-5 pb-3 bg-white rounded-xl">
+          {/* <div className="flex justify-between gap-6 px-[50px]">
             {dataCard.map((item, index) => (
               <Col
                 key={index}
@@ -284,8 +289,8 @@ const AdminSimoanginangin = () => {
                 {item.icon}
               </Col>
             ))}
-          </div>
-          <div className="w-full swiperWrapper">
+          </div> */}
+          {/* <div className="w-full swiperWrapper">
             <Swiper
               cssMode={true}
               navigation={true}
@@ -339,16 +344,41 @@ const AdminSimoanginangin = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
+          </div> */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {data
+              ? dataLabels.map(({ key, label }) => {
+                  // Dapatkan nilai dari dataAgregat berdasarkan key
+                  const value = data[key];
+
+                  // Jika nilai tidak ada, tampilkan 0 atau nilai default
+                  return (
+                    <StatComponent
+                      key={key}
+                      label={label}
+                      value={value !== undefined ? value : 0}
+                    />
+                  );
+                })
+              : null}
           </div>
         </div>
-        <Tabs aria-label="Dynamic tabs" items={tabs} className="justify-center mt-[16px]">
+        <Tabs
+          aria-label="Dynamic tabs"
+          items={tabs}
+          className="justify-center mt-[16px]"
+        >
           {(item) => (
-            <Tab key={item.id} title={item.label} className="w-full font-semibold">
+            <Tab
+              key={item.id}
+              title={item.label}
+              className="w-full font-semibold"
+            >
               {item.content}
             </Tab>
           )}
         </Tabs>
-        
+
         {/* {loading && (
         <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
           <Bars
