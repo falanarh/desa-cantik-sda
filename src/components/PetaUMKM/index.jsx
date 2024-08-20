@@ -100,6 +100,8 @@ const ExpandableList = () => {
 
 export default function MapSection() {
   const [selectedClassification, setSelectedClassification] = useState("all");
+  const [selectedtUsaha, setSelectedtUsaha] = useState("all");
+  const [selectedskalaUsaha, setSelectedskalaUsaha] = useState("all");
   const [mapInstance, setMapInstance] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisualizationOpen, setIsVisualizationOpen] = useState(true);
@@ -283,8 +285,6 @@ export default function MapSection() {
           "Dusun",
           "Jumlah Rumah Tangga",
           "Jumlah UMKM",
-          "UMKM Tetap",
-          "UMKM Non-Tetap",
         ];
         const keysToShow = [
           "rt",
@@ -292,12 +292,10 @@ export default function MapSection() {
           "dusun",
           "jml_ruta",
           "jml_umkm",
-          "jml_umkm_tetap",
-          "jml_umkm_nontetap",
         ];
 
         const popupContent = `<div>
-          <strong>Informasi:</strong><br>
+          <strong>Informasi RT:</strong><br>
           ${keysToShow
             .map(
               (key, index) =>
@@ -337,7 +335,7 @@ export default function MapSection() {
           setSelectedRT("desa");
         } else {
           selectedLayer = layer;
-          setSelectedRT(feature.properties.rt);
+          setSelectedRT(feature.properties.kode);
           layer.setStyle({
             weight: 4,
             color: "#fff",
@@ -367,7 +365,7 @@ export default function MapSection() {
         setFilteredData(data[0]);
       } else {
         const filtered = data.find(
-          (item) => item.features[0].properties.rt === selectedRT
+          (item) => item.features[0].properties.kode === selectedRT
         );
         setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
       }
@@ -433,8 +431,18 @@ export default function MapSection() {
     all: "Semua Tempat Usaha",
     "bangunan-khusus-usaha": "Bangunan Khusus Usaha",
     "bangunan-campuran": "Bangunan Campuran",
+    "kaki-lima": "Kaki Lima",
+    "keliling": "Keliling",
     "didalam-bangunan-tempat-tinggal/online": "Didalam Bangunan Tempat Tinggal/Online",
   };
+
+  const skalaUsaha = {
+    all: "Semua Skala Usaha",
+    "usaha-mikro": "Skala Usaha Mikro",
+    "usaha-kecil": "Skala Usaha Kecil",
+    "usaha-menengah": "Skala Usaha Menengah",
+  };
+
   const classifications = {
     all: "Seluruh Lapangan Usaha",
     // kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
@@ -462,6 +470,14 @@ export default function MapSection() {
 
   const handleClassificationChange = (event) => {
     setSelectedClassification(event.target.value);
+  };
+
+  const handletUsahaChange = (event) => {
+    setSelectedtUsaha(event.target.value);
+  };
+
+  const handleskalaUsahaChange = (event) => {
+    setSelectedskalaUsaha(event.target.value);
   };
 
   return (
@@ -530,11 +546,13 @@ export default function MapSection() {
                 )}
                 {showIndividu &&
                   dataRumahTangga
-                    .filter(
-                      (item) =>
-                        selectedClassification === "all" ||
-                        item.kategori_usaha === selectedClassification
-                    )
+                  .filter(
+                    (item) =>
+                      (selectedRT === "desa" || item.kodeRt === selectedRT)&&
+                      (selectedClassification === "all" || item.kategori_usaha === selectedClassification) &&
+                      (selectedtUsaha === "all" || item.lokasi_tempat_usaha === selectedtUsaha) &&
+                      (selectedskalaUsaha === "all" || item.skala_usaha === selectedskalaUsaha)
+                  )
                     .map((item) => (
                       <Marker
                         key={`marker-${item._id}`}
@@ -637,9 +655,9 @@ export default function MapSection() {
                   <option value="desa">Semua RT</option>
                   {data && data.length > 0 ? (
                     data.map((item) => {
-                      const { rt } = item.features[0].properties; // Destrukturisasi untuk bersih
+                      const { rt, kode } = item.features[0].properties; // Destrukturisasi untuk bersih
                       return (
-                        <option key={rt} value={rt}>
+                        <option key={rt} value={kode}>
                           {rt}
                         </option>
                       );
@@ -677,31 +695,31 @@ export default function MapSection() {
               id="tUsaha"
               name="tUsaha"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              onChange={handletUsahaChange}
+              value={selectedtUsaha}
             >
-              <option value="all_tUsaha">Semua Tempat Usaha</option>
-              <option value="bangunan_khusus_usaha">
-                Bangunan Khusus Usaha
-              </option>
-              <option value="bangunan_campuran">Bangunan Campuran</option>
-              <option value="kaki_lima">Kaki Lima</option>
-              <option value="keliling">Keliling</option>
-              <option value="online">
-                Didalam bangunan tempat tinggal/Online
-              </option>
+              {Object.entries(tempatUsaha).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </select>
 
             <label className="block mt-4 text-sm font-medium text-white">
-              Status UMKM
+              Skala Usaha
             </label>
             <select
-              id="status"
-              name="status"
+              id="skala"
+              name="skala"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              onChange={handleskalaUsahaChange}
+              value={selectedskalaUsaha}
             >
-              <option value="bangunan_khusus_usaha">Semua UMKM</option>
-              <option value="bangunan_campuran">Mikro</option>
-              <option value="kaki_lima">Kecil</option>
-              <option value="keliling">Menengah</option>
+              {Object.entries(skalaUsaha).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
         </Transition>
@@ -717,7 +735,6 @@ export default function MapSection() {
           className="absolute top-16 left-[10%] z-10 w-64 max-h-[77vh] p-4 bg-[#1D262C] rounded-md shadow-md text-white overflow-y-auto"
         >
           <div className="text-center">
-            {/* Check if data and necessary properties are defined */}
             {filteredData &&
             filteredData.features &&
             filteredData.features[0] ? (
@@ -760,12 +777,6 @@ export default function MapSection() {
                       </div>
                       <p className="text-xm">Keluarga UMKM</p>
                     </div>
-                    {/* <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <div className="text-2xl font-bold">
-              Rp<CountUp start={0} end={filteredData.features[0].properties.total_pendapatan_sebulan_terakhir} duration={3/2} />
-            </div>
-            <p className="text-xm">Pendapatan UMKM</p>
-          </div> */}
                   </>
                 ) : (
                   <>
@@ -800,23 +811,10 @@ export default function MapSection() {
                         />
                         %
                       </div>
-                      <p className="text-xm">Rumah Tangga UMKM</p>
+                      <p className="text-xm">Keluarga UMKM</p>
                     </div>
-                    {/* <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-            <div className="text-2xl font-bold">
-              Rp<CountUp start={0} end={dataAgregat.total_pendapatan_sebulan_terakhir} duration={3/2} />
-            </div>
-            <p className="text-xm">Pendapatan UMKM</p>
-          </div> */}
                   </>
                 )}
-                {/* <div>
-            <p className="mb-2 font-semibold text-left font-xl">Sebaran Lapangan Usaha UMKM</p>
-            <ExpandableList />
-          </div> */}
-                {/* <div className="p-4 mb-4 rounded-md">
-            <DonutChart data={chartData} />
-          </div> */}
               </>
             ) : (
               <p>Data tidak tersedia</p>
@@ -853,21 +851,6 @@ export default function MapSection() {
                 </div>
               )}
             </button>
-            {/* <div className="flex flex-col justify-center mr-4 space-y-2">
-        
-        <button
-          className={`py-1 px-2 rounded-md text-sm ${visualization === 'umkm' ? 'bg-[#BD0026] text-white' : 'bg-gray-200 text-gray-800'}`}
-          onClick={() => changeVisualization('umkm')}
-        >
-          Peta UMKM
-        </button>
-        <button
-          className={`py-1 px-2 rounded-md text-sm ${visualization === 'pendapatan' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}
-          onClick={() => changeVisualization('pendapatan')}
-        >
-          Peta Pendapatan
-        </button>
-        </div> */}
             <div>
               {visualization === "umkm" ? (
                 <div className="w-[20vh]">
