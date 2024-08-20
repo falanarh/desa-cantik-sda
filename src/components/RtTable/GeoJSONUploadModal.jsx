@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -25,6 +25,12 @@ const GeoJSONUploadModal = ({
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAddModalOpen) {
+      setFiles([]);
+    }
+  }, [isAddModalOpen]);
 
   const uploadProps = {
     name: "file",
@@ -55,6 +61,11 @@ const GeoJSONUploadModal = ({
   };
 
   const handleAdd = async () => {
+    if (files.length === 0) {
+      setLoading(false);
+      message.error(`Terjadi kesalahan: Tidak ada file`, 5);
+      return;
+    }
     onAddModalOpenChange(false);
     setLoading(true);
     try {
@@ -155,15 +166,20 @@ const GeoJSONUploadModal = ({
                 <Button
                   className="bg-[#0B588F] text-white font-inter font-semibold"
                   onPress={handleAdd}
+                  disabled={loading}
                 >
-                  Tambah
+                  {loading ? (
+                  <Bars width="25" height="25" color="#ffffff" />
+                ) : (
+                  "Tambah"
+                )}
                 </Button>
               </ModalFooter>
             </>
           )}
         </ModalContent>
       </Modal>
-      {loading && (
+      {/* {loading && (
         <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
           <Bars
             height="60"
@@ -178,7 +194,7 @@ const GeoJSONUploadModal = ({
             Loading
           </p>
         </div>
-      )}
+      )} */}
     </>
   );
 };

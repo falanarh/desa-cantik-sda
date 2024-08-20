@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import Logo from "../assets/logo/umkm-unggul.png";
+import Logo from "../../public/pict/logo_dc.png";
 import { useNavigate } from "react-router-dom";
 import "./pages.css";
 import api from "../utils/api";
