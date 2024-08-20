@@ -237,7 +237,7 @@ const AdminSimoanginangin = () => {
     {
       id: "sls",
       label: "Satuan Lingkungan Setempat (SLS)",
-      content: <RtTable />,
+      content: <RtTable fetchDataAggregate={fetchData} />,
     },
     {
       id: "keluarga-umkm",

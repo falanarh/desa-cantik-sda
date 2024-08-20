@@ -28,7 +28,7 @@ import EditRtModal from "./EditRtModal";
 import DetailRtModal from "./DetailRtModal";
 import { useAsyncList } from "@react-stately/data";
 
-const RtTable = () => {
+const RtTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRt, setSelectedRt] = useState({}); // State untuk menyimpan RT yang dipilih
   const [data, setData] = useState([]); // State untuk data RT
@@ -341,6 +341,7 @@ const RtTable = () => {
         onEditModalOpenChange={onEditModalOpenChange}
         rt={editRtData}
         fetchData={fetchData}
+        fetchDataAggregate={fetchDataAggregate}
       />
 
       {/* {loading && (

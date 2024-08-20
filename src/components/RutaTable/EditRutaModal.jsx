@@ -296,7 +296,7 @@ const EditRutaModal = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleEditSave = () => {
+  const handleEditSave = async () => {
     if (!validateForm()) {
       message.error(
         "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
@@ -326,11 +326,12 @@ const EditRutaModal = ({
 
       console.log(convertedData);
 
-      updateData(convertedData);
+      await updateData(convertedData);
 
-      setTimeout(() => {
-        fetchDataAggregate();
-      }, 1000);
+      await fetchDataAggregate();
+      // setTimeout(() => {
+      //   fetchDataAggregate();
+      // }, 1000);
     }
   };
 

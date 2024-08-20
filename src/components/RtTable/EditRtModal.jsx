@@ -19,6 +19,7 @@ const EditRtModal = ({
   onEditModalOpenChange,
   rt,
   fetchData,
+  fetchDataAggregate,
 }) => {
   const [editRtData, setEditRtData] = useState(rt);
   const [loading, setLoading] = useState(false);
@@ -118,7 +119,8 @@ const EditRtModal = ({
       console.log("Data updated:", response.data.data);
       message.success(`RT ${data.rt} berhasil diupdate.`, 5);
       onEditModalOpenChange(false); // Close the modal
-      fetchData(); // Fetch updated data
+      await fetchData(); // Fetch updated data
+      await fetchDataAggregate();
     } catch (error) {
       if (
         error.response &&
