@@ -61,8 +61,52 @@ const EditRtModal = ({
         jml_umkm_kbli_s: parseInt(editRtData.jml_umkm_kbli_s, 10) || 0,
         jml_umkm_kbli_t: parseInt(editRtData.jml_umkm_kbli_t, 10) || 0,
         jml_umkm_kbli_u: parseInt(editRtData.jml_umkm_kbli_u, 10) || 0,
+        jml_umkm_lokasi_bangunan_khusus_usaha: parseInt(
+          editRtData.jml_umkm_lokasi_bangunan_khusus_usaha,
+          10
+        ) || 0,
+        jml_umkm_lokasi_bangunan_campuran: parseInt(
+          editRtData.jml_umkm_lokasi_bangunan_campuran,
+          10
+        ) || 0,
+        jml_umkm_lokasi_kaki_lima: parseInt(
+          editRtData.jml_umkm_lokasi_kaki_lima,
+          10
+        ) || 0,
+        jml_umkm_lokasi_keliling: parseInt(
+          editRtData.jml_umkm_lokasi_keliling,
+          10
+        ) || 0,
+        jml_umkm_lokasi_didalam_bangunan_tempat_tinggal_online: parseInt(
+          editRtData.jml_umkm_lokasi_didalam_bangunan_tempat_tinggal_online,
+          10
+        ) || 0,
+        jml_umkm_bentuk_pt_persero_sejenisnya: parseInt(
+          editRtData.jml_umkm_bentuk_pt_persero_sejenisnya,
+          10
+        ) || 0,
+        jml_umkm_bentuk_ijin_desa_ijin_lainnya: parseInt(
+          editRtData.jml_umkm_bentuk_ijin_desa_ijin_lainnya,
+          10
+        ) || 0,
+        jml_umkm_bentuk_tidak_berbadan_hukum: parseInt(
+          editRtData.jml_umkm_bentuk_tidak_berbadan_hukum,
+          10
+        ) || 0,
+        jml_umkm_skala_usaha_mikro: parseInt(
+          editRtData.jml_umkm_skala_usaha_mikro,
+          10
+        ) || 0,
+        jml_umkm_skala_usaha_kecil: parseInt(
+          editRtData.jml_umkm_skala_usaha_kecil,
+          10
+        ) || 0,
+        jml_umkm_skala_usaha_menengah: parseInt(
+          editRtData.jml_umkm_skala_usaha_menengah,
+          10
+        ) || 0,
       };
-
+      console.log("Edit data:", convertedData);
       updateData(convertedData);
     }
   };
