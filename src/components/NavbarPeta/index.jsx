@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 export default function NavbarPeta() {
   return (
     <div className="sticky top-0 z-50">
-      <Navbar className="bg-base h-[11vh] p-3 sm:p-4 mx-0 flex shadow-lg">
+      <Navbar className="bg-base h-[11vh] p-3 sm:p-2 mx-0 flex shadow-lg">
         <NavbarBrand justify="left">
-        <img
+          <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Coat_of_Arms_of_Sidoarjo_Regency.png/664px-Coat_of_Arms_of_Sidoarjo_Regency.png"
-            alt="Desa Cantik Logo"
+            alt="Sidoarjo Coat of Arms"
             width={48}
             height={48}
           />
-        <img
+          <img
             src="/pict/logo_dc.png"
             alt="Desa Cantik Logo"
             width={48}

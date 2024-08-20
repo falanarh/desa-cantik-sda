@@ -237,81 +237,96 @@ export default function MapSection() {
   let selectedLayer = null; // Track the currently selected layer
 
   const onEachFeature = (feature, layer) => {
-    layer.on({
-      mouseover: (e) => {
-        const layer = e.target;
-        if (layer !== selectedLayer) {
-          layer.setStyle({
-            weight: 4,
-            color: "#fff",
-            dashArray: "",
-            fillOpacity: 0.8,
-          });
-        }
+  layer.on({
+    mouseover: (e) => {
+      const layer = e.target;
+      if (layer !== selectedLayer) {
+        layer.setStyle({
+          weight: 4,
+          color: "#fff",
+          dashArray: "",
+          fillOpacity: 0.8,
+        });
+      }
+
+      const keysLayer = [
+        "RT",
+        "RW",
+        "Dusun",
+        "Jumlah Rumah Tangga",
+        "Jumlah UMKM",
+      ];
+      const keysToShow = [
+        "rt",
+        "rw",
+        "dusun",
+        "jml_ruta",
+        "jml_umkm",
+      ];
+
+      const popupContent = `<div>
+        <strong>Informasi RT:</strong><br>
+        ${keysToShow
+          .map(
+            (key, index) =>
+              `${keysLayer[index]}: ${feature.properties[key] || "N/A"}`
+          )
+          .join("<br>")}
+      </div>`;
+
+      const popup = layer.bindPopup(popupContent, {
+        autoPan: false,
+      }).openPopup(e.latlng);
+
+      popup.setLatLng(e.latlng);
+    },
+
+    mouseout: (e) => {
+      const layer = e.target;
+      if (layer !== selectedLayer) {
+        layer.setStyle({
+          weight: 2,
+          color: "white",
+          dashArray: "3",
+          fillOpacity: 0.3,
+        });
+      }
+      layer.closePopup();
+    },
+
+    click: (e) => {
+      const layer = e.target;
+      
+      // Reset previous selected layer style
+      if (selectedLayer) {
+        selectedLayer.setStyle({
+          weight: 2,
+          color: "white",
+          dashArray: "3",
+          fillOpacity: 0.3,
+        });
+      }
+      
+      // Set the current layer as the selected layer
+      if (selectedLayer === layer) {
+        selectedLayer = null;
+        setSelectedRT("desa");
+      } else {
+        selectedLayer = layer;
+        setSelectedRT(feature.properties.kode);
+        layer.setStyle({
+          weight: 4,
+          color: "#fff",
+          dashArray: "",
+          fillOpacity: 0.8, // Ensure opacity is set to 0.8 when clicked
+        });
+      }
+    },
+  });
+};
+
   
-        const keysLayer = [
-          "RT",
-          "RW",
-          "Dusun",
-          "Jumlah Rumah Tangga",
-          "Jumlah UMKM",
-        ];
-        const keysToShow = [
-          "rt",
-          "rw",
-          "dusun",
-          "jml_ruta",
-          "jml_umkm",
-        ];
   
-        const popupContent = `<div>
-          <strong>Informasi RT:</strong><br>
-          ${keysToShow
-            .map(
-              (key, index) =>
-                `${keysLayer[index]}: ${feature.properties[key] || "N/A"}`
-            )
-            .join("<br>")}
-        </div>`;
-  
-        // Menggunakan latlng dari event mouseover untuk menempatkan popup
-        layer.bindPopup(popupContent, {
-          autoPan: true,
-          autoPanPadding: L.point(50, 50), // Menyesuaikan padding agar popup tidak terlalu jauh dari kursor
-        }).openPopup(e.latlng);
-      },
-  
-      mouseout: (e) => {
-        const layer = e.target;
-        if (layer !== selectedLayer) {
-          layer.setStyle({
-            weight: 2,
-            color: "white",
-            dashArray: "3",
-            fillOpacity: 0.3,
-          });
-        }
-        layer.closePopup();
-      },
-  
-      click: (e) => {
-        const layer = e.target;
-        if (selectedLayer === layer) {
-          selectedLayer = null;
-          setSelectedRT("desa");
-        } else {
-          selectedLayer = layer;
-          setSelectedRT(feature.properties.kode);
-          layer.setStyle({
-            weight: 4,
-            color: "#fff",
-            dashArray: "",
-            fillOpacity: 0.8,
-          });
-        }
-      },
-    });
-  };
   
 
   useEffect(() => {
@@ -494,21 +509,23 @@ export default function MapSection() {
                           parseFloat(item.longitude),
                         ]}
                         icon={divIcon({
-                          className: "custom-label",
-                          html: `<div style="
+                        className: "custom-label",
+                        html: `<div style="
+                          background-color: #AF282F;
                           border-radius: 50%;
-                          width: 24px;
-                          height: 24px;
+                          width: 1.5rem;
+                          height: 1.5rem;
+                          border: 0.1rem solid white;
                           display: flex;
                           justify-content: center;
                           align-items: center;
                         ">
-                          <span class="material-icons" style="color:#AF282F; font-size=2rem"> location_on </span>
+                          <span class="material-icons" style="color: #FFFFFF; font-size: 1rem;">store</span>
                         </div>`,
-                        })}
+                      })}
                       >
                         <Popup>
-                          <div>
+                          <div className="z-100">
                             <strong>Informasi UMKM:</strong>
                             {console.log("Check items ", item)}
                             <br />
