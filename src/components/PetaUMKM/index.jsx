@@ -7,7 +7,6 @@ import {
   Marker,
   Popup,
 } from "react-leaflet";
-import * as turf from "@turf/turf";
 import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
 import { Transition } from "@headlessui/react";
@@ -189,13 +188,6 @@ export default function MapSection() {
     }
   };
 
-  // useEffect(() => {
-  //   // Fetch data from API
-  //   fetchData();
-  //   fetchDataAgregat();
-  //   fetchDataRumahTangga();
-  // }, []);
-
   useEffect(() => {
     if (!isFetched) {
       fetchData().then(() => {
@@ -217,7 +209,7 @@ export default function MapSection() {
       opacity: 1,
       color: "white",
       dashArray: "3",
-      fillOpacity: 0.7,
+      fillOpacity: 0.3,
     };
   };
 
@@ -279,9 +271,9 @@ export default function MapSection() {
         if (layer !== selectedLayer) {
           layer.setStyle({
             weight: 4,
-            color: "#333",
+            color: "#fff",
             dashArray: "",
-            fillOpacity: 0.85,
+            fillOpacity: 0.8,
           });
         }
 
@@ -324,7 +316,7 @@ export default function MapSection() {
             weight: 2,
             color: "white",
             dashArray: "3",
-            fillOpacity: 0.6,
+            fillOpacity: 0.3,
           });
         }
         layer.closePopup();
@@ -332,14 +324,14 @@ export default function MapSection() {
 
       click: (e) => {
         const layer = e.target;
-        if (selectedLayer) {
-          selectedLayer.setStyle({
-            weight: 4,
-            color: "#333",
-            dashArray: "",
-            fillOpacity: 0.85,
-          });
-        }
+        // if (selectedLayer) {
+        //   selectedLayer.setStyle({
+        //     weight: 4,
+        //     color: "#fff",
+        //     dashArray: "",
+        //     fillOpacity: 0.8,
+        //   });
+        // }
         if (selectedLayer === layer) {
           selectedLayer = null;
           setSelectedRT("desa");
@@ -348,9 +340,9 @@ export default function MapSection() {
           setSelectedRT(feature.properties.rt);
           layer.setStyle({
             weight: 4,
-            color: "#333",
+            color: "#fff",
             dashArray: "",
-            fillOpacity: 0.95,
+            fillOpacity: 0.8,
           });
         }
       },
@@ -410,9 +402,10 @@ export default function MapSection() {
 
   function capitalizeWords(str) {
     return str
-      .split(" ")
+      .split(/[-/]/) // Pisahkan berdasarkan "-" dan "/"
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .join(" ")
+      .replace(/\s\/\s/, "/"); // Gabungkan kembali "/" tanpa spasi
   }
 
   function calculateCentroid(multiPolygon) {
@@ -435,6 +428,13 @@ export default function MapSection() {
 
     return [centroidY, centroidX]; // Return as an array of floats
   }
+
+  const tempatUsaha = {
+    all: "Semua Tempat Usaha",
+    "bangunan-khusus-usaha": "Bangunan Khusus Usaha",
+    "bangunan-campuran": "Bangunan Campuran",
+    "didalam-bangunan-tempat-tinggal/online": "Didalam Bangunan Tempat Tinggal/Online",
+  };
   const classifications = {
     all: "Seluruh Lapangan Usaha",
     // kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
@@ -533,7 +533,7 @@ export default function MapSection() {
                     .filter(
                       (item) =>
                         selectedClassification === "all" ||
-                        item.klasifikasiKbli === selectedClassification
+                        item.kategori_usaha === selectedClassification
                     )
                     .map((item) => (
                       <Marker
@@ -559,20 +559,17 @@ export default function MapSection() {
                         <Popup>
                           <div>
                             <strong>Informasi UMKM:</strong>
+                            {console.log("Check items ", item)}
                             <br />
-                            RT: {item.rt}
+                            <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{item.nama_usaha} </span>
                             <br />
-                            RW: {item.rw}
+                            {item.rt_rw_dusun} 
                             <br />
-                            Dusun: {item.dusun}
+                            <b>Kategori: </b><br />{classifications[item.kategori_usaha]}
                             <br />
-                            Klasifikasi: {classifications[item.klasifikasiKbli]}
+                            <b>Tempat Usaha: </b><br />{capitalizeWords(item.lokasi_tempat_usaha)}
                             <br />
-                            Jenis UMKM: {capitalizeWords(item.jenisUmkm)}
-                            <br />
-                            Pendapatan per Bulan: Rp
-                            {item.pendapatanSebulanTerakhir}
-                            <br />
+                            <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)}
                           </div>
                         </Popup>
                       </Marker>
@@ -728,8 +725,8 @@ export default function MapSection() {
                 {selectedRT !== "desa" ? (
                   <>
                     <div className="mb-4">
-                      <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
-                        <span className="mr-1 text-sm material-icons">
+                      <p className="bg-[#2E2E2E] rounded-full p-1 text-sm text-[#fff] font-medium">
+                        <span className="mr-1 text-sm material-icons text-[#fff] ">
                           location_on
                         </span>{" "}
                         RT {filteredData.features[0].properties.rt} RW{" "}
@@ -773,11 +770,11 @@ export default function MapSection() {
                 ) : (
                   <>
                     <div className="mb-4">
-                      <p className="bg-[#2E2E2E] rounded-full p-1 text-sm font-medium">
+                      <p className="bg-[#2E2E2E] rounded-full text-[#fff] p-1 text-sm font-medium">
                         <span className="mr-1 text-sm material-icons">
                           location_on
                         </span>{" "}
-                        Desa Simoangin Angin
+                        Desa Simoangin-angin
                       </p>
                     </div>
                     <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
