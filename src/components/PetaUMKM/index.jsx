@@ -233,36 +233,6 @@ export default function MapSection() {
       : "#000000";
   };
 
-  const getStyleIncome = (data) => {
-    const densityIncome =
-      data.features[0].properties.total_pendapatan_sebulan_terakhir || 0;
-    return {
-      fillColor: getColorIncome(densityIncome),
-      weight: 2,
-      opacity: 1,
-      color: "white",
-      dashArray: "3",
-      fillOpacity: 0.7,
-    };
-  };
-
-  const getColorIncome = (densityIncome) => {
-    return densityIncome > 100000000
-      ? "#08306B" // Dark blue
-      : densityIncome > 75000000
-      ? "#08519C"
-      : densityIncome > 50000000
-      ? "#2171B5"
-      : densityIncome > 20000000
-      ? "#4292C6"
-      : densityIncome > 1000000
-      ? "#6BAED6"
-      : densityIncome > 500000
-      ? "#9ECAE1"
-      : densityIncome > 0
-      ? "#C6DBEF"
-      : "#000000"; // Light blue
-  };
 
   let selectedLayer = null; // Track the currently selected layer
 
@@ -278,7 +248,7 @@ export default function MapSection() {
             fillOpacity: 0.8,
           });
         }
-
+  
         const keysLayer = [
           "RT",
           "RW",
@@ -293,7 +263,7 @@ export default function MapSection() {
           "jml_ruta",
           "jml_umkm",
         ];
-
+  
         const popupContent = `<div>
           <strong>Informasi RT:</strong><br>
           ${keysToShow
@@ -303,10 +273,14 @@ export default function MapSection() {
             )
             .join("<br>")}
         </div>`;
-
-        layer.bindPopup(popupContent).openPopup();
+  
+        // Menggunakan latlng dari event mouseover untuk menempatkan popup
+        layer.bindPopup(popupContent, {
+          autoPan: true,
+          autoPanPadding: L.point(50, 50), // Menyesuaikan padding agar popup tidak terlalu jauh dari kursor
+        }).openPopup(e.latlng);
       },
-
+  
       mouseout: (e) => {
         const layer = e.target;
         if (layer !== selectedLayer) {
@@ -319,17 +293,9 @@ export default function MapSection() {
         }
         layer.closePopup();
       },
-
+  
       click: (e) => {
         const layer = e.target;
-        // if (selectedLayer) {
-        //   selectedLayer.setStyle({
-        //     weight: 4,
-        //     color: "#fff",
-        //     dashArray: "",
-        //     fillOpacity: 0.8,
-        //   });
-        // }
         if (selectedLayer === layer) {
           selectedLayer = null;
           setSelectedRT("desa");
@@ -346,17 +312,7 @@ export default function MapSection() {
       },
     });
   };
-
-  // useEffect(() => {
-  //   if (selectedRT === "desa") {
-  //     setFilteredData(data[0]);
-  //   } else {
-  //     const filtered = data.find(
-  //       (item) => item.features[0].properties.rt === selectedRT
-  //     );
-  //     setFilteredData(filtered || data[0]); // Fallback to data[0] if no match is found
-  //   }
-  // }, [selectedRT, data]);
+  
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -374,29 +330,6 @@ export default function MapSection() {
       setFilteredData(null); // Atau data default lainnya jika diperlukan
     }
   }, [selectedRT, data]);
-
-  useEffect(() => {
-    if (filteredData) {
-      const chartData = {
-        name: filteredData
-          ? filteredData.features
-            ? filteredData.features.length > 0
-              ? filteredData.features[0].properties.rt
-              : ""
-            : ""
-          : "",
-        value: filteredData
-          ? filteredData.features
-            ? filteredData.features.length > 0
-              ? filteredData.features[0].properties.jml_umkm
-              : 0
-            : 0
-          : 0,
-        // value: filteredData.features[0].properties.jml_umkm,
-      };
-      setChartData([chartData]);
-    }
-  }, [filteredData]);
 
   function capitalizeWords(str) {
     return str
