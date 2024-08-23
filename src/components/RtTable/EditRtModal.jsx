@@ -190,7 +190,7 @@ const EditRtModal = ({
                   />
                   <Input
                     label="Dusun"
-                    placeholder="Masukkan Dusun"
+                    placeholder="Masukkan dusun"
                     fullWidth
                     name="dusun"
                     value={editRtData?.dusun ?? ""}
@@ -199,8 +199,8 @@ const EditRtModal = ({
                     disabled
                   />
                   <Input
-                    label="Jumlah Ruta"
-                    placeholder="Masukkan jumlah Ruta"
+                    label="Jumlah Keluarga"
+                    placeholder="Masukkan jumlah keluarga"
                     fullWidth
                     name="jml_ruta"
                     value={editRtData?.jml_ruta ?? ""}
