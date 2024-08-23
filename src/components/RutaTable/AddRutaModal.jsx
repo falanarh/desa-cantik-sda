@@ -23,6 +23,8 @@ import * as XLSX from "xlsx";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { convertDatesInArray } from "../../utils/date";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.kode === key);
@@ -554,13 +556,20 @@ const AddRutaModal = ({
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
+  
+  const customMarker = L.icon({
+    iconUrl: "https://i.ibb.co.com/GCZrQ4w/shop.png", // Replace with your custom icon URL
+    iconSize: [45, 45], // Size of the icon
+    iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -45] // Point from which the popup should open relative to the iconAnchor
+  });
 
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onClose}
       size="xl"
-      className="bg-slate-100 font-inter max-h-[90%]"
+      className="bg-slate-100 font-inter max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",
@@ -928,7 +937,7 @@ const AddRutaModal = ({
                             attribution="Tiles © Esri"
                           />
                           <MapUpdater position={mapPosition} />
-                          <Marker position={mapPosition}>
+                          <Marker position={mapPosition} icon={customMarker}>
                             <Popup>Posisi Keluarga UMKM</Popup>
                           </Marker>
                         </MapContainer>

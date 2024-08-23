@@ -142,7 +142,7 @@ const EditRtModal = ({
         isOpen={isEditModalOpen}
         onOpenChange={onEditModalOpenChange}
         size="xl"
-        className="bg-slate-100 font-inter max-h-[90%]"
+        className="bg-slate-100 font-inter max-h-[90%] my-auto"
         classNames={{
           header: "border-b-[1px] border-slate-300",
           footer: "border-t-[1px] border-slate-300",

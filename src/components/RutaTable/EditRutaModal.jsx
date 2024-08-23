@@ -17,6 +17,8 @@ import { DatePicker, message } from "antd";
 import { Bars } from "react-loader-spinner";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.kode === key);
@@ -119,9 +121,139 @@ const EditRutaModal = ({
     }
   }, [editRutaData]);
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setEditRutaData((prevValues) => ({ ...prevValues, [name]: value }));
+
+  //   if (name === "no_urut_bangunan") {
+  //     if (!value) {
+  //       errors.no_urut_bangunan = "No. Urut Bangunan harus diisi.";
+  //     } else if (!/^\d{3}$/.test(value)) {
+  //       errors.no_urut_bangunan =
+  //         "No. Urut Bangunan harus berupa angka tiga digit. Contoh: 001";
+  //     } else {
+  //       errors.no_urut_bangunan = "";
+  //     }
+  //   }
+
+  //   if (name === "nama_kepala_keluarga") {
+  //     if (!value) {
+  //       errors.nama_kepala_keluarga = "Nama Kepala Keluarga harus diisi.";
+  //     } else {
+  //       errors.nama_kepala_keluarga = "";
+  //     }
+  //   }
+
+  //   if (name === "nama_pemilik_penanggungjawab") {
+  //     if (!value) {
+  //       errors.nama_pemilik_penanggungjawab =
+  //         "Nama Pemilik/Penanggungjawab harus diisi.";
+  //     } else {
+  //       errors.nama_pemilik_penanggungjawab = "";
+  //     }
+  //   }
+
+  //   if (name === "nik") {
+  //     if (!value) {
+  //       errors.nik = "NIK harus diisi.";
+  //     } else if (!/^\d{16}$/.test(value)) {
+  //       errors.nik = "NIK harus terdiri dari 16 digit angka.";
+  //     } else {
+  //       errors.nik = "";
+  //     }
+  //   }
+
+  //   if (name === "no_hp") {
+  //     if (!value) {
+  //       errors.no_hp = "No. HP harus diisi.";
+  //     } else if (!/^08\d{8,11}$/.test(value)) {
+  //       errors.no_hp =
+  //         "No. HP harus diawali dengan '08' dan terdiri dari 10 hingga 13 digit.";
+  //     } else {
+  //       errors.no_hp = "";
+  //     }
+  //   }
+
+  //   if (name === "nama_usaha") {
+  //     if (!value) {
+  //       errors.nama_usaha = "Nama Usaha harus diisi.";
+  //     } else {
+  //       errors.nama_usaha = "";
+  //     }
+  //   }
+
+  //   if (name === "alamat") {
+  //     if (!value) {
+  //       errors.alamat = "Alamat harus diisi.";
+  //     } else {
+  //       errors.alamat = "";
+  //     }
+  //   }
+
+  //   const correctedValue = value.replace(",", ".");
+
+  //   if (name === "latitude") {
+  //     if (correctedValue === "") {
+  //       errors.latitude = "Latitude harus diisi.";
+  //     } else if (isNaN(correctedValue)) {
+  //       errors.latitude = "Latitude harus berupa angka.";
+  //     } else {
+  //       const numericValue = parseFloat(correctedValue);
+  //       if (!isValidLatitude(numericValue)) {
+  //         errors.latitude = "Latitude harus antara -90 dan 90.";
+  //       } else {
+  //         errors.latitude = "";
+  //         // Update state dengan nilai yang telah dikoreksi
+  //         setEditRutaData((prevState) => ({
+  //           ...prevState,
+  //           [name]: correctedValue,
+  //         }));
+  //       }
+  //     }
+  //   }
+
+  //   if (name === "longitude") {
+  //     if (correctedValue === "") {
+  //       errors.longitude = "Longitude harus diisi.";
+  //     } else if (isNaN(correctedValue)) {
+  //       errors.longitude = "Longitude harus berupa angka.";
+  //     } else {
+  //       const numericValue = parseFloat(correctedValue);
+  //       if (!isValidLongitude(numericValue)) {
+  //         errors.longitude = "Longitude harus antara -180 dan 180.";
+  //       } else {
+  //         errors.longitude = "";
+  //         // Update state dengan nilai yang telah dikoreksi
+  //         setEditRutaData((prevState) => ({
+  //           ...prevState,
+  //           [name]: correctedValue,
+  //         }));
+  //       }
+  //     }
+  //   }
+  // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditRutaData((prevValues) => ({ ...prevValues, [name]: value }));
+
+    let updatedValue = value;
+
+    if (name === "latitude" || name === "longitude") {
+      updatedValue = value.replace(",", "."); // Replace comma with dot for valid decimal format
+    }
+
+    if (
+      name === "nama_kepala_keluarga" ||
+      name === "nama_pemilik_penanggungjawab" ||
+      name === "nama_usaha" ||
+      name === "alamat"
+    ) {
+      updatedValue = value.toUpperCase();
+    }
+
+    if (name !== "latitude" && name !== "longitude") {
+      setEditRutaData((prevValues) => ({ ...prevValues, [name]: updatedValue }));
+    }
 
     if (name === "no_urut_bangunan") {
       if (!value) {
@@ -188,44 +320,42 @@ const EditRutaModal = ({
       }
     }
 
-    const correctedValue = value.replace(",", ".");
-
     if (name === "latitude") {
-      if (correctedValue === "") {
+      if (updatedValue === "") {
         errors.latitude = "Latitude harus diisi.";
-      } else if (isNaN(correctedValue)) {
+      } else if (isNaN(updatedValue)) {
         errors.latitude = "Latitude harus berupa angka.";
       } else {
-        const numericValue = parseFloat(correctedValue);
+        const numericValue = parseFloat(updatedValue);
         if (!isValidLatitude(numericValue)) {
           errors.latitude = "Latitude harus antara -90 dan 90.";
         } else {
           errors.latitude = "";
-          // Update state dengan nilai yang telah dikoreksi
-          setEditRutaData((prevState) => ({
-            ...prevState,
-            [name]: correctedValue,
+          setEditRutaData((prevValues) => ({
+            ...prevValues,
+            [name]: updatedValue,
           }));
+          console.log("Corrected Latitude:", updatedValue);
         }
       }
     }
 
     if (name === "longitude") {
-      if (correctedValue === "") {
+      if (updatedValue === "") {
         errors.longitude = "Longitude harus diisi.";
-      } else if (isNaN(correctedValue)) {
+      } else if (isNaN(updatedValue)) {
         errors.longitude = "Longitude harus berupa angka.";
       } else {
-        const numericValue = parseFloat(correctedValue);
+        const numericValue = parseFloat(updatedValue);
         if (!isValidLongitude(numericValue)) {
           errors.longitude = "Longitude harus antara -180 dan 180.";
         } else {
           errors.longitude = "";
-          // Update state dengan nilai yang telah dikoreksi
-          setEditRutaData((prevState) => ({
-            ...prevState,
-            [name]: correctedValue,
+          setEditRutaData((prevValues) => ({
+            ...prevValues,
+            [name]: updatedValue,
           }));
+          console.log("Corrected Longitude:", updatedValue);
         }
       }
     }
@@ -373,12 +503,19 @@ const EditRutaModal = ({
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
+  const customMarker = L.icon({
+    iconUrl: "https://i.ibb.co.com/GCZrQ4w/shop.png", // Replace with your custom icon URL
+    iconSize: [45, 45], // Size of the icon
+    iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -45] // Point from which the popup should open relative to the iconAnchor
+  });
+
   return (
     <Modal
       isOpen={isEditModalOpen}
       onOpenChange={onEditModalOpenChange}
       size="xl"
-      className="bg-slate-100 font-inter max-h-[90%]"
+      className="bg-slate-100 font-inter max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",
@@ -750,9 +887,9 @@ const EditRutaModal = ({
                           attribution="Tiles © Esri"
                         />
                         <MapUpdater position={mapPosition} />
-                        <Marker position={mapPosition}>
-                          <Popup>Posisi Keluarga UMKM</Popup>
-                        </Marker>
+                        <Marker position={mapPosition} icon={customMarker}>
+                            <Popup>Posisi Keluarga UMKM</Popup>
+                          </Marker>
                       </MapContainer>
                     </div>
                   )}

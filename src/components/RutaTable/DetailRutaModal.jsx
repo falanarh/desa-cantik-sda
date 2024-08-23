@@ -18,6 +18,8 @@ import {
   pendidikan_terakhir,
   skala_usaha,
 } from "./data";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.key === key);
@@ -60,6 +62,13 @@ const TableRow = ({ label, value }) => (
   </tr>
 );
 
+const customMarker = L.icon({
+  iconUrl: "https://i.ibb.co.com/GCZrQ4w/shop.png", // Replace with your custom icon URL
+  iconSize: [45, 45], // Size of the icon
+  iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
+  popupAnchor: [0, -45] // Point from which the popup should open relative to the iconAnchor
+});
+
 const RutaMap = ({ latitude, longitude }) => (
   <div className="my-4">
     <p className="text-[14px] font-semibold ml-3 my-2 text-pdarkblue">
@@ -76,7 +85,7 @@ const RutaMap = ({ latitude, longitude }) => (
         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         attribution="Tiles © Esri"
       />
-      <Marker position={[latitude, longitude]} />
+      <Marker position={[latitude, longitude]} icon={customMarker}/>
     </MapContainer>
   </div>
 );
@@ -119,7 +128,7 @@ const RutaDetail = ({ ruta }) => {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-4 overflow-x-auto">
       <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-auto table-detail-ruta">
         <tbody className="text-[14px]">
           {rows.map((row, index) => (
@@ -140,7 +149,7 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       size="xl"
-      className="bg-slate-100 font-inter max-h-[90%]"
+      className="bg-slate-100 font-inter max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",
