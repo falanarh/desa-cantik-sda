@@ -1,5 +1,5 @@
-thead [role="row"] th,
-thead [role="row"] {
+.simoanginangin-sls-table thead [role="row"] th,
+.simoanginangin-sls-table thead [role="row"] {
   background-color: #a7daff !important;
   color: #0b588f !important;
   font-size: 14px;
@@ -24,7 +24,8 @@ tbody tr td:last-child {
   background-color: #ffffffff !important;
 } */
 
-[data-slot="label"] {
+.simoanginangin-sls-search [data-slot="label"],
+.simoanginangin-sls-edit [data-slot="label"] {
   color: #0b588f !important;
   font-size: 16px !important;
   font-weight: 600;
@@ -35,9 +36,9 @@ tbody tr td:last-child {
   color: #0b588f !important;
 } */
 
-.anticon-inbox {
+/* .anticon-inbox {
   color: #0b588f !important;
-}
+} */
 
 .table-detail-rt th {
   width: 60% !important;

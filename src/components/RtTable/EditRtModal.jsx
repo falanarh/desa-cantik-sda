@@ -157,7 +157,7 @@ const EditRtModal = ({
                 Edit Rukun Tetangga (RT)
               </ModalHeader>
               <ModalBody className="py-4">
-                <div className="space-y-4">
+                <div className="space-y-4 simoanginangin-sls-edit">
                   <Input
                     label="Kode"
                     placeholder="Masukkan kode"

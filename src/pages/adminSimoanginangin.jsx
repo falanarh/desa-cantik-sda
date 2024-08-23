@@ -271,7 +271,7 @@ const AdminSimoanginangin = () => {
         <h1 className="font-semibold text-[16px] mt-[90px] mb-[12px] bg-white py-2 px-3 w-fit rounded-xl">
           Ringkasan Statistik UMKM Desa Simoanginangin
         </h1>
-        <div className="flex flex-col w-full gap-0 p-5 pb-3 bg-white rounded-xl">
+        <div className="flex flex-col w-full gap-0 p-5 pb-3 bg-white rounded-xl admin-simoanginangin">
           {/* <div className="flex justify-between gap-6 px-[50px]">
             {dataCard.map((item, index) => (
               <Col
@@ -364,9 +364,12 @@ const AdminSimoanginangin = () => {
           </div>
         </div>
         <Tabs
-          aria-label="Dynamic tabs"
+          aria-label="Simoanginangin Dynamic tabs"
           items={tabs}
           className="justify-center mt-[16px]"
+          // classNames={{
+          //   cursor: ["shadow-none", "bg-[#a7daff] important"],
+          // }}
         >
           {(item) => (
             <Tab

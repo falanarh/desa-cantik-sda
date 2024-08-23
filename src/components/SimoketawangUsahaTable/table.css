@@ -1,7 +1,7 @@
-.simoanginangin-umkm-table [role="row"] th,
-.simoanginangin-umkm-table thead [role="row"] {
-  background-color: #a7daff !important;
-  color: #0b588f !important;
+.simoketawang-usaha-table [role="row"] th,
+.simoketawang-usaha-table thead [role="row"] {
+  background-color: #f3fdb2 !important;
+  color: #d4ac2b !important;
   font-size: 14px;
   font-weight: 700;
 }
@@ -24,13 +24,19 @@ tbody tr td:last-child {
   background-color: #ffffffff !important;
 } */
 
-.simoanginangin-umkm-search [data-slot="label"],
-.simoanginangin-umkm-add [data-slot="label"],
-.simoanginangin-umkm-edit [data-slot="label"] {
-  color: #0b588f !important;
+.simoketawang-usaha-search [data-slot="label"],
+.simoketawang-usaha-add [data-slot="label"],
+.simoketawang-usaha-edit [data-slot="label"] {
+  color: #D4AC2B !important;
   font-size: 16px !important;
   font-weight: 600;
   margin: 2px 0 0 2px !important;
+}
+
+.simoketawang-usaha-search [data-slot="inner-wrapper"] svg,
+.simoketawang-usaha-search [data-slot="input"],
+.simoketawang-usaha-search [data-slot="input"]::placeholder {
+  color: #d4ac2b !important;
 }
 
 /* [data-slot="input"] {

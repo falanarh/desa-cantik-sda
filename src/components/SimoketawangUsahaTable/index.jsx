@@ -15,27 +15,21 @@ import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import {
-  bentuk_badan_usaha,
   columns,
-  jenis_kelamin,
-  kategori_usaha,
-  lokasi_tempat_usaha,
-  pendidikan_terakhir,
-  skala_usaha,
 } from "./data";
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
 import { FaPlus } from "react-icons/fa6";
 import { message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import api from "../../utils/api";
 import { Bars } from "react-loader-spinner";
 import "leaflet/dist/leaflet.css";
 import AddRutaModal from "./AddRutaModal";
 import DetailRutaModal from "./DetailRutaModal";
 import EditRutaModal from "./EditRutaModal";
+import api3 from "../../utils/api3";
 
-const RutaTable = ({ fetchDataAggregate }) => {
+const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRuta, setSelectedRuta] = useState(null);
   const [dataRuta, setDataRuta] = useState([]);
@@ -62,8 +56,8 @@ const RutaTable = ({ fetchDataAggregate }) => {
     setLoading(true); // Mulai loading
     try {
       const [rtResponse, rutaResponse] = await Promise.all([
-        api.get("/api/rt"),
-        api.get("/api/rumahTangga"),
+        api3.get("/api/sls"),
+        api3.get("/api/usahaKlengkeng"),
       ]);
       setDataRt(rtResponse.data.data);
       console.log("Check dataRt", rtResponse.data.data);
@@ -89,10 +83,10 @@ const RutaTable = ({ fetchDataAggregate }) => {
   const deleteData = async (ruta) => {
     setLoading(true);
     try {
-      await api.delete(`/api/rumahTangga/${ruta.kode}`);
+      await api3.delete(`/api/usahaKlengkeng/${ruta.kode}`);
       setDataRuta(dataRuta.filter((item) => item.kode !== ruta.kode));
       message.success(
-        `UMKM ${ruta.nama_pemilik_penanggungjawab} berhasil dihapus.`,
+        `Usaha ${ruta.nama_kepala_keluarga} berhasil dihapus.`,
         5
       );
       fetchData();
@@ -224,10 +218,10 @@ const RutaTable = ({ fetchDataAggregate }) => {
           classNames={{
             inputWrapper: "shadow",
           }}
-          className="mb-4 w-[50%] simoanginangin-umkm-search"
+          className="mb-4 w-[50%] simoketawang-usaha-search"
           placeholder="Ketikkan kata kunci..."
           startContent={
-            <SearchIcon className="mb-0.5 text-pdarkblue pointer-events-none flex-shrink-0" />
+            <SearchIcon className="mb-0.5 text-pyellow pointer-events-none flex-shrink-0" />
           }
           value={searchTerm}
           onChange={handleSearchChange}
@@ -245,7 +239,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
             Tambah
           </Button>
           {dropdownVisible && (
-            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
+            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pyellow font-inter">
               <div className="py-1">
                 <a
                   href="#"
@@ -269,7 +263,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
       <Table
         aria-label="Example table with custom cells"
         shadow="none"
-        className="shadow rounded-xl font-inter simoanginangin-umkm-table"
+        className="shadow rounded-xl font-inter simoketawang-usaha-table"
         classNames={{ loadingWrapper: "mx-auto" }}
         bottomContent={
           <div className="flex justify-center w-full">
@@ -285,7 +279,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
           </div>
         }
       >
-        <TableHeader columns={columns} className="font-inter text-pdarkblue">
+        <TableHeader columns={columns} className="font-inter text-pyellow">
           {(column) => (
             <TableColumn
               key={column.uid}
@@ -361,7 +355,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
             wrapperClass=""
             visible={true}
           />
-          <p className="mt-3 font-semibold font-inter text-pdarkblue">
+          <p className="mt-3 font-semibold font-inter text-pyellow">
             Loading
           </p>
         </div>
@@ -370,4 +364,4 @@ const RutaTable = ({ fetchDataAggregate }) => {
   );
 };
 
-export default RutaTable;
+export default SimoketawangUsahaTable;

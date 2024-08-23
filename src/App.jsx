@@ -10,6 +10,8 @@ import PetaUMKMSimonaginagin from "./pages/petaUMKMSimoanginagin";
 import ProtectedRoute from "./hooks/ProtectedRoute";
 import Admin from "./pages/admin";
 import BuletinAd from "./pages/buletinAdmin";
+import LoginSimoKetawang from "./pages/loginSimoketawang";
+import AdminSimoketawang from "./pages/adminSimoketawang";
 
 function App() {
   const navigate = useNavigate();
@@ -22,11 +24,20 @@ function App() {
         <Route path="/tentangkami" element={<TentangKami />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login-simoanginangin" element={<LoginSimoanginangin />} />
+        <Route path="/login-simoketawang" element={<LoginSimoKetawang />} />
         <Route
           path="/admin-simoanginangin"
           element={
             <ProtectedRoute>
               <AdminSimoanginangin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-simoketawang"
+          element={
+            <ProtectedRoute>
+              <AdminSimoketawang />
             </ProtectedRoute>
           }
         />

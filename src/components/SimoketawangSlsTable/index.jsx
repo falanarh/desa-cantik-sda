@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Table,
   TableHeader,
@@ -14,32 +15,24 @@ import {
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
-import {
-  bentuk_badan_usaha,
-  columns,
-  jenis_kelamin,
-  kategori_usaha,
-  lokasi_tempat_usaha,
-  pendidikan_terakhir,
-  skala_usaha,
-} from "./data";
+import { columns } from "./data";
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
 import { FaPlus } from "react-icons/fa6";
 import { message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import api from "../../utils/api";
 import { Bars } from "react-loader-spinner";
-import "leaflet/dist/leaflet.css";
-import AddRutaModal from "./AddRutaModal";
-import DetailRutaModal from "./DetailRutaModal";
-import EditRutaModal from "./EditRutaModal";
+import GeoJSONUploadModal from "./GeoJSONUploadModal";
+import EditRtModal from "./EditRtModal";
+import DetailRtModal from "./DetailRtModal";
+import { useAsyncList } from "@react-stately/data";
+import api3 from "../../utils/api3";
 
-const RutaTable = ({ fetchDataAggregate }) => {
+const SimoketawangSlsTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRuta, setSelectedRuta] = useState(null);
-  const [dataRuta, setDataRuta] = useState([]);
-  const [dataRt, setDataRt] = useState([]);
+  const [selectedRt, setSelectedRt] = useState({}); // State untuk menyimpan RT yang dipilih
+  const [data, setData] = useState([]); // State untuk data RT
+  const [dataGeoJson, setDataGeoJson] = useState([]); // State untuk data GeoJSON
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isAddModalOpen,
@@ -53,22 +46,32 @@ const RutaTable = ({ fetchDataAggregate }) => {
     onOpen: onEditModalOpen,
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
-  const [editRutaData, setEditRutaData] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [isSatuan, setIsSatuan] = useState(true);
+  const [editRtData, setEditRtData] = useState(null);
   const [loading, setLoading] = useState(true); // State untuk loading
+
+  function getGeoJsonByKode(kode) {
+    for (let collection of dataGeoJson) {
+      for (let feature of collection.features) {
+        if (feature.properties.kode === kode) {
+          return feature;
+        }
+      }
+    }
+    return null; // Return null if no matching feature is found
+  }
 
   const fetchData = async () => {
     setLoading(true); // Mulai loading
     try {
-      const [rtResponse, rutaResponse] = await Promise.all([
-        api.get("/api/rt"),
-        api.get("/api/rumahTangga"),
+      // const response = await api3.get("/api/rt");
+      const [rtResponse, geojsonResponse] = await Promise.all([
+        api3.get("/api/sls"),
+        api3.get("/api/sls/all/geojson"),
       ]);
-      setDataRt(rtResponse.data.data);
-      console.log("Check dataRt", rtResponse.data.data);
-      setDataRuta(rutaResponse.data.data);
-      console.log("Check dataRuta", rutaResponse.data.data);
+      setData(rtResponse.data.data); // Update state dengan data dari API
+      setDataGeoJson(geojsonResponse.data.data);
+      console.log("Data fetched:", rtResponse.data.data);
+      console.log("Data GeoJSON fetched:", geojsonResponse.data.data);
     } catch (error) {
       // Cek jika error memiliki respons body
       if (
@@ -86,17 +89,12 @@ const RutaTable = ({ fetchDataAggregate }) => {
     }
   };
 
-  const deleteData = async (ruta) => {
+  const deleteData = async (rt) => {
     setLoading(true);
     try {
-      await api.delete(`/api/rumahTangga/${ruta.kode}`);
-      setDataRuta(dataRuta.filter((item) => item.kode !== ruta.kode));
-      message.success(
-        `UMKM ${ruta.nama_pemilik_penanggungjawab} berhasil dihapus.`,
-        5
-      );
-      fetchData();
-      fetchDataAggregate();
+      await api3.delete(`/api/sls/${rt.kode}`);
+      setData(data.filter((item) => item.kode !== rt.kode));
+      message.success(`SLS ${rt.label} berhasil dihapus.`, 5);
     } catch (error) {
       // Cek jika error memiliki respons body
       if (
@@ -129,29 +127,30 @@ const RutaTable = ({ fetchDataAggregate }) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleDetailClick = (ruta) => {
-    setSelectedRuta(ruta);
+  const handleDetailClick = (rt) => {
+    setSelectedRt(rt);
     onOpen();
   };
 
-  const handleEditClick = (ruta) => {
-    console.log("handleEditClick: ", ruta);
-    setEditRutaData(ruta);
+  const handleEditClick = (rt) => {
+    console.log("Check editRtData", rt);
+    setEditRtData(rt);
     onEditModalOpen();
   };
 
-  const handleDelete = (ruta) => {
-    deleteData(ruta);
+  const handleDelete = (rt) => {
+    deleteData(rt);
+    fetchData();
   };
 
-  const filteredData = dataRuta.filter((ruta) =>
-    Object.values(ruta).some((value) =>
+  const filteredData = data.filter((rt) =>
+    Object.values(rt).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
-  const renderCell = (ruta, columnKey) => {
-    const cellValue = ruta[columnKey];
+  const renderCell = (rt, columnKey) => {
+    const cellValue = rt[columnKey];
 
     switch (columnKey) {
       case "aksi":
@@ -160,7 +159,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
             <Tooltip content="Detail">
               <span
                 className="text-lg cursor-pointer text-default-400 active:opacity-50"
-                onClick={() => handleDetailClick(ruta)}
+                onClick={() => handleDetailClick(rt)}
               >
                 <EyeIcon />
               </span>
@@ -168,16 +167,16 @@ const RutaTable = ({ fetchDataAggregate }) => {
             <Tooltip content="Edit">
               <span
                 className="text-lg cursor-pointer text-default-400 active:opacity-50"
-                onClick={() => handleEditClick(ruta)}
+                onClick={() => handleEditClick(rt)}
               >
                 <EditIcon />
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Hapus">
               <Popconfirm
-                title="Hapus Data UMKM"
-                description="Anda yakin menghapus data UMKM ini?"
-                onConfirm={() => handleDelete(ruta)}
+                title="Hapus Satuan Lingkungan Setempat (SLS)"
+                description="Anda yakin menghapus SLS ini?"
+                onConfirm={() => handleDelete(rt)}
                 onOpenChange={() => console.log("open change")}
               >
                 <span className="text-lg cursor-pointer text-danger active:opacity-50">
@@ -195,9 +194,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 25;
 
-  const pages = Math.ceil(dataRuta.length / rowsPerPage);
-
-  console.log(pages);
+  const pages = Math.ceil(filteredData.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -206,71 +203,85 @@ const RutaTable = ({ fetchDataAggregate }) => {
     return filteredData.slice(start, end);
   }, [page, filteredData]);
 
-  const handleSatuanAddModal = () => {
-    onAddModalOpen();
-    setIsSatuan(true);
-  };
-  const handleKumpulanAddModal = () => {
-    onAddModalOpen();
-    setIsSatuan(false);
-  };
+  let list = useAsyncList({
+    async sort({ items, sortDescriptor }) {
+      console.log("Before sorting:", items);
+
+      let sortedItems = items.sort((a, b) => {
+        let first = a[sortDescriptor.column];
+        let second = b[sortDescriptor.column];
+
+        // Log the values being compared
+        console.log(`Comparing "${first}" with "${second}"`);
+
+        // Convert to numbers if possible, or keep as strings
+        let firstValue = parseInt(first) || first;
+        let secondValue = parseInt(second) || second;
+
+        let cmp =
+          firstValue < secondValue ? -1 : firstValue > secondValue ? 1 : 0;
+
+        // Log comparison result
+        console.log(`Comparison result: ${cmp}`);
+
+        // Adjust for sort direction
+        if (sortDescriptor.direction === "descending") {
+          cmp *= -1;
+        }
+
+        // Log the final comparison result after direction adjustment
+        console.log(
+          `Final comparison result (after direction adjustment): ${cmp}`
+        );
+
+        return cmp;
+      });
+
+      console.log("After sorting:", sortedItems);
+
+      return {
+        items: sortedItems,
+      };
+    },
+  });
 
   return (
-    <div className="p-4 bg-[#ffffffb4] rounded-xl">
+    <div className="p-4 bg-[#ffffffb4] rounded-xl simoketawang-sls-table">
       <div className="flex justify-between">
         <Input
           label="Pencarian"
           radius="lg"
           classNames={{
-            inputWrapper: "shadow",
+            inputWrapper: ["shadow"],
           }}
-          className="mb-4 w-[50%] simoanginangin-umkm-search"
           placeholder="Ketikkan kata kunci..."
           startContent={
             <SearchIcon className="mb-0.5 text-pdarkblue pointer-events-none flex-shrink-0" />
           }
           value={searchTerm}
           onChange={handleSearchChange}
+          className="mb-4 w-[50%] simoketawang-sls-search"
         />
-        <div
-          className="relative"
-          onMouseLeave={() => setDropdownVisible(false)}
+        <Button
+          color="success"
+          className="text-[14px] font-semibold text-white"
+          startContent={<FaPlus className="text-[20px] text-white" />}
+          onClick={onAddModalOpen}
         >
-          <Button
-            color="success"
-            className="text-[14px] font-semibold text-white"
-            startContent={<FaPlus className="text-[20px] text-white" />}
-            onMouseEnter={() => setDropdownVisible(true)}
-          >
-            Tambah
-          </Button>
-          {dropdownVisible && (
-            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
-              <div className="py-1">
-                <a
-                  href="#"
-                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
-                  onClick={handleSatuanAddModal}
-                >
-                  Satuan
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
-                  onClick={handleKumpulanAddModal}
-                >
-                  Kumpulan
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
+          Tambah
+        </Button>
       </div>
       <Table
         aria-label="Example table with custom cells"
         shadow="none"
-        className="shadow rounded-xl font-inter simoanginangin-umkm-table"
-        classNames={{ loadingWrapper: "mx-auto" }}
+        className="shadow rounded-xl font-inter"
+        classNames={{ 
+          loadingWrapper: "mx-auto", 
+          th: ["bg-[#f3fdb2]", "text-pyellow", "font-inter", "text-[14px]"],
+          // th: "text-red",
+          // td: "bg-pdarkblue",
+          // table: "bg-black",
+         }}
         bottomContent={
           <div className="flex justify-center w-full">
             <Pagination
@@ -284,12 +295,15 @@ const RutaTable = ({ fetchDataAggregate }) => {
             />
           </div>
         }
+        // sortDescriptor={list.sortDescriptor}
+        // onSortChange={list.sort}
       >
         <TableHeader columns={columns} className="font-inter text-pdarkblue">
           {(column) => (
             <TableColumn
               key={column.uid}
               align={column.uid === "aksi" ? "center" : "start"}
+              // allowsSorting={column.uid === "jml_umkm" ? true : false}
             >
               {column.name}
             </TableColumn>
@@ -300,7 +314,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
           emptyContent={"Tidak ada data."}
           isLoading={loading}
           loadingContent={
-            <Bars width="50" height="50" color="#0B588F" className="mx-auto" />
+            <Bars width="50" height="50" color="#D4AC2B" className="mx-auto" />
           }
         >
           {(item) => (
@@ -313,41 +327,27 @@ const RutaTable = ({ fetchDataAggregate }) => {
         </TableBody>
       </Table>
 
-      <DetailRutaModal
+      <DetailRtModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        selectedRuta={selectedRuta}
+        selectedRt={selectedRt}
+        geojsonRt={getGeoJsonByKode(selectedRt.kode)}
       />
 
-      <AddRutaModal
-        isOpen={isAddModalOpen}
-        onClose={onAddModalOpenChange}
-        isSatuan={isSatuan}
-        dataRuta={dataRuta}
-        daftarRt={dataRt}
-        jenis_kelamin={jenis_kelamin}
-        pendidikan_terakhir={pendidikan_terakhir}
-        kategori_usaha={kategori_usaha}
-        bentuk_badan_usaha={bentuk_badan_usaha}
-        lokasi_tempat_usaha={lokasi_tempat_usaha}
-        skala_usaha={skala_usaha}
-        fetchData={fetchData}
-        fetchDataAggregate={fetchDataAggregate}
+      <GeoJSONUploadModal
+        isAddModalOpen={isAddModalOpen}
+        onAddModalOpenChange={onAddModalOpenChange}
+        onSuccessCreate={() => {
+          fetchData();
+        }}
       />
 
-      <EditRutaModal
+      <EditRtModal
         isEditModalOpen={isEditModalOpen}
         onEditModalOpenChange={onEditModalOpenChange}
-        ruta={editRutaData}
+        rt={editRtData}
         fetchData={fetchData}
         fetchDataAggregate={fetchDataAggregate}
-        daftarRt={dataRt}
-        jenis_kelamin={jenis_kelamin}
-        pendidikan_terakhir={pendidikan_terakhir}
-        kategori_usaha={kategori_usaha}
-        bentuk_badan_usaha={bentuk_badan_usaha}
-        lokasi_tempat_usaha={lokasi_tempat_usaha}
-        skala_usaha={skala_usaha}
       />
 
       {/* {loading && (
@@ -370,4 +370,4 @@ const RutaTable = ({ fetchDataAggregate }) => {
   );
 };
 
-export default RutaTable;
+export default SimoketawangSlsTable;
