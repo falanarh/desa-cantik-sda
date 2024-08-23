@@ -110,7 +110,8 @@ const AddRutaModal = ({
       name === "nama_kepala_keluarga" ||
       name === "nama_pemilik_penanggungjawab" ||
       name === "nama_usaha" ||
-      name === "alamat"
+      name === "alamat" ||
+      name === "kegiatan_utama_usaha"
     ) {
       updatedValue = value.toUpperCase();
     }
@@ -556,12 +557,12 @@ const AddRutaModal = ({
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
-  
+
   const customMarker = L.icon({
     iconUrl: "https://i.ibb.co.com/GCZrQ4w/shop.png", // Replace with your custom icon URL
     iconSize: [45, 45], // Size of the icon
     iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
-    popupAnchor: [0, -45] // Point from which the popup should open relative to the iconAnchor
+    popupAnchor: [0, -45], // Point from which the popup should open relative to the iconAnchor
   });
 
   return (
