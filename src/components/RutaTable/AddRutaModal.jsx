@@ -104,6 +104,15 @@ const AddRutaModal = ({
       updatedValue = value.replace(",", "."); // Replace comma with dot for valid decimal format
     }
 
+    if (
+      name === "nama_kepala_keluarga" ||
+      name === "nama_pemilik_penanggungjawab" ||
+      name === "nama_usaha" ||
+      name === "alamat"
+    ) {
+      updatedValue = value.toUpperCase();
+    }
+
     if (name !== "latitude" && name !== "longitude") {
       setAddRutaData((prevValues) => ({ ...prevValues, [name]: updatedValue }));
     }

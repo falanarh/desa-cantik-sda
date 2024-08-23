@@ -34,6 +34,7 @@ import "leaflet/dist/leaflet.css";
 import AddRutaModal from "./AddRutaModal";
 import DetailRutaModal from "./DetailRutaModal";
 import EditRutaModal from "./EditRutaModal";
+import { useMediaQuery } from "react-responsive";
 
 const RutaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,6 +47,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
     onOpen: onAddModalOpen,
     onOpenChange: onAddModalOpenChange,
   } = useDisclosure();
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   // State untuk modal edit
   const {
@@ -215,6 +217,12 @@ const RutaTable = ({ fetchDataAggregate }) => {
     setIsSatuan(false);
   };
 
+  const handleButtonClick = () => {
+    if (isMobile) {
+      setDropdownVisible(!dropdownVisible);
+    }
+  };
+
   return (
     <div className="p-4 bg-[#ffffffb4] rounded-xl">
       <div className="flex justify-between">
@@ -232,7 +240,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <div
+        {/* <div
           className="relative"
           onMouseLeave={() => setDropdownVisible(false)}
         >
@@ -241,6 +249,40 @@ const RutaTable = ({ fetchDataAggregate }) => {
             className="text-[14px] font-semibold text-white"
             startContent={<FaPlus className="text-[20px] text-white" />}
             onMouseEnter={() => setDropdownVisible(true)}
+          >
+            Tambah
+          </Button>
+          {dropdownVisible && (
+            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
+              <div className="py-1">
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                  onClick={handleSatuanAddModal}
+                >
+                  Satuan
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                  onClick={handleKumpulanAddModal}
+                >
+                  Kumpulan
+                </a>
+              </div>
+            </div>
+          )}
+        </div> */}
+        <div
+          className="relative"
+          onMouseLeave={() => !isMobile && setDropdownVisible(false)}
+        >
+          <Button
+            color="success"
+            className="text-[14px] font-semibold text-white"
+            startContent={<FaPlus className="text-[20px] text-white" />}
+            onMouseEnter={() => !isMobile && setDropdownVisible(true)}
+            onClick={handleButtonClick}
           >
             Tambah
           </Button>
@@ -349,23 +391,6 @@ const RutaTable = ({ fetchDataAggregate }) => {
         lokasi_tempat_usaha={lokasi_tempat_usaha}
         skala_usaha={skala_usaha}
       />
-
-      {/* {loading && (
-        <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
-          <Bars
-            height="60"
-            width="60"
-            color="#0B588F"
-            ariaLabel="bars-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-          <p className="mt-3 font-semibold font-inter text-pdarkblue">
-            Loading
-          </p>
-        </div>
-      )} */}
     </div>
   );
 };
