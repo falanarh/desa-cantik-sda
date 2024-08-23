@@ -405,13 +405,13 @@ export default function MapSection() {
     kbli_j: "J. Informasi dan Komunikasi",
     kbli_k: "K. Jasa Keuangan dan Asuransi",
     kbli_l: "L. Real Estat",
-    kbli_m: "M, N. Jasa Perusahaan",
-    // kbli_n: "M, N. Jasa Perusahaan",
+    kbli_m: "M. Jasa Profesional, Ilmiah, dan Teknis",
+    kbli_n: "N. Jasa Administratif dan Jasa Dukungan",
     // kbli_o: "O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",
     kbli_p: "P. Jasa Pendidikan",
     kbli_q: "Q. Jasa Kesehatan dan Kegiatan Sosial",
-    // kbli_r: "R, S, dan Jasa Lainnya",
-    kbli_s: "R, S, dan Jasa Lainnya",
+    kbli_r: "R. Jasa Perorangan dan Rumah Tangga",
+    kbli_s: "S. Jasa Lainnya",
     // kbli_t: "R,S, T, U. Jasa Lainnya",
     // kbli_u: "R,S, T, U. Jasa Lainnya"
   };
