@@ -86,6 +86,7 @@ const RutaDetail = ({ ruta }) => {
     { label: "Alamat", value: ruta.alamat },
     { label: "Jenis Klengkeng", value: getLabelByKey(ruta.jenis_klengkeng, jenis_klengkeng) },
     { label: "Usia Pohon", value: ruta.usia_pohon },
+    
     // {
     //   label: "Pendidikan Terakhir",
     //   value: getLabelByKey(ruta.pendidikan_terakhir, pendidikan_terakhir),
