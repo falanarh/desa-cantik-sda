@@ -261,10 +261,10 @@ const AdminSimoanginangin = () => {
   return (
     <>
       <div className="flex justify-between items-center absolute border-b-1 border-[#bed5e3] w-full px-[10%] 2xl:px-[20%] font-inter text-pdarkblue py-[16px]">
-        <h1 className="text-lg font-semibold">Manajemen Data Peta Tematik</h1>
+        <h1 className="text-sm font-semibold md:text-lg">Manajemen Data Peta Tematik</h1>
         <div className="flex items-center gap-2">
           <PiUserCircleDashedDuotone className="text-[40px]" />
-          <h1 className="text-lg font-semibold">{username}</h1>
+          <h1 className="font-semibold md:text-lg text:sm">{username}</h1>
         </div>
       </div>
       <div className="flex flex-col items-center w-full min-h-screen bg-[#eefcff] px-[10%] 2xl:px-[20%] font-inter text-pdarkblue">

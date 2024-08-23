@@ -533,7 +533,7 @@ export default function MapSection() {
                             <br />
                             {item.rt_rw_dusun} 
                             <br />
-                            <b>Kegiatan Utama Usaha: </b><br />{classifications[item.kegiatan_utama_usaha]}
+                            <b>Kegiatan Utama Usaha: </b><br />{item.kegiatan_utama_usaha}
                             <br />
                             <b>Kategori: </b><br />{classifications[item.kategori_usaha]}
                             <br />
