@@ -263,7 +263,7 @@ const RtTable = ({ fetchDataAggregate }) => {
           onChange={handleSearchChange}
         />
         <Button
-          color="success"
+          color="primary"
           className="text-[14px] font-semibold text-white"
           startContent={<FaPlus className="text-[20px] text-white" />}
           onClick={onAddModalOpen}
