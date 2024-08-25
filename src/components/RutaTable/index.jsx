@@ -198,7 +198,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
   };
 
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 25;
+  const rowsPerPage = 10;
 
   const pages = Math.ceil(dataRuta.length / rowsPerPage);
 
