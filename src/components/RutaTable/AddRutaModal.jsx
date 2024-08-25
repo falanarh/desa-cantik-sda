@@ -415,7 +415,7 @@ const AddRutaModal = ({
       setAddRutaDataCache(addRutaData);
       const convertedData = {
         ...addRutaData,
-        kode: incrementLargestCodeByKodeRt(dataRuta, addRutaData.kodeRt), // Pastikan ini sesuai dengan kebutuhan
+        // kode: incrementLargestCodeByKodeRt(dataRuta, addRutaData.kodeRt), // Pastikan ini sesuai dengan kebutuhan
         rt_rw_dusun: getLabelByKey(addRutaData.kodeRt, daftarRt),
         latitude: parseFloat(addRutaData.latitude),
         longitude: parseFloat(addRutaData.longitude),
