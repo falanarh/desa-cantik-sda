@@ -26,6 +26,7 @@ import {
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
 import { FaPlus } from "react-icons/fa6";
+import { SiMicrosoftexcel } from "react-icons/si";
 import { message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
@@ -35,6 +36,8 @@ import AddRutaModal from "./AddRutaModal";
 import DetailRutaModal from "./DetailRutaModal";
 import EditRutaModal from "./EditRutaModal";
 import { useMediaQuery } from "react-responsive";
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 const RutaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -91,8 +94,8 @@ const RutaTable = ({ fetchDataAggregate }) => {
   const deleteData = async (ruta) => {
     setLoading(true);
     try {
-      await api.delete(`/api/rumahTangga/${ruta.kode}`);
-      setDataRuta(dataRuta.filter((item) => item.kode !== ruta.kode));
+      await api.delete(`/api/rumahTangga/${ruta._id}`);
+      setDataRuta(dataRuta.filter((item) => item._id !== ruta._id));
       message.success(
         `UMKM ${ruta.nama_pemilik_penanggungjawab} berhasil dihapus.`,
         5
@@ -223,6 +226,53 @@ const RutaTable = ({ fetchDataAggregate }) => {
     }
   };
 
+  const exportToExcel = (data, fileName) => {
+    // Menghapus atribut _id dan __v dari setiap objek dalam data
+    const filteredData = data.map(({ _id, __v, ...rest }) => rest);
+  
+    // Membuat worksheet dari data yang sudah difilter
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+  
+    // Mendapatkan range dari worksheet
+    const range = XLSX.utils.decode_range(ws['!ref']);
+  
+    // Membuat style untuk header yang bold
+    const headerStyle = { font: { bold: true } };
+  
+    // Menerapkan style bold ke setiap sel di baris pertama (header)
+    for (let col = range.s.c; col <= range.e.c; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
+      if (!ws[cellAddress]) continue;
+      ws[cellAddress].s = headerStyle;
+    }
+  
+    // Menyetel lebar kolom agar sesuai dengan konten
+    const columnWidths = filteredData.reduce((acc, row) => {
+      Object.keys(row).forEach((key, i) => {
+        const cellValue = row[key] ? row[key].toString() : '';
+        acc[i] = Math.max(acc[i] || 0, cellValue.length);
+      });
+      return acc;
+    }, {});
+  
+    ws['!cols'] = Object.keys(columnWidths).map(i => ({ wch: columnWidths[i] }));
+  
+    // Membuat workbook dan menambahkan worksheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  
+    // Mengonversi workbook ke array buffer
+    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  
+    // Menyimpan file menggunakan FileSaver
+    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+    FileSaver.saveAs(blob, `${fileName}.xlsx`);
+  };
+  
+  const handleEksporButtonClick = () => {
+    exportToExcel(dataRuta, 'umkm-simoanginangin-2024');
+  };
+
   return (
     <div className="p-4 bg-[#ffffffb4] rounded-xl">
       <div className="flex justify-between">
@@ -273,39 +323,49 @@ const RutaTable = ({ fetchDataAggregate }) => {
             </div>
           )}
         </div> */}
-        <div
-          className="relative"
-          onMouseLeave={() => !isMobile && setDropdownVisible(false)}
-        >
+        <div className="flex gap-2">
+          <div
+            className="relative"
+            onMouseLeave={() => !isMobile && setDropdownVisible(false)}
+          >
+            <Button
+              color="primary"
+              className="text-[14px] font-semibold text-white"
+              startContent={<FaPlus className="text-[20px] text-white" />}
+              onMouseEnter={() => !isMobile && setDropdownVisible(true)}
+              onClick={handleButtonClick}
+            >
+              Tambah
+            </Button>
+            {dropdownVisible && (
+              <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
+                <div className="py-1">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                    onClick={handleSatuanAddModal}
+                  >
+                    Satuan
+                  </a>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                    onClick={handleKumpulanAddModal}
+                  >
+                    Kumpulan
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
           <Button
             color="success"
             className="text-[14px] font-semibold text-white"
-            startContent={<FaPlus className="text-[20px] text-white" />}
-            onMouseEnter={() => !isMobile && setDropdownVisible(true)}
-            onClick={handleButtonClick}
+            startContent={<SiMicrosoftexcel className="text-[20px] text-white" />}
+            onClick={handleEksporButtonClick}
           >
-            Tambah
+            Ekspor
           </Button>
-          {dropdownVisible && (
-            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
-              <div className="py-1">
-                <a
-                  href="#"
-                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
-                  onClick={handleSatuanAddModal}
-                >
-                  Satuan
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
-                  onClick={handleKumpulanAddModal}
-                >
-                  Kumpulan
-                </a>
-              </div>
-            </div>
-          )}
         </div>
       </div>
       <Table

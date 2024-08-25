@@ -67,6 +67,7 @@ const AddRutaModal = ({
 }) => {
   const initialCoordinate = [-7.437249, 112.601518];
   const [addRutaData, setAddRutaData] = useState({});
+  const [addRutaDataCache, setAddRutaDataCache] = useState({});
   const [addRutaList, setAddRutaList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mapPosition, setMapPosition] = useState(initialCoordinate); // Default position
@@ -82,9 +83,27 @@ const AddRutaModal = ({
   const [selectedSkalaUsaha, setSelectedSkalaUsaha] = useState("");
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
+  const [createError, setCreateError] = useState(false);
 
   dayjs.extend(customParseFormat);
   const dateFormat = "DD-MM-YYYY";
+
+  useEffect(() => {
+    // Cek apakah addRutaDataCache bukan objek kosong
+    if (Object.keys(addRutaDataCache).length > 0 && createError === true) {
+      setAddRutaData(addRutaDataCache);
+      setSelectedRt(addRutaDataCache.kodeRt);
+      setSelectedJenisKelamin(addRutaDataCache.jenis_kelamin);
+      setSelectedPendidikanTerakhir(addRutaDataCache.pendidikan_terakhir);
+      setSelectedKategoriUsaha(addRutaDataCache.kategori_usaha);
+      setSelectedBentukBadanUsaha(addRutaDataCache.bentuk_badan_usaha);
+      setSelectedLokasiTempatUsaha(addRutaDataCache.lokasi_tempat_usaha);
+      setSelectedSkalaUsaha(addRutaDataCache.skala_usaha);
+      console.log("createError", createError);
+      console.log("addRutaDataCache", addRutaDataCache);
+      setCreateError(false);
+    }
+  }, [createError]);
 
   useEffect(() => {
     if (addRutaData.latitude && addRutaData.longitude) {
@@ -260,7 +279,8 @@ const AddRutaModal = ({
     console.log(date ? date.format("DD-MM-YYYY") : null);
   };
 
-  const validateForm = () => {
+  const validateForm = (addRutaData) => {
+    console.log("validateForm", addRutaData);
     const newErrors = {};
 
     // Validasi setiap field
@@ -373,8 +393,9 @@ const AddRutaModal = ({
   }
 
   const handleAddSave = async () => {
+    console.log("handleAddSave ", addRutaData);
     if (addRutaData && isSatuan) {
-      if (!validateForm()) {
+      if (!validateForm(addRutaData)) {
         message.error(
           "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
           5
@@ -391,39 +412,25 @@ const AddRutaModal = ({
       }
 
       console.log("Add Ruta Data", addRutaData);
-      try {
-        // // Fetch data jumlah UMKM di RT tertentu
-        // const rtResponse = await api.get(`/api/rt/${addRutaData.kodeRt}`);
-        // const jumlahUmkm = rtResponse.data.data.jml_umkm; // Pastikan `jumlahUmkm` sesuai dengan struktur respons API
+      setAddRutaDataCache(addRutaData);
+      const convertedData = {
+        ...addRutaData,
+        kode: incrementLargestCodeByKodeRt(dataRuta, addRutaData.kodeRt), // Pastikan ini sesuai dengan kebutuhan
+        rt_rw_dusun: getLabelByKey(addRutaData.kodeRt, daftarRt),
+        latitude: parseFloat(addRutaData.latitude),
+        longitude: parseFloat(addRutaData.longitude),
+        // jumlahUmkm, // Tambahkan jumlah UMKM ke data yang akan disimpan
+      };
 
-        // // Logging data yang diterima
-        // console.log("Jumlah UMKM di RT:", jumlahUmkm);
+      console.log("Data Ruta", convertedData);
 
-        // Konversi data yang akan disimpan
-        const convertedData = {
-          ...addRutaData,
-          kode: incrementLargestCodeByKodeRt(dataRuta, addRutaData.kodeRt), // Pastikan ini sesuai dengan kebutuhan
-          rt_rw_dusun: getLabelByKey(addRutaData.kodeRt, daftarRt),
-          latitude: parseFloat(addRutaData.latitude),
-          longitude: parseFloat(addRutaData.longitude),
-          // jumlahUmkm, // Tambahkan jumlah UMKM ke data yang akan disimpan
-        };
+      // Lanjutkan dengan penyimpanan data
+      await createData(convertedData);
 
-        console.log("Data Ruta", convertedData);
-
-        // Lanjutkan dengan penyimpanan data
-        await createData(convertedData);
-
-        setAddRutaData({});
-        setErrors({});
-        resetSelect();
-        setTimeout(() => {
-          fetchDataAggregate();
-        }, 1000);
-      } catch (error) {
-        // Tangani kesalahan jika fetch data gagal
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
+      setAddRutaData({});
+      setErrors({});
+      resetSelect();
+      await fetchDataAggregate();
     } else {
       try {
         console.log("Add Ruta Data List", addRutaList);
@@ -461,12 +468,32 @@ const AddRutaModal = ({
         error.response.data.message
       ) {
         message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
+        console.log("Habis error kesini 1");
+        setCreateError(true);
+        // initializeAfterError(data);
       } else {
         message.error(`Terjadi kesalahan: ${error.message}`, 5);
+        console.log("Habis error kesini 2");
+        console.log("AddRutaData when error", addRutaData);
+        setCreateError(true);
+        // initializeAfterError(data);
       }
     } finally {
       setLoading(false);
     }
+  };
+
+  const initializeAfterError = ({ ruta }) => {
+    const addRutaData = { ...ruta };
+    setAddRutaData(addRutaData);
+    setSelectedRt(ruta.kodeRt);
+    setSelectedJenisKelamin(ruta.jenis_kelamin);
+    setSelectedPendidikanTerakhir(ruta.pendidikan_terakhir);
+    setSelectedKategoriUsaha(ruta.kategori_usaha);
+    setSelectedBentukBadanUsaha(ruta.bentuk_badan_usaha);
+    setSelectedLokasiTempatUsaha(ruta.lokasi_tempat_usaha);
+    setSelectedSkalaUsaha(ruta.skala_usaha);
+    console.log("Data after error", addRutaData);
   };
 
   const handleCloseButton = () => {

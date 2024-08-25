@@ -472,7 +472,7 @@ const EditRutaModal = ({
   const updateData = async (data) => {
     setLoading(true);
     try {
-      const response = await api.put(`/api/rumahTangga/${data.kode}`, data);
+      const response = await api.put(`/api/rumahTangga/${data._id}`, data);
       message.success(
         `UMKM ${data.nama_pemilik_penanggungjawab} berhasil diupdate.`,
         5
