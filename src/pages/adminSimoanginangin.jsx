@@ -211,7 +211,7 @@ const AdminSimoanginangin = () => {
       </div>
       <div className="flex flex-col items-center w-full min-h-screen bg-[#eefcff] px-[5%] sm:px-[10%] 2xl:px-[20%] font-inter text-pdarkblue">
         <h1 className="font-semibold text-[16px] mt-[90px] mb-[12px] bg-white py-2 px-3 w-fit rounded-xl text-center">
-          Ringkasan Statistik UMKM Desa Simoanginangin
+          Ringkasan Statistik UMKM Desa Simoangin-angin
         </h1>
         <div className="flex flex-col w-full gap-0 p-5 pb-3 bg-white rounded-xl admin-simoanginangin">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

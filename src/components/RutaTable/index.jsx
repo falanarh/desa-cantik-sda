@@ -273,12 +273,15 @@ const RutaTable = ({ fetchDataAggregate }) => {
 
   const getFormattedDateTime = () => {
     const now = new Date();
+  
+    // Ambil komponen tanggal dan waktu
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0
-    const day = String(now.getDate()).padStart(2, "0");
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+  
+    // Format tanggal dan waktu sesuai dengan "dd-MM-yyyy HH:mm"
     return `${day}-${month}-${year} ${hours}:${minutes}`;
   };
 
