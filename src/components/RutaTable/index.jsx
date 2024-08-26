@@ -426,7 +426,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
           }
         >
           {(item) => (
-            <TableRow key={item.kode}>
+            <TableRow key={item._id}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
