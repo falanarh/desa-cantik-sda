@@ -282,7 +282,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
     const minutes = String(now.getMinutes()).padStart(2, '0');
   
     // Format tanggal dan waktu sesuai dengan "dd-MM-yyyy HH:mm"
-    return `${day}-${month}-${year} ${hours}:${minutes}`;
+    return `${day}-${month}-${year} ${hours}.${minutes}`;
   };
 
   const handleEksporButtonClick = () => {
