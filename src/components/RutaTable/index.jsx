@@ -36,8 +36,8 @@ import AddRutaModal from "./AddRutaModal";
 import DetailRutaModal from "./DetailRutaModal";
 import EditRutaModal from "./EditRutaModal";
 import { useMediaQuery } from "react-responsive";
-import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import * as XLSX from "xlsx";
+import * as FileSaver from "file-saver";
 
 const RutaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -229,48 +229,63 @@ const RutaTable = ({ fetchDataAggregate }) => {
   const exportToExcel = (data, fileName) => {
     // Menghapus atribut _id dan __v dari setiap objek dalam data
     const filteredData = data.map(({ _id, __v, ...rest }) => rest);
-  
+
     // Membuat worksheet dari data yang sudah difilter
     const ws = XLSX.utils.json_to_sheet(filteredData);
-  
+
     // Mendapatkan range dari worksheet
-    const range = XLSX.utils.decode_range(ws['!ref']);
-  
+    const range = XLSX.utils.decode_range(ws["!ref"]);
+
     // Membuat style untuk header yang bold
     const headerStyle = { font: { bold: true } };
-  
+
     // Menerapkan style bold ke setiap sel di baris pertama (header)
     for (let col = range.s.c; col <= range.e.c; col++) {
       const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
       if (!ws[cellAddress]) continue;
       ws[cellAddress].s = headerStyle;
     }
-  
+
     // Menyetel lebar kolom agar sesuai dengan konten
     const columnWidths = filteredData.reduce((acc, row) => {
       Object.keys(row).forEach((key, i) => {
-        const cellValue = row[key] ? row[key].toString() : '';
+        const cellValue = row[key] ? row[key].toString() : "";
         acc[i] = Math.max(acc[i] || 0, cellValue.length);
       });
       return acc;
     }, {});
-  
-    ws['!cols'] = Object.keys(columnWidths).map(i => ({ wch: columnWidths[i] }));
-  
+
+    ws["!cols"] = Object.keys(columnWidths).map((i) => ({
+      wch: columnWidths[i],
+    }));
+
     // Membuat workbook dan menambahkan worksheet
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-  
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
     // Mengonversi workbook ke array buffer
-    const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-  
+    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
     // Menyimpan file menggunakan FileSaver
-    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+    const blob = new Blob([wbout], { type: "application/octet-stream" });
     FileSaver.saveAs(blob, `${fileName}.xlsx`);
   };
-  
+
+  const getFormattedDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  };
+
   const handleEksporButtonClick = () => {
-    exportToExcel(dataRuta, 'umkm-simoanginangin-2024');
+    const formattedDateTime = getFormattedDateTime();
+    const fileName = `Data UMKM Simoangin-angin ${formattedDateTime}`;
+    exportToExcel(dataRuta, fileName);
   };
 
   return (
@@ -361,7 +376,9 @@ const RutaTable = ({ fetchDataAggregate }) => {
           <Button
             color="success"
             className="text-[14px] font-semibold text-white"
-            startContent={<SiMicrosoftexcel className="text-[20px] text-white" />}
+            startContent={
+              <SiMicrosoftexcel className="text-[20px] text-white" />
+            }
             onClick={handleEksporButtonClick}
           >
             Ekspor
