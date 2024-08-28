@@ -73,3 +73,19 @@ tbody tr td:last-child {
 .ant-popover-content {
   font-family: "Inter", sans-serif !important;
 }
+
+.simoketawang-upload .ant-upload-select {
+  background-color: rgb(241, 245, 249) !important;
+  border-radius: 8px !important;
+  border: 2px dashed #d4ac2b !important;
+  font-family: "Inter", sans-serif !important;
+  width: 100% !important;
+}
+
+.simoketawang-upload .ant-upload-list-item-container {
+  width: 100% !important;
+}
+
+.table-detail-usaha th {
+  width: 45% !important;
+}

@@ -15,7 +15,7 @@ import {
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import api from "../../utils/api";
 import "leaflet/dist/leaflet.css";
-import { DatePicker, message } from "antd";
+import { ConfigProvider, DatePicker, Image, message, Upload } from "antd";
 import { Bars } from "react-loader-spinner";
 import Dragger from "antd/es/upload/Dragger";
 import { InboxOutlined } from "@mui/icons-material";
@@ -23,6 +23,12 @@ import * as XLSX from "xlsx";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { convertDatesInArray } from "../../utils/date";
+import api3 from "../../utils/api3";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { FaImages } from "react-icons/fa6";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.kode === key);
@@ -48,6 +54,14 @@ const isValidLongitude = (longitude) => {
   return !isNaN(longitude) && longitude >= -180 && longitude <= 180;
 };
 
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 const AddRutaModal = ({
   isOpen,
   onClose,
@@ -55,68 +69,143 @@ const AddRutaModal = ({
   dataRuta,
   fetchData,
   fetchDataAggregate,
-  daftarRt,
-  jenis_kelamin,
-  pendidikan_terakhir,
-  kategori_usaha,
-  bentuk_badan_usaha,
-  lokasi_tempat_usaha,
-  skala_usaha,
+  daftarSls,
+  jenis_klengkeng,
+  jenis_pupuk,
+  pemanfaatan_produk,
 }) => {
   const initialCoordinate = [-7.437249, 112.601518];
-  const [addRutaData, setAddRutaData] = useState({});
-  const [addRutaList, setAddRutaList] = useState([]);
+  const [addUsahaData, setAddUsahaData] = useState({});
+  const [addUsahaList, setAddUsahaList] = useState([]);
+  const [addUsahaDataCache, setAddUsahaDataCache] = useState({});
   const [loading, setLoading] = useState(false);
   const [mapPosition, setMapPosition] = useState(initialCoordinate); // Default position
-  const [selectedRt, setSelectedRt] = useState("");
-  const [selectedJenisKelamin, setSelectedJenisKelamin] = useState("");
-  const [selectedTanggalLahir, setSelectedTanggalLahir] = useState("");
-  const [selectedPendidikanTerakhir, setSelectedPendidikanTerakhir] =
-    useState("");
-  const [selectedKategoriUsaha, setSelectedKategoriUsaha] = useState("");
-  const [selectedBentukBadanUsaha, setSelectedBentukBadanUsaha] = useState("");
-  const [selectedLokasiTempatUsaha, setSelectedLokasiTempatUsaha] =
-    useState("");
-  const [selectedSkalaUsaha, setSelectedSkalaUsaha] = useState("");
+  const [selectedSls, setSelectedSls] = useState("");
+  const [selectedJenisKlengkeng, setSelectedJenisKlengkeng] = useState("");
+  const [selectedJenisPupuk, setSelectedJenisPupuk] = useState("");
+  const [selectedPemanfaatanProduk, setSelectedPemanfaatanProduk] = useState(
+    []
+  );
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
-
-  dayjs.extend(customParseFormat);
-  const dateFormat = "DD-MM-YYYY";
+  const [createError, setCreateError] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const [customFilename, setCustomFilename] = useState("");
 
   useEffect(() => {
-    if (addRutaData.latitude && addRutaData.longitude) {
-      const latitude = parseFloat(addRutaData.latitude);
-      const longitude = parseFloat(addRutaData.longitude);
+    // Cek apakah addRutaDataCache bukan objek kosong
+    if (Object.keys(addUsahaDataCache).length > 0 && createError === true) {
+      setAddUsahaData(addUsahaDataCache);
+      setSelectedSls(addUsahaDataCache.kodeSls);
+      setSelectedJenisKlengkeng(addUsahaDataCache.jenis_klengkeng);
+      setSelectedJenisPupuk(addUsahaDataCache.jenis_pupuk);
+      setSelectedPemanfaatanProduk(addUsahaDataCache.pemanfaatan_produk);
+      console.log("createError", createError);
+      console.log("addUsahaDataCache", addUsahaDataCache);
+      setCreateError(false);
+    }
+  }, [createError]);
+
+  useEffect(() => {
+    if (addUsahaData.latitude && addUsahaData.longitude) {
+      const latitude = parseFloat(addUsahaData.latitude);
+      const longitude = parseFloat(addUsahaData.longitude);
 
       if (errors.latitude === "" && errors.longitude === "") {
         setMapPosition([latitude, longitude]);
       }
     }
-  }, [addRutaData.latitude, addRutaData.longitude]);
+  }, [addUsahaData.latitude, addUsahaData.longitude]);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+    setCustomFilename(addUsahaData.nama_kepala_keluarga);
+  };
+
+  const customRequest = ({ file, onSuccess, onError, filename }) => {
+    const formData = new FormData();
+
+    // Gunakan parameter filename jika diberikan, jika tidak gunakan nama file asli
+    const finalFilename = filename ? filename : file.name.split(".")[0];
+
+    // Tambahkan file dan nama file ke FormData
+    formData.append("filename", finalFilename);
+    formData.append("image", file);
+
+    // Kirimkan data menggunakan Axios
+    api3
+      .post("/api/photo/upload", formData)
+      .then((response) => {
+        console.log("Link Photo: ", response.data.imageUrl);
+        setAddUsahaData((prevValues) => ({
+          ...prevValues,
+          ["url_img"]: response.data.imageUrl,
+        }));
+        onSuccess(response.data);
+      })
+      .catch((error) => {
+        onError(error);
+        console.log(error);
+        if (error.response) {
+          message.error(error.response.data.message, 8);
+        } else {
+          message.error(error.message, 8);
+        }
+      });
+  };
+
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: "none",
+      }}
+      type="button"
+      disabled={true}
+    >
+      <FaImages size={30} className="mx-auto text-pyellow" />
+      <div
+        style={{
+          marginTop: 6,
+        }}
+        className="font-semibold text-pyellow"
+      >
+        Upload
+      </div>
+    </button>
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     let updatedValue = value;
 
-    if (name === "latitude" || name === "longitude") {
+    if (name === "latitude" || name === "longitude" || name === "usia_pohon") {
       updatedValue = value.replace(",", "."); // Replace comma with dot for valid decimal format
     }
 
-    if (name !== "latitude" && name !== "longitude") {
-      setAddRutaData((prevValues) => ({ ...prevValues, [name]: updatedValue }));
+    if (
+      name === "nama_kepala_keluarga" ||
+      name === "catatan" ||
+      name === "alamat"
+    ) {
+      updatedValue = value.toUpperCase();
     }
 
-    if (name === "no_urut_bangunan") {
-      if (!value) {
-        errors.no_urut_bangunan = "No. Urut Bangunan harus diisi.";
-      } else if (!/^\d{3}$/.test(value)) {
-        errors.no_urut_bangunan =
-          "No. Urut Bangunan harus berupa angka tiga digit. Contoh: 001";
-      } else {
-        errors.no_urut_bangunan = "";
-      }
+    if (name !== "latitude" && name !== "longitude") {
+      setAddUsahaData((prevValues) => ({
+        ...prevValues,
+        [name]: updatedValue,
+      }));
     }
 
     if (name === "nama_kepala_keluarga") {
@@ -127,49 +216,47 @@ const AddRutaModal = ({
       }
     }
 
-    if (name === "nama_pemilik_penanggungjawab") {
-      if (!value) {
-        errors.nama_pemilik_penanggungjawab =
-          "Nama Pemilik/Penanggungjawab harus diisi.";
-      } else {
-        errors.nama_pemilik_penanggungjawab = "";
-      }
-    }
-
-    if (name === "nik") {
-      if (!value) {
-        errors.nik = "NIK harus diisi.";
-      } else if (!/^\d{16}$/.test(value)) {
-        errors.nik = "NIK harus terdiri dari 16 digit angka.";
-      } else {
-        errors.nik = "";
-      }
-    }
-
-    if (name === "no_hp") {
-      if (!value) {
-        errors.no_hp = "No. HP harus diisi.";
-      } else if (!/^08\d{8,11}$/.test(value)) {
-        errors.no_hp =
-          "No. HP harus diawali dengan '08' dan terdiri dari 10 hingga 13 digit.";
-      } else {
-        errors.no_hp = "";
-      }
-    }
-
-    if (name === "nama_usaha") {
-      if (!value) {
-        errors.nama_usaha = "Nama Usaha harus diisi.";
-      } else {
-        errors.nama_usaha = "";
-      }
-    }
-
     if (name === "alamat") {
       if (!value) {
         errors.alamat = "Alamat harus diisi.";
       } else {
         errors.alamat = "";
+      }
+    }
+
+    if (name === "usia_pohon") {
+      if (!value) {
+        errors.usia_pohon = "Usia Pohon harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.usia_pohon = "Usia Pohon harus berupa angka positif.";
+      } else {
+        errors.usia_pohon = "";
+      }
+    }
+
+    if (name === "rata2_volume_produksi_per_panen") {
+      if (!value) {
+        errors.rata2_volume_produksi_per_panen =
+          "Rata-rata Volume Produksi Per Panen harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.rata2_volume_produksi_per_panen =
+          "Rata-rata Volume Produksi Per Panen harus berupa angka positif.";
+      } else {
+        errors.rata2_volume_produksi_per_panen = "";
+      }
+    }
+
+    if (name === "frekuensi_berbuah") {
+      if (!value) {
+        errors.frekuensi_berbuah = "Frekuensi Berbuah harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.frekuensi_berbuah =
+          "Frekuensi Berbuah harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.frekuensi_berbuah =
+          "Frekuensi Berbuah harus berupa angka bulat.";
+      } else {
+        errors.frekuensi_berbuah = "";
       }
     }
 
@@ -184,7 +271,7 @@ const AddRutaModal = ({
           errors.latitude = "Latitude harus antara -90 dan 90.";
         } else {
           errors.latitude = "";
-          setAddRutaData((prevValues) => ({
+          setAddUsahaData((prevValues) => ({
             ...prevValues,
             [name]: updatedValue,
           }));
@@ -204,7 +291,7 @@ const AddRutaModal = ({
           errors.longitude = "Longitude harus antara -180 dan 180.";
         } else {
           errors.longitude = "";
-          setAddRutaData((prevValues) => ({
+          setAddUsahaData((prevValues) => ({
             ...prevValues,
             [name]: updatedValue,
           }));
@@ -216,153 +303,60 @@ const AddRutaModal = ({
 
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
-    setAddRutaData((prevValues) => ({ ...prevValues, [name]: value }));
+    setAddUsahaData((prevValues) => ({ ...prevValues, [name]: value }));
 
-    if (name === "kodeRt") setSelectedRt(value);
-    if (name === "jenis_kelamin") setSelectedJenisKelamin(value);
-    if (name === "tanggal_lahir") setSelectedTanggalLahir(value);
-    if (name === "pendidikan_terakhir") setSelectedPendidikanTerakhir(value);
-    if (name === "kategori_usaha") setSelectedKategoriUsaha(value);
-    if (name === "bentuk_badan_usaha") setSelectedBentukBadanUsaha(value);
-    if (name === "lokasi_tempat_usaha") setSelectedLokasiTempatUsaha(value);
-    if (name === "skala_usaha") setSelectedSkalaUsaha(value);
+    if (name === "kodeSls") setSelectedSls(value);
+    if (name === "jenis_klengkeng") setSelectedJenisKlengkeng(value);
+    if (name === "jenis_pupuk") setSelectedJenisPupuk(value);
+  };
+
+  const handleOnSelectionChange = (keys) => {
+    // Set the selected keys (Set) to the state
+    console.log("Keys:", keys);
+    setAddUsahaData((prevValues) => ({
+      ...prevValues,
+      ["pemanfaatan_produk"]: [...keys],
+    }));
+    setSelectedPemanfaatanProduk(new Set(keys));
   };
 
   const resetSelect = () => {
-    setSelectedRt("");
-    setSelectedJenisKelamin("");
-    setSelectedTanggalLahir("");
-    setSelectedPendidikanTerakhir("");
-    setSelectedKategoriUsaha("");
-    setSelectedBentukBadanUsaha("");
-    setSelectedLokasiTempatUsaha("");
-    setSelectedSkalaUsaha("");
+    setSelectedSls("");
+    setSelectedJenisKlengkeng("");
+    setSelectedJenisPupuk("");
+    setSelectedPemanfaatanProduk([]);
   };
 
-  const handleDatePickerChange = (date) => {
-    setSelectedTanggalLahir(date ? date.format("DD-MM-YYYY") : null);
-    setAddRutaData((prevValues) => ({
-      ...prevValues,
-      ["tanggal_lahir"]: date ? date.format("DD-MM-YYYY") : null,
-    }));
-    console.log(date ? date.format("DD-MM-YYYY") : null);
-  };
-
-  const validateForm = () => {
+  const validateForm = (addUsahaData) => {
     const newErrors = {};
 
     // Validasi setiap field
-    if (!addRutaData.kodeRt) newErrors.kodeRt = "Identitas SLS wajib dipilih.";
-    if (!addRutaData.no_urut_bangunan)
-      newErrors.no_urut_bangunan = "No. Urut Bangunan wajib diisi.";
-    if (!addRutaData.nama_kepala_keluarga)
+    if (!addUsahaData.kodeSls)
+      newErrors.kodeSls = "Identitas SLS wajib dipilih.";
+    if (!addUsahaData.nama_kepala_keluarga)
       newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
-    if (!addRutaData.nama_pemilik_penanggungjawab)
-      newErrors.nama_pemilik_penanggungjawab =
-        "Nama Pemilik atau Penanggungjawab wajib diisi.";
-    if (!addRutaData.jenis_kelamin)
-      newErrors.jenis_kelamin = "Jenis Kelamin wajib dipilih.";
-    if (!addRutaData.tanggal_lahir)
-      newErrors.tanggal_lahir = "Tanggal Lahir wajib dipilih.";
-    if (!addRutaData.nik) newErrors.nik = "NIK wajib diisi.";
-    if (!addRutaData.no_hp) newErrors.no_hp = "No. HP wajib diisi.";
-    if (!addRutaData.pendidikan_terakhir)
-      newErrors.pendidikan_terakhir = "Pendidikan Terakhir wajib dipilih.";
-    if (!addRutaData.nama_usaha)
-      newErrors.nama_usaha = "Nama Usaha wajib diisi.";
-    if (!addRutaData.kegiatan_utama_usaha)
-      newErrors.kegiatan_utama_usaha = "Kegiatan Utama Usaha wajib diisi.";
-    if (!addRutaData.kategori_usaha)
-      newErrors.kategori_usaha = "Kategori Usaha wajib dipilih.";
-    if (!addRutaData.bentuk_badan_usaha)
-      newErrors.bentuk_badan_usaha = "Bentuk Badan Usaha wajib dipilih.";
-    if (!addRutaData.lokasi_tempat_usaha)
-      newErrors.lokasi_tempat_usaha = "Lokasi Tempat Usaha wajib dipilih.";
-    if (!addRutaData.skala_usaha)
-      newErrors.skala_usaha = "Skala Usaha wajib dipilih.";
-    if (!addRutaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
-    // if (!addRutaData.catatan)
-    //   newErrors.catatan = "Catatan wajib diisi.";
-    if (!addRutaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
-    if (!addRutaData.longitude) newErrors.longitude = "Longitude wajib diisi.";
+    if (!addUsahaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
+    if (!addUsahaData.jenis_klengkeng)
+      newErrors.jenis_klengkeng = "Jenis Klengkeng wajib diisi.";
+    if (!addUsahaData.jenis_pupuk)
+      newErrors.jenis_pupuk = "Jenis Pupuk wajib diisi.";
+    if (!addUsahaData.frekuensi_berbuah)
+      newErrors.frekuensi_berbuah = "Frekuensi Berbuah wajib diisi.";
+    if (!addUsahaData.rata2_volume_produksi_per_panen)
+      newErrors.rata2_volume_produksi_per_panen =
+        "Rata-rata Volume Produksi Per Panen wajib diisi.";
+    if (!addUsahaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
+    if (!addUsahaData.longitude) newErrors.longitude = "Longitude wajib diisi.";
+    if (!addUsahaData.url_img)
+      newErrors.url_img = "Terjadi kesalahan upload foto.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const formatNumber = (input) => {
-    // Tambahkan 1 ke input
-    const incrementedValue = input + 1;
-
-    // Konversi angka menjadi string dan format dengan padding 3 digit
-    const formattedString = incrementedValue.toString().padStart(3, "0");
-
-    return formattedString;
-  };
-
-  function incrementLastThreeDigits(code) {
-    // Memastikan panjang string yang valid
-    if (code.length < 3) {
-      throw new Error("String must be at least 3 characters long");
-    }
-
-    // Pisahkan string menjadi dua bagian
-    const lastThreeDigits = code.slice(-3); // Ambil tiga digit terakhir
-    const remainingString = code.slice(0, -3); // Ambil string sisanya
-
-    console.log("Last Three Digits:", lastThreeDigits);
-    console.log("Remaining String:", remainingString);
-
-    // Tambahkan satu pada tiga digit terakhir
-    const incrementedLastThree = (parseInt(lastThreeDigits, 10) + 1)
-      .toString()
-      .padStart(3, "0");
-
-    console.log("Incremented Last Three Digits:", incrementedLastThree);
-
-    // Gabungkan string sisanya dengan tiga digit terakhir yang diperbarui
-    const finalCode = remainingString + incrementedLastThree;
-
-    console.log("Final Code:", finalCode);
-
-    return finalCode;
-  }
-
-  function incrementLargestCodeByKodeRt(array, kodeRt) {
-    // Filter objek berdasarkan kodeRt
-    const filteredArray = array.filter((obj) => obj.kodeRt === kodeRt);
-    console.log("Filtered Array:", filteredArray);
-
-    // Jika tidak ada objek yang memenuhi kriteria, kembalikan null atau penanganan error
-    if (filteredArray.length === 0) {
-      console.log("No objects found for the given kodeRt");
-      return incrementLastThreeDigits(kodeRt + "000"); // Atau Anda bisa menggunakan throw new Error('No objects found for the given kodeRt');
-    }
-
-    // Temukan kode string terbesar di antara objek yang sudah difilter
-    const largestCode = filteredArray.reduce((max, obj) => {
-      return obj.kode > max ? obj.kode : max;
-    }, "");
-    console.log("Largest Code:", largestCode);
-
-    // // Tambahkan satu pada kode string terbesar
-    // const largestCodeLength = largestCode.length;
-    // const incrementedCode = (parseInt(largestCode, 10) + 1).toString();
-
-    // // Pastikan panjang kode tetap konsisten dengan kode terbesar yang ditemukan
-    // const paddedCode = incrementedCode.padStart(largestCodeLength, "0");
-    // console.log("Padded Incremented Code:", paddedCode);
-
-    // // Hasil akhir
-    // const finalCode = paddedCode;
-    // console.log("Final Code:", finalCode);
-
-    return incrementLastThreeDigits(largestCode);
-  }
-
   const handleAddSave = async () => {
-    if (addRutaData && isSatuan) {
-      if (!validateForm()) {
+    if (addUsahaData && isSatuan) {
+      if (!validateForm(addUsahaData)) {
         message.error(
           "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
           5
@@ -378,45 +372,31 @@ const AddRutaModal = ({
         return;
       }
 
-      console.log("Add Ruta Data", addRutaData);
-      try {
-        // // Fetch data jumlah UMKM di RT tertentu
-        // const rtResponse = await api.get(`/api/rt/${addRutaData.kodeRt}`);
-        // const jumlahUmkm = rtResponse.data.data.jml_umkm; // Pastikan `jumlahUmkm` sesuai dengan struktur respons API
+      console.log("Add Usaha Data", addUsahaData);
+      setAddUsahaDataCache(addUsahaData);
+      const convertedData = {
+        ...addUsahaData,
+        rt_rw_dusun: getLabelByKey(addUsahaData.kodeSls, daftarSls),
+        latitude: parseFloat(addUsahaData.latitude),
+        longitude: parseFloat(addUsahaData.longitude),
+        // jumlahUmkm, // Tambahkan jumlah UMKM ke data yang akan disimpan
+      };
 
-        // // Logging data yang diterima
-        // console.log("Jumlah UMKM di RT:", jumlahUmkm);
+      console.log("Data Ruta", convertedData);
 
-        // Konversi data yang akan disimpan
-        const convertedData = {
-          ...addRutaData,
-          kode: incrementLargestCodeByKodeRt(dataRuta, addRutaData.kodeRt), // Pastikan ini sesuai dengan kebutuhan
-          rt_rw_dusun: getLabelByKey(addRutaData.kodeRt, daftarRt),
-          latitude: parseFloat(addRutaData.latitude),
-          longitude: parseFloat(addRutaData.longitude),
-          // jumlahUmkm, // Tambahkan jumlah UMKM ke data yang akan disimpan
-        };
+      // Lanjutkan dengan penyimpanan data
+      await createData(convertedData);
 
-        console.log("Data Ruta", convertedData);
-
-        // Lanjutkan dengan penyimpanan data
-        await createData(convertedData);
-
-        setAddRutaData({});
-        setErrors({});
-        resetSelect();
-        setTimeout(() => {
-          fetchDataAggregate();
-        }, 1000);
-      } catch (error) {
-        // Tangani kesalahan jika fetch data gagal
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
+      setAddUsahaData({});
+      setFileList([]);
+      setErrors({});
+      resetSelect();
+      await fetchDataAggregate();
     } else {
       try {
-        console.log("Add Ruta Data List", addRutaList);
-        await createData(addRutaList);
-        setAddRutaData({});
+        console.log("Add Usaha Data List", addUsahaList);
+        await createData(addUsahaList);
+        setAddUsahaData({});
         setErrors({});
         await fetchDataAggregate();
       } catch (error) {
@@ -428,15 +408,15 @@ const AddRutaModal = ({
   const createData = async (data) => {
     setLoading(true);
     try {
-      await api.post("/api/rumahTangga", data);
+      await api3.post("/api/usahaKlengkeng", data);
       if (isSatuan) {
         message.success(
-          `UMKM ${data.nama_pemilik_penanggungjawab} berhasil dibuat.`,
+          `Usaha Kelengkeng ${data.nama_kepala_keluarga} berhasil dibuat.`,
           5
         );
       } else {
         message.success(
-          `Data UMKM sebanyak ${data.length} berhasil dibuat.`,
+          `Data Usaha Kelengkeng sebanyak ${data.length} berhasil dibuat.`,
           5
         );
       }
@@ -449,8 +429,10 @@ const AddRutaModal = ({
         error.response.data.message
       ) {
         message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
+        setCreateError(true);
       } else {
         message.error(`Terjadi kesalahan: ${error.message}`, 5);
+        setCreateError(true);
       }
     } finally {
       setLoading(false);
@@ -458,7 +440,8 @@ const AddRutaModal = ({
   };
 
   const handleCloseButton = () => {
-    setAddRutaData({});
+    setAddUsahaData({});
+    setFileList([]);
     resetSelect();
     setErrors({});
     onClose();
@@ -467,24 +450,24 @@ const AddRutaModal = ({
   function generateKodeRumahTangga(inputArray, rutaList) {
     const rtCountMap = {};
 
-    // Hitung jumlah rumah tangga untuk setiap kodeRt dalam rutaList
+    // Hitung jumlah rumah tangga untuk setiap kodeSls dalam rutaList
     rutaList.forEach((ruta) => {
-      const { kodeRt } = ruta;
-      if (!rtCountMap[kodeRt]) {
-        rtCountMap[kodeRt] = 0;
+      const { kodeSls } = ruta;
+      if (!rtCountMap[kodeSls]) {
+        rtCountMap[kodeSls] = 0;
       }
-      rtCountMap[kodeRt]++;
+      rtCountMap[kodeSls]++;
     });
 
     // Tambahkan kode rumah tangga untuk setiap objek dalam inputArray
     return inputArray.map((item) => {
-      const { kodeRt } = item;
-      if (!rtCountMap[kodeRt]) {
-        rtCountMap[kodeRt] = 0;
+      const { kodeSls } = item;
+      if (!rtCountMap[kodeSls]) {
+        rtCountMap[kodeSls] = 0;
       }
-      rtCountMap[kodeRt]++;
-      const noUrut = rtCountMap[kodeRt].toString().padStart(3, "0");
-      const kodeRumahTangga = `${kodeRt}${noUrut}`;
+      rtCountMap[kodeSls]++;
+      const noUrut = rtCountMap[kodeSls].toString().padStart(3, "0");
+      const kodeRumahTangga = `${kodeSls}${noUrut}`;
 
       return { ...item, kode: kodeRumahTangga };
     });
@@ -518,7 +501,7 @@ const AddRutaModal = ({
 
         console.log("Excel to JSON:", readyRutaList); // JSON hasil konversi
 
-        setAddRutaList(readyRutaList);
+        setAddUsahaList(readyRutaList);
 
         setFiles((prevFiles) => {
           if (!prevFiles.some((f) => f.uid === file.uid)) {
@@ -546,12 +529,19 @@ const AddRutaModal = ({
     },
   };
 
+  const customMarker = L.icon({
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/8058/8058939.png", // Replace with your custom icon URL
+    iconSize: [45, 45], // Size of the icon
+    iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -45], // Point from which the popup should open relative to the iconAnchor
+  });
+
   return (
     <Modal
       isOpen={isOpen}
       onOpenChange={onClose}
       size="xl"
-      className="bg-slate-100 font-inter max-h-[90%]"
+      className="bg-slate-100 font-inter max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",
@@ -562,47 +552,33 @@ const AddRutaModal = ({
       isKeyboardDismissDisabled={true}
       hideCloseButton={true}
     >
-      <ModalContent className="font-inter text-pdarkblue">
+      <ModalContent className="font-inter text-pyellow">
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-              Tambah Keluarga UMKM
+            <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
+              Tambah Usaha Kelengkeng
             </ModalHeader>
             <ModalBody className="py-4">
               {isSatuan ? (
-                <div className="space-y-4 simoanginangin-umkm-add">
+                <div className="space-y-4 simoketawang-usaha-add">
                   <Select
                     size="md"
                     label="Identitas SLS"
                     className="w-full"
-                    name="kodeRt"
-                    selectedKeys={selectedRt ? [selectedRt] : []}
+                    name="kodeSls"
+                    selectedKeys={selectedSls ? [selectedSls] : []}
                     placeholder="Pilih Identitas SLS"
                     onChange={handleSelectChange}
                   >
-                    {daftarRt.map((item) => (
+                    {daftarSls.map((item) => (
                       <SelectItem key={item.kode} value={item.kode}>
                         {item.label}
                       </SelectItem>
                     ))}
                   </Select>
-                  {errors.kodeRt && (
+                  {errors.kodeSls && (
                     <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.kodeRt}
-                    </p>
-                  )}
-                  <Input
-                    label="No. Urut Bangunan"
-                    placeholder="Masukkan No. Urut Bangunan"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="no_urut_bangunan"
-                    value={addRutaData.no_urut_bangunan}
-                    onChange={handleInputChange}
-                  />
-                  {errors.no_urut_bangunan && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.no_urut_bangunan}
+                      {errors.kodeSls}
                     </p>
                   )}
                   <Input
@@ -611,7 +587,7 @@ const AddRutaModal = ({
                     fullWidth
                     classNames={{ inputWrapper: "shadow", input: "text-black" }}
                     name="nama_kepala_keluarga"
-                    value={addRutaData.nama_kepala_keluarga}
+                    value={addUsahaData.nama_kepala_keluarga}
                     onChange={handleInputChange}
                   />
                   {errors.nama_kepala_keluarga && (
@@ -619,237 +595,11 @@ const AddRutaModal = ({
                       {errors.nama_kepala_keluarga}
                     </p>
                   )}
-                  <Input
-                    label="Nama Pemilik/Penanggungjawab"
-                    placeholder="Masukkan Nama Pemilik/Penanggungjawab"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="nama_pemilik_penanggungjawab"
-                    value={addRutaData.nama_pemilik_penanggungjawab}
-                    onChange={handleInputChange}
-                  />
-                  {errors.nama_pemilik_penanggungjawab && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.nama_pemilik_penanggungjawab}
-                    </p>
-                  )}
-                  <Select
-                    size="md"
-                    label="Jenis Kelamin"
-                    className="w-full"
-                    name="jenis_kelamin"
-                    selectedKeys={
-                      selectedJenisKelamin ? [selectedJenisKelamin] : []
-                    }
-                    placeholder="Pilih Jenis Kelamin"
-                    onChange={handleSelectChange}
-                  >
-                    {jenis_kelamin.map((item) => (
-                      <SelectItem key={item.key} value={item.key}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  {errors.jenis_kelamin && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.jenis_kelamin}
-                    </p>
-                  )}
-                  <div className="relative w-full">
-                    <h2 className="absolute top-[4px] left-[14px] z-50 text-pdarkblue text-[14px] font-semibold">
-                      Tanggal Lahir
-                    </h2>
-                    <DatePicker
-                      label="Tanggal Lahir"
-                      placeholder="Pilih Tanggal Lahir"
-                      size="middle"
-                      className="w-full h-[50px] shadow rounded-xl border-none font-inter"
-                      name="tanggal_lahir"
-                      maxDate={dayjs()}
-                      format={dateFormat}
-                      onChange={handleDatePickerChange}
-                    />
-                  </div>
-                  {errors.tanggal_lahir && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.tanggal_lahir}
-                    </p>
-                  )}
-                  <Input
-                    label="NIK"
-                    placeholder="Masukkan NIK"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="nik"
-                    value={addRutaData.nik}
-                    onChange={handleInputChange}
-                  />
-                  {errors.nik && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.nik}
-                    </p>
-                  )}
-                  <Input
-                    label="No. HP"
-                    placeholder="Masukkan No. HP"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="no_hp"
-                    value={addRutaData.no_hp}
-                    onChange={handleInputChange}
-                  />
-                  {errors.no_hp && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.no_hp}
-                    </p>
-                  )}
-                  <Select
-                    size="md"
-                    label="Pendidikan Terakhir"
-                    className="w-full"
-                    name="pendidikan_terakhir"
-                    selectedKeys={
-                      selectedPendidikanTerakhir
-                        ? [selectedPendidikanTerakhir]
-                        : []
-                    }
-                    placeholder="Pilih Pendidikan Terakhir"
-                    onChange={handleSelectChange}
-                  >
-                    {pendidikan_terakhir.map((item) => (
-                      <SelectItem key={item.key} value={item.label}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  {errors.pendidikan_terakhir && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.pendidikan_terakhir}
-                    </p>
-                  )}
-                  <Input
-                    label="Nama Usaha"
-                    placeholder="Masukkan Nama Usaha"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="nama_usaha"
-                    value={addRutaData.nama_usaha}
-                    onChange={handleInputChange}
-                  />
-                  {errors.nama_usaha && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.nama_usaha}
-                    </p>
-                  )}
-                  <Input
-                    label="Kegiatan Utama Usaha"
-                    placeholder="Masukkan Kegiatan Utama Usaha"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="kegiatan_utama_usaha"
-                    value={addRutaData.kegiatan_utama_usaha}
-                    onChange={handleInputChange}
-                  />
-                  {errors.kegiatan_utama_usaha && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.kegiatan_utama_usaha}
-                    </p>
-                  )}
-                  <Select
-                    size="md"
-                    label="Kategori Usaha"
-                    className="w-full"
-                    name="kategori_usaha"
-                    selectedKeys={
-                      selectedKategoriUsaha ? [selectedKategoriUsaha] : []
-                    }
-                    placeholder="Pilih Kategori Usaha"
-                    onChange={handleSelectChange}
-                  >
-                    {kategori_usaha.map((item) => (
-                      <SelectItem key={item.key} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  {errors.kategori_usaha && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.kategori_usaha}
-                    </p>
-                  )}
-                  <Select
-                    size="md"
-                    label="Bentuk Badan Usaha"
-                    className="w-full"
-                    name="bentuk_badan_usaha"
-                    selectedKeys={
-                      selectedBentukBadanUsaha ? [selectedBentukBadanUsaha] : []
-                    }
-                    placeholder="Pilih Bentuk Badan Usaha"
-                    onChange={handleSelectChange}
-                  >
-                    {bentuk_badan_usaha.map((item) => (
-                      <SelectItem key={item.key} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  {errors.bentuk_badan_usaha && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.bentuk_badan_usaha}
-                    </p>
-                  )}
-                  <Select
-                    size="md"
-                    label="Lokasi Tempat Usaha"
-                    className="w-full"
-                    name="lokasi_tempat_usaha"
-                    selectedKeys={
-                      selectedLokasiTempatUsaha
-                        ? [selectedLokasiTempatUsaha]
-                        : []
-                    }
-                    placeholder="Pilih Lokasi Tempat Usaha"
-                    onChange={handleSelectChange}
-                  >
-                    {lokasi_tempat_usaha.map((item) => (
-                      <SelectItem key={item.key} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  {errors.lokasi_tempat_usaha && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.lokasi_tempat_usaha}
-                    </p>
-                  )}
-                  <Select
-                    size="md"
-                    label="Skala Usaha"
-                    className="w-full"
-                    name="skala_usaha"
-                    selectedKeys={
-                      selectedSkalaUsaha ? [selectedSkalaUsaha] : []
-                    }
-                    placeholder="Pilih Skala Usaha"
-                    onChange={handleSelectChange}
-                  >
-                    {skala_usaha.map((item) => (
-                      <SelectItem key={item.key} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  {errors.skala_usaha && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.skala_usaha}
-                    </p>
-                  )}
                   <Textarea
                     label="Alamat"
                     placeholder="Masukkan Alamat"
                     name="alamat"
-                    value={addRutaData.alamat}
+                    value={addUsahaData.alamat}
                     onChange={handleInputChange}
                   />
                   {errors.alamat && (
@@ -857,11 +607,120 @@ const AddRutaModal = ({
                       {errors.alamat}
                     </p>
                   )}
+                  <Select
+                    size="md"
+                    label="Jenis Kelengkeng"
+                    className="w-full"
+                    name="jenis_klengkeng"
+                    selectedKeys={
+                      selectedJenisKlengkeng ? [selectedJenisKlengkeng] : []
+                    }
+                    placeholder="Pilih Jenis Kelengkeng"
+                    onChange={handleSelectChange}
+                  >
+                    {jenis_klengkeng.map((item) => (
+                      <SelectItem key={item.key} value={item.key}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  {errors.jenis_klengkeng && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.jenis_klengkeng}
+                    </p>
+                  )}
+                  <Input
+                    label="Usia Pohon Kelengkeng"
+                    placeholder="Masukkan Usia Phon Kelengkeng"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="usia_pohon"
+                    value={addUsahaData.usia_pohon}
+                    onChange={handleInputChange}
+                  />
+                  {errors.usia_pohon && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.usia_pohon}
+                    </p>
+                  )}
+                  <Select
+                    size="md"
+                    label="Jenis Pupuk"
+                    className="w-full"
+                    name="jenis_pupuk"
+                    selectedKeys={
+                      selectedJenisPupuk ? [selectedJenisPupuk] : []
+                    }
+                    placeholder="Pilih Jenis Pupuk"
+                    onChange={handleSelectChange}
+                  >
+                    {jenis_pupuk.map((item) => (
+                      <SelectItem key={item.key} value={item.key}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  {errors.jenis_pupuk && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.jenis_pupuk}
+                    </p>
+                  )}
+                  <Input
+                    label="Frekuensi Berbuah Pohon Kelengkeng (Kali)"
+                    placeholder="Masukkan Frekuensi Berbuah Pohon Kelengkeng"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="frekuensi_berbuah"
+                    value={addUsahaData.frekuensi_berbuah}
+                    onChange={handleInputChange}
+                  />
+                  {errors.frekuensi_berbuah && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.frekuensi_berbuah}
+                    </p>
+                  )}
+                  <Input
+                    label="Rata-Rata Volume Produksi per Panen (Kg)"
+                    placeholder="Masukkan Rata-Rata Volume Produksi per Panen"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="rata2_volume_produksi_per_panen"
+                    value={addUsahaData.rata2_volume_produksi_per_panen}
+                    onChange={handleInputChange}
+                  />
+                  {errors.rata2_volume_produksi_per_panen && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.rata2_volume_produksi_per_panen}
+                    </p>
+                  )}
+                  <Select
+                    size="md"
+                    label="Pemanfaatan Produk Kelengkeng"
+                    className="w-full"
+                    selectionMode="multiple"
+                    name="pemanfaatan_produk"
+                    selectedKeys={
+                      selectedPemanfaatanProduk ? selectedPemanfaatanProduk : []
+                    }
+                    placeholder="Pilih Pemanfaatan Produk Kelengkeng"
+                    onSelectionChange={handleOnSelectionChange}
+                  >
+                    {pemanfaatan_produk.map((item) => (
+                      <SelectItem key={item.key} value={item.key}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                  {errors.pemanfaatan_produk && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.pemanfaatan_produk}
+                    </p>
+                  )}
                   <Textarea
                     label="Catatan"
                     placeholder="Masukkan Catatan"
                     name="catatan"
-                    value={addRutaData.catatan}
+                    value={addUsahaData.catatan}
                     onChange={handleInputChange}
                   />
                   {errors.catatan && (
@@ -874,7 +733,7 @@ const AddRutaModal = ({
                     placeholder="Masukkan nilai latitude"
                     fullWidth
                     name="latitude"
-                    value={addRutaData.latitude}
+                    value={addUsahaData.latitude}
                     classNames={{ inputWrapper: "shadow" }}
                     onChange={handleInputChange}
                   />
@@ -888,7 +747,7 @@ const AddRutaModal = ({
                     placeholder="Masukkan nilai longitude"
                     fullWidth
                     name="longitude"
-                    value={addRutaData.longitude}
+                    value={addUsahaData.longitude}
                     classNames={{ inputWrapper: "shadow" }}
                     onChange={handleInputChange}
                   />
@@ -900,8 +759,8 @@ const AddRutaModal = ({
                   {isValidLatitude(mapPosition[0]) &&
                     isValidLongitude(mapPosition[1]) && (
                       <div className="my-4">
-                        <p className="text-[14px] font-semibold ml-3 my-2">
-                          Titik lokasi Rumah Tangga UMKM
+                        <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">
+                          Titik lokasi Usaha Kelengkeng
                         </p>
                         <MapContainer
                           center={mapPosition}
@@ -919,12 +778,51 @@ const AddRutaModal = ({
                             attribution="Tiles © Esri"
                           />
                           <MapUpdater position={mapPosition} />
-                          <Marker position={mapPosition}>
-                            <Popup>Posisi Keluarga UMKM</Popup>
+                          <Marker position={mapPosition} icon={customMarker}>
+                            <Popup>Posisi Usaha Kelengkeng</Popup>
                           </Marker>
                         </MapContainer>
                       </div>
                     )}
+                  <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">
+                    Foto Pohon Kelengkeng
+                  </p>
+                  <Upload
+                    // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                    customRequest={(options) =>
+                      customRequest({ ...options, filename: customFilename })
+                    }
+                    listType="picture-card"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                    className="simoketawang-upload"
+                    disabled={
+                      addUsahaData.nama_kepala_keluarga === "" ||
+                      addUsahaData.nama_kepala_keluarga === undefined
+                    }
+                  >
+                    {fileList.length >= 1 ? null : uploadButton}
+                  </Upload>
+                  {previewImage && (
+                    <Image
+                      wrapperStyle={{
+                        display: "none",
+                      }}
+                      preview={{
+                        visible: previewOpen,
+                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                        afterOpenChange: (visible) =>
+                          !visible && setPreviewImage(""),
+                      }}
+                      src={previewImage}
+                    />
+                  )}
+                  {errors.url_img && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.url_img}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col text-pdarkblue font-inter">
@@ -956,7 +854,7 @@ const AddRutaModal = ({
                 Tutup
               </Button>
               <Button
-                className="bg-[#0B588F] text-white font-inter font-semibold"
+                className="font-semibold text-white bg-pyellow font-inter"
                 onPress={handleAddSave}
                 disabled={loading}
               >

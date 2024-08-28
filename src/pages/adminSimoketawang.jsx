@@ -69,7 +69,6 @@ const AdminSimoketawang = () => {
       <div className="flex items-center justify-between w-full p-2 border-2 border-dashed border-pyellow rounded-xl font-inter text-pyellow">
         <div className="flex justify-between items-center w-full text-[14px]">
           <span className="font-semibold text-[14px]">{label}</span>
-          {/* <span className="font-semibold text-[14px]">: </span> */}
           <span className="ml-2">{value}</span>
         </div>
       </div>

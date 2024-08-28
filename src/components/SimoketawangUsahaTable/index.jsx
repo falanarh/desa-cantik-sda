@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-undef */
 import {
   Table,
   TableHeader,
@@ -16,6 +18,9 @@ import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import {
   columns,
+  jenis_klengkeng,
+  jenis_pupuk,
+  pemanfaatan_produk,
 } from "./data";
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
@@ -28,6 +33,10 @@ import AddRutaModal from "./AddRutaModal";
 import DetailRutaModal from "./DetailRutaModal";
 import EditRutaModal from "./EditRutaModal";
 import api3 from "../../utils/api3";
+import { useMediaQuery } from "react-responsive";
+import * as XLSX from "xlsx";
+import * as FileSaver from "file-saver";
+import { SiMicrosoftexcel } from "react-icons/si";
 
 const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -40,6 +49,7 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
     onOpen: onAddModalOpen,
     onOpenChange: onAddModalOpenChange,
   } = useDisclosure();
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   // State untuk modal edit
   const {
@@ -83,8 +93,8 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
   const deleteData = async (ruta) => {
     setLoading(true);
     try {
-      await api3.delete(`/api/usahaKlengkeng/${ruta.kode}`);
-      setDataRuta(dataRuta.filter((item) => item.kode !== ruta.kode));
+      await api3.delete(`/api/usahaKlengkeng/${ruta._id}`);
+      setDataRuta(dataRuta.filter((item) => item._id !== ruta._id));
       message.success(
         `Usaha ${ruta.nama_kepala_keluarga} berhasil dihapus.`,
         5
@@ -187,7 +197,7 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
   };
 
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 25;
+  const rowsPerPage = 10;
 
   const pages = Math.ceil(dataRuta.length / rowsPerPage);
 
@@ -209,6 +219,77 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
     setIsSatuan(false);
   };
 
+  const handleButtonClick = () => {
+    if (isMobile) {
+      setDropdownVisible(!dropdownVisible);
+    }
+  };
+
+  const exportToExcel = (data, fileName) => {
+    // Menghapus atribut _id dan __v dari setiap objek dalam data
+    const filteredData = data.map(({ _id, __v, ...rest }) => rest);
+
+    // Membuat worksheet dari data yang sudah difilter
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+
+    // Mendapatkan range dari worksheet
+    const range = XLSX.utils.decode_range(ws["!ref"]);
+
+    // Membuat style untuk header yang bold
+    const headerStyle = { font: { bold: true } };
+
+    // Menerapkan style bold ke setiap sel di baris pertama (header)
+    for (let col = range.s.c; col <= range.e.c; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
+      if (!ws[cellAddress]) continue;
+      ws[cellAddress].s = headerStyle;
+    }
+
+    // Menyetel lebar kolom agar sesuai dengan konten
+    const columnWidths = filteredData.reduce((acc, row) => {
+      Object.keys(row).forEach((key, i) => {
+        const cellValue = row[key] ? row[key].toString() : "";
+        acc[i] = Math.max(acc[i] || 0, cellValue.length);
+      });
+      return acc;
+    }, {});
+
+    ws["!cols"] = Object.keys(columnWidths).map((i) => ({
+      wch: columnWidths[i],
+    }));
+
+    // Membuat workbook dan menambahkan worksheet
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    // Mengonversi workbook ke array buffer
+    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
+    // Menyimpan file menggunakan FileSaver
+    const blob = new Blob([wbout], { type: "application/octet-stream" });
+    FileSaver.saveAs(blob, `${fileName}.xlsx`);
+  };
+
+  const getFormattedDateTime = () => {
+    const now = new Date();
+  
+    // Ambil komponen tanggal dan waktu
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+  
+    // Format tanggal dan waktu sesuai dengan "dd-MM-yyyy HH:mm"
+    return `${day}-${month}-${year} ${hours}.${minutes}`;
+  };
+
+  const handleEksporButtonClick = () => {
+    const formattedDateTime = getFormattedDateTime();
+    const fileName = `Data Usaha Kelengkeng Simoketawang ${formattedDateTime}`;
+    exportToExcel(dataRuta, fileName);
+  };
+
   return (
     <div className="p-4 bg-[#ffffffb4] rounded-xl">
       <div className="flex justify-between">
@@ -226,7 +307,7 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <div
+        {/* <div
           className="relative"
           onMouseLeave={() => setDropdownVisible(false)}
         >
@@ -258,6 +339,52 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
               </div>
             </div>
           )}
+        </div> */}
+        <div className="flex gap-2">
+          <div
+            className="relative"
+            onMouseLeave={() => !isMobile && setDropdownVisible(false)}
+          >
+            <Button
+              color="primary"
+              className="text-[14px] font-semibold text-white"
+              startContent={<FaPlus className="text-[20px] text-white" />}
+              onMouseEnter={() => !isMobile && setDropdownVisible(true)}
+              onClick={handleButtonClick}
+            >
+              Tambah
+            </Button>
+            {dropdownVisible && (
+              <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
+                <div className="py-1">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                    onClick={handleSatuanAddModal}
+                  >
+                    Satuan
+                  </a>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 rounded-md hover:bg-gray-100"
+                    onClick={handleKumpulanAddModal}
+                  >
+                    Kumpulan
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+          <Button
+            color="success"
+            className="text-[14px] font-semibold text-white"
+            startContent={
+              <SiMicrosoftexcel className="text-[20px] text-white" />
+            }
+            onClick={handleEksporButtonClick}
+          >
+            Ekspor
+          </Button>
         </div>
       </div>
       <Table
@@ -294,11 +421,11 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
           emptyContent={"Tidak ada data."}
           isLoading={loading}
           loadingContent={
-            <Bars width="50" height="50" color="#0B588F" className="mx-auto" />
+            <Bars width="50" height="50" color="#D4AC2B" className="mx-auto" />
           }
         >
           {(item) => (
-            <TableRow key={item.kode}>
+            <TableRow key={item._id}>
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
@@ -318,13 +445,10 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
         onClose={onAddModalOpenChange}
         isSatuan={isSatuan}
         dataRuta={dataRuta}
-        daftarRt={dataRt}
-        jenis_kelamin={jenis_kelamin}
-        pendidikan_terakhir={pendidikan_terakhir}
-        kategori_usaha={kategori_usaha}
-        bentuk_badan_usaha={bentuk_badan_usaha}
-        lokasi_tempat_usaha={lokasi_tempat_usaha}
-        skala_usaha={skala_usaha}
+        daftarSls={dataRt}
+        jenis_klengkeng={jenis_klengkeng}
+        jenis_pupuk={jenis_pupuk}
+        pemanfaatan_produk={pemanfaatan_produk}
         fetchData={fetchData}
         fetchDataAggregate={fetchDataAggregate}
       />
@@ -335,31 +459,10 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
         ruta={editRutaData}
         fetchData={fetchData}
         fetchDataAggregate={fetchDataAggregate}
-        daftarRt={dataRt}
-        jenis_kelamin={jenis_kelamin}
-        pendidikan_terakhir={pendidikan_terakhir}
-        kategori_usaha={kategori_usaha}
-        bentuk_badan_usaha={bentuk_badan_usaha}
-        lokasi_tempat_usaha={lokasi_tempat_usaha}
-        skala_usaha={skala_usaha}
+        jenis_klengkeng={jenis_klengkeng}
+        jenis_pupuk={jenis_pupuk}
+        pemanfaatan_produk={pemanfaatan_produk}
       />
-
-      {/* {loading && (
-        <div className="fixed inset-0 bg-[#caf4ff85] flex flex-col justify-center items-center z-50 overflow-hidden">
-          <Bars
-            height="60"
-            width="60"
-            color="#0B588F"
-            ariaLabel="bars-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
-          <p className="mt-3 font-semibold font-inter text-pyellow">
-            Loading
-          </p>
-        </div>
-      )} */}
     </div>
   );
 };

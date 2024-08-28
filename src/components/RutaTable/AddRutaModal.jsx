@@ -483,19 +483,6 @@ const AddRutaModal = ({
     }
   };
 
-  const initializeAfterError = ({ ruta }) => {
-    const addRutaData = { ...ruta };
-    setAddRutaData(addRutaData);
-    setSelectedRt(ruta.kodeRt);
-    setSelectedJenisKelamin(ruta.jenis_kelamin);
-    setSelectedPendidikanTerakhir(ruta.pendidikan_terakhir);
-    setSelectedKategoriUsaha(ruta.kategori_usaha);
-    setSelectedBentukBadanUsaha(ruta.bentuk_badan_usaha);
-    setSelectedLokasiTempatUsaha(ruta.lokasi_tempat_usaha);
-    setSelectedSkalaUsaha(ruta.skala_usaha);
-    console.log("Data after error", addRutaData);
-  };
-
   const handleCloseButton = () => {
     setAddRutaData({});
     resetSelect();
@@ -586,7 +573,7 @@ const AddRutaModal = ({
   };
 
   const customMarker = L.icon({
-    iconUrl: "https://i.ibb.co.com/GCZrQ4w/shop.png", // Replace with your custom icon URL
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/5693/5693840.png", // Replace with your custom icon URL
     iconSize: [45, 45], // Size of the icon
     iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
     popupAnchor: [0, -45], // Point from which the popup should open relative to the iconAnchor

@@ -13,10 +13,12 @@ import { Input, Select, SelectItem } from "@nextui-org/react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import api from "../../utils/api";
-import { DatePicker, message } from "antd";
+import { DatePicker, Image, message, Upload } from "antd";
 import { Bars } from "react-loader-spinner";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import api3 from "../../utils/api3";
+import { FaImages } from "react-icons/fa6";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.kode === key);
@@ -46,58 +48,59 @@ const isValidPendapatanSebulanTerakhir = (pendapatanSebulanTerakhir) => {
   return pendapatanSebulanTerakhir >= 0;
 };
 
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 const EditRutaModal = ({
   isEditModalOpen,
   onEditModalOpenChange,
   ruta,
   fetchData,
   fetchDataAggregate,
-  daftarRt,
-  jenis_kelamin,
-  pendidikan_terakhir,
-  kategori_usaha,
-  bentuk_badan_usaha,
-  lokasi_tempat_usaha,
-  skala_usaha,
+  jenis_klengkeng,
+  jenis_pupuk,
+  pemanfaatan_produk,
 }) => {
   // Initialize state with default values
-  const [editRutaData, setEditRutaData] = useState({});
-  const [oldRutaData, setOldRutaData] = useState({});
+  const [editUsahaData, setEditUsahaData] = useState({});
+  const [oldUsahaData, setOldUsahaData] = useState({});
   const [loading, setLoading] = useState(false);
   const [mapPosition, setMapPosition] = useState([0, 0]); // Initialize map position
-  const [selectedRt, setSelectedRt] = useState("");
-  const [selectedJenisKelamin, setSelectedJenisKelamin] = useState("");
-  const [selectedTanggalLahir, setSelectedTanggalLahir] = useState("");
-  const [selectedPendidikanTerakhir, setSelectedPendidikanTerakhir] =
-    useState("");
-  const [selectedKategoriUsaha, setSelectedKategoriUsaha] = useState("");
-  const [selectedBentukBadanUsaha, setSelectedBentukBadanUsaha] = useState("");
-  const [selectedLokasiTempatUsaha, setSelectedLokasiTempatUsaha] =
-    useState("");
-  const [selectedSkalaUsaha, setSelectedSkalaUsaha] = useState("");
+  const [selectedSls, setSelectedSls] = useState("");
+  const [selectedJenisKlengkeng, setSelectedJenisKlengkeng] = useState("");
+  const [selectedJenisPupuk, setSelectedJenisPupuk] = useState("");
+  const [selectedPemanfaatanProduk, setSelectedPemanfaatanProduk] = useState(
+    []
+  );
+  const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
-
-  dayjs.extend(customParseFormat);
-  const dateFormat = "DD-MM-YYYY";
+  const [createError, setCreateError] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const [customFilename, setCustomFilename] = useState("");
 
   useEffect(() => {
     if (ruta) {
-      const ruta2 = {
-        ...ruta,
-        ["no_urut_bangunan"]: ruta.no_urut_bangunan
-          ? ruta.no_urut_bangunan.padStart(3, "0")
-          : "",
-      };
-      setEditRutaData(ruta2);
-      setOldRutaData(ruta2);
-      setSelectedRt(ruta2.kodeRt);
-      setSelectedJenisKelamin(ruta2.jenis_kelamin);
-      setSelectedTanggalLahir(ruta2.tanggal_lahir);
-      setSelectedPendidikanTerakhir(ruta2.pendidikan_terakhir);
-      setSelectedKategoriUsaha(ruta2.kategori_usaha);
-      setSelectedBentukBadanUsaha(ruta2.bentuk_badan_usaha);
-      setSelectedLokasiTempatUsaha(ruta2.lokasi_tempat_usaha);
-      setSelectedSkalaUsaha(ruta2.skala_usaha);
+      setEditUsahaData(ruta);
+      setOldUsahaData(ruta);
+      setSelectedSls(ruta.kodeSls);
+      setSelectedJenisKlengkeng(ruta.jenis_klengkeng);
+      setSelectedJenisPupuk(ruta.jenis_pupuk);
+      setSelectedPemanfaatanProduk(ruta.pemanfaatan_produk);
+      setFileList([
+        {
+          uid: ruta._id,
+          name: ruta.nama_kepala_keluarga + ".png",
+          status: "done",
+          url: ruta.url_img,
+        },
+      ]);
     }
   }, [ruta]);
 
@@ -109,29 +112,103 @@ const EditRutaModal = ({
   }, [ruta]);
 
   useEffect(() => {
-    if (editRutaData.latitude && editRutaData.longitude) {
+    if (editUsahaData.latitude && editUsahaData.longitude) {
       if (
         (!errors.latitude && !errors.longitude) ||
         (errors.latitude === "" && errors.longitude === "")
       ) {
-        setMapPosition([editRutaData.latitude, editRutaData.longitude]);
+        setMapPosition([editUsahaData.latitude, editUsahaData.longitude]);
       }
     }
-  }, [editRutaData]);
+  }, [editUsahaData]);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+    setCustomFilename(editUsahaData.nama_kepala_keluarga);
+  };
+
+  const customRequest = ({ file, onSuccess, onError, filename }) => {
+    const formData = new FormData();
+
+    // Gunakan parameter filename jika diberikan, jika tidak gunakan nama file asli
+    const finalFilename = filename ? filename : file.name.split(".")[0];
+
+    // Tambahkan file dan nama file ke FormData
+    formData.append("filename", finalFilename);
+    formData.append("image", file);
+
+    // Kirimkan data menggunakan Axios
+    api3
+      .post("/api/photo/upload", formData)
+      .then((response) => {
+        console.log("Link Photo: ", response.data.imageUrl);
+        setEditUsahaData((prevValues) => ({
+          ...prevValues,
+          ["url_img"]: response.data.imageUrl,
+        }));
+        onSuccess(response.data);
+      })
+      .catch((error) => {
+        onError(error);
+        console.log(error);
+        if (error.response) {
+          message.error(error.response.data.message, 8);
+        } else {
+          message.error(error.message, 8);
+        }
+      });
+  };
+
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: "none",
+      }}
+      type="button"
+      disabled={true}
+    >
+      <FaImages size={30} className="mx-auto text-pyellow" />
+      <div
+        style={{
+          marginTop: 6,
+        }}
+        className="font-semibold text-pyellow"
+      >
+        Upload
+      </div>
+    </button>
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditRutaData((prevValues) => ({ ...prevValues, [name]: value }));
 
-    if (name === "no_urut_bangunan") {
-      if (!value) {
-        errors.no_urut_bangunan = "No. Urut Bangunan harus diisi.";
-      } else if (!/^\d{3}$/.test(value)) {
-        errors.no_urut_bangunan =
-          "No. Urut Bangunan harus berupa angka tiga digit. Contoh: 001";
-      } else {
-        errors.no_urut_bangunan = "";
-      }
+    let updatedValue = value;
+
+    if (name === "latitude" || name === "longitude" || name === "usia_pohon") {
+      updatedValue = value.replace(",", "."); // Replace comma with dot for valid decimal format
+    }
+
+    if (
+      name === "nama_kepala_keluarga" ||
+      name === "catatan" ||
+      name === "alamat"
+    ) {
+      updatedValue = value.toUpperCase();
+    }
+
+    if (name !== "latitude" && name !== "longitude") {
+      setEditUsahaData((prevValues) => ({
+        ...prevValues,
+        [name]: updatedValue,
+      }));
     }
 
     if (name === "nama_kepala_keluarga") {
@@ -139,44 +216,6 @@ const EditRutaModal = ({
         errors.nama_kepala_keluarga = "Nama Kepala Keluarga harus diisi.";
       } else {
         errors.nama_kepala_keluarga = "";
-      }
-    }
-
-    if (name === "nama_pemilik_penanggungjawab") {
-      if (!value) {
-        errors.nama_pemilik_penanggungjawab =
-          "Nama Pemilik/Penanggungjawab harus diisi.";
-      } else {
-        errors.nama_pemilik_penanggungjawab = "";
-      }
-    }
-
-    if (name === "nik") {
-      if (!value) {
-        errors.nik = "NIK harus diisi.";
-      } else if (!/^\d{16}$/.test(value)) {
-        errors.nik = "NIK harus terdiri dari 16 digit angka.";
-      } else {
-        errors.nik = "";
-      }
-    }
-
-    if (name === "no_hp") {
-      if (!value) {
-        errors.no_hp = "No. HP harus diisi.";
-      } else if (!/^08\d{8,11}$/.test(value)) {
-        errors.no_hp =
-          "No. HP harus diawali dengan '08' dan terdiri dari 10 hingga 13 digit.";
-      } else {
-        errors.no_hp = "";
-      }
-    }
-
-    if (name === "nama_usaha") {
-      if (!value) {
-        errors.nama_usaha = "Nama Usaha harus diisi.";
-      } else {
-        errors.nama_usaha = "";
       }
     }
 
@@ -188,44 +227,78 @@ const EditRutaModal = ({
       }
     }
 
-    const correctedValue = value.replace(",", ".");
+    if (name === "usia_pohon") {
+      if (!value) {
+        errors.usia_pohon = "Usia Pohon harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.usia_pohon = "Usia Pohon harus berupa angka positif.";
+      } else {
+        errors.usia_pohon = "";
+      }
+    }
+
+    if (name === "rata2_volume_produksi_per_panen") {
+      if (!value) {
+        errors.rata2_volume_produksi_per_panen =
+          "Rata-rata Volume Produksi Per Panen harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.rata2_volume_produksi_per_panen =
+          "Rata-rata Volume Produksi Per Panen harus berupa angka positif.";
+      } else {
+        errors.rata2_volume_produksi_per_panen = "";
+      }
+    }
+
+    if (name === "frekuensi_berbuah") {
+      if (!value) {
+        errors.frekuensi_berbuah = "Frekuensi Berbuah harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.frekuensi_berbuah =
+          "Frekuensi Berbuah harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.frekuensi_berbuah =
+          "Frekuensi Berbuah harus berupa angka bulat.";
+      } else {
+        errors.frekuensi_berbuah = "";
+      }
+    }
 
     if (name === "latitude") {
-      if (correctedValue === "") {
+      if (updatedValue === "") {
         errors.latitude = "Latitude harus diisi.";
-      } else if (isNaN(correctedValue)) {
+      } else if (isNaN(updatedValue)) {
         errors.latitude = "Latitude harus berupa angka.";
       } else {
-        const numericValue = parseFloat(correctedValue);
+        const numericValue = parseFloat(updatedValue);
         if (!isValidLatitude(numericValue)) {
           errors.latitude = "Latitude harus antara -90 dan 90.";
         } else {
           errors.latitude = "";
-          // Update state dengan nilai yang telah dikoreksi
-          setEditRutaData((prevState) => ({
-            ...prevState,
-            [name]: correctedValue,
+          setEditUsahaData((prevValues) => ({
+            ...prevValues,
+            [name]: updatedValue,
           }));
+          console.log("Corrected Latitude:", updatedValue);
         }
       }
     }
 
     if (name === "longitude") {
-      if (correctedValue === "") {
+      if (updatedValue === "") {
         errors.longitude = "Longitude harus diisi.";
-      } else if (isNaN(correctedValue)) {
+      } else if (isNaN(updatedValue)) {
         errors.longitude = "Longitude harus berupa angka.";
       } else {
-        const numericValue = parseFloat(correctedValue);
+        const numericValue = parseFloat(updatedValue);
         if (!isValidLongitude(numericValue)) {
           errors.longitude = "Longitude harus antara -180 dan 180.";
         } else {
           errors.longitude = "";
-          // Update state dengan nilai yang telah dikoreksi
-          setEditRutaData((prevState) => ({
-            ...prevState,
-            [name]: correctedValue,
+          setEditUsahaData((prevValues) => ({
+            ...prevValues,
+            [name]: updatedValue,
           }));
+          console.log("Corrected Longitude:", updatedValue);
         }
       }
     }
@@ -233,71 +306,53 @@ const EditRutaModal = ({
 
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
-    setEditRutaData((prevValues) => ({ ...prevValues, [name]: value }));
+    setEditUsahaData((prevValues) => ({ ...prevValues, [name]: value }));
 
-    if (name === "kodeRt") setSelectedRt(value);
-    if (name === "jenis_kelamin") setSelectedJenisKelamin(value);
-    if (name === "tanggal_lahir") setSelectedTanggalLahir(value);
-    if (name === "pendidikan_terakhir") setSelectedPendidikanTerakhir(value);
-    if (name === "kategori_usaha") setSelectedKategoriUsaha(value);
-    if (name === "bentuk_badan_usaha") setSelectedBentukBadanUsaha(value);
-    if (name === "lokasi_tempat_usaha") setSelectedLokasiTempatUsaha(value);
-    if (name === "skala_usaha") setSelectedSkalaUsaha(value);
+    if (name === "kodeSls") setSelectedSls(value);
+    if (name === "jenis_klengkeng") setSelectedJenisKlengkeng(value);
+    if (name === "jenis_pupuk") setSelectedJenisPupuk(value);
   };
 
-  const handleDatePickerChange = (date) => {
-    setSelectedTanggalLahir(date ? date.format("DD-MM-YYYY") : null);
-    setEditRutaData((prevValues) => ({
+  const handleOnSelectionChange = (keys) => {
+    // Set the selected keys (Set) to the state
+    console.log("Keys:", keys);
+    setEditUsahaData((prevValues) => ({
       ...prevValues,
-      ["tanggal_lahir"]: date ? date.format("DD-MM-YYYY") : null,
+      ["pemanfaatan_produk"]: [...keys],
     }));
-    console.log(date ? date.format("DD-MM-YYYY") : null);
+    setSelectedPemanfaatanProduk(new Set(keys));
   };
 
-  const validateForm = () => {
+  const validateForm = (editUsahaData) => {
     const newErrors = {};
 
     // Validasi setiap field
-    if (!editRutaData.kodeRt) newErrors.kodeRt = "Identitas SLS wajib dipilih.";
-    if (!editRutaData.no_urut_bangunan)
-      newErrors.no_urut_bangunan = "No. Urut Bangunan wajib diisi.";
-    if (!editRutaData.nama_kepala_keluarga)
+    if (!editUsahaData.kodeSls)
+      newErrors.kodeSls = "Identitas SLS wajib dipilih.";
+    if (!editUsahaData.nama_kepala_keluarga)
       newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
-    if (!editRutaData.nama_pemilik_penanggungjawab)
-      newErrors.nama_pemilik_penanggungjawab =
-        "Nama Pemilik atau Penanggungjawab wajib diisi.";
-    if (!editRutaData.jenis_kelamin)
-      newErrors.jenis_kelamin = "Jenis Kelamin wajib dipilih.";
-    if (!editRutaData.tanggal_lahir)
-      newErrors.tanggal_lahir = "Tanggal Lahir wajib dipilih.";
-    if (!editRutaData.nik) newErrors.nik = "NIK wajib diisi.";
-    if (!editRutaData.no_hp) newErrors.no_hp = "No. HP wajib diisi.";
-    if (!editRutaData.pendidikan_terakhir)
-      newErrors.pendidikan_terakhir = "Pendidikan Terakhir wajib dipilih.";
-    if (!editRutaData.nama_usaha)
-      newErrors.nama_usaha = "Nama Usaha wajib diisi.";
-    if (!editRutaData.kegiatan_utama_usaha)
-      newErrors.kegiatan_utama_usaha = "Kegiatan Utama Usaha wajib diisi.";
-    if (!editRutaData.kategori_usaha)
-      newErrors.kategori_usaha = "Kategori Usaha wajib dipilih.";
-    if (!editRutaData.bentuk_badan_usaha)
-      newErrors.bentuk_badan_usaha = "Bentuk Badan Usaha wajib dipilih.";
-    if (!editRutaData.lokasi_tempat_usaha)
-      newErrors.lokasi_tempat_usaha = "Lokasi Tempat Usaha wajib dipilih.";
-    if (!editRutaData.skala_usaha)
-      newErrors.skala_usaha = "Skala Usaha wajib dipilih.";
-    if (!editRutaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
-    // if (!editRutaData.catatan)
-    //   newErrors.catatan = "Catatan wajib diisi.";
-    if (!editRutaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
-    if (!editRutaData.longitude) newErrors.longitude = "Longitude wajib diisi.";
+    if (!editUsahaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
+    if (!editUsahaData.jenis_klengkeng)
+      newErrors.jenis_klengkeng = "Jenis Klengkeng wajib diisi.";
+    if (!editUsahaData.jenis_pupuk)
+      newErrors.jenis_pupuk = "Jenis Pupuk wajib diisi.";
+    if (!editUsahaData.frekuensi_berbuah)
+      newErrors.frekuensi_berbuah = "Frekuensi Berbuah wajib diisi.";
+    if (!editUsahaData.rata2_volume_produksi_per_panen)
+      newErrors.rata2_volume_produksi_per_panen =
+        "Rata-rata Volume Produksi Per Panen wajib diisi.";
+    if (!editUsahaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
+    if (!editUsahaData.longitude)
+      newErrors.longitude = "Longitude wajib diisi.";
+    if (!editUsahaData.url_img)
+      newErrors.url_img = "Terjadi kesalahan upload foto.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleEditSave = async () => {
-    if (!validateForm()) {
+    if (!validateForm(editUsahaData)) {
       message.error(
         "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
         5
@@ -317,11 +372,11 @@ const EditRutaModal = ({
       return;
     }
 
-    if (editRutaData) {
+    if (editUsahaData) {
       const convertedData = {
-        ...editRutaData,
-        latitude: parseFloat(editRutaData.latitude),
-        longitude: parseFloat(editRutaData.longitude),
+        ...editUsahaData,
+        latitude: parseFloat(editUsahaData.latitude),
+        longitude: parseFloat(editUsahaData.longitude),
       };
 
       console.log(convertedData);
@@ -338,9 +393,9 @@ const EditRutaModal = ({
   const updateData = async (data) => {
     setLoading(true);
     try {
-      const response = await api.put(`/api/rumahTangga/${data.kode}`, data);
+      const response = await api3.put(`/api/usahaKlengkeng/${data._id}`, data);
       message.success(
-        `UMKM ${data.nama_pemilik_penanggungjawab} berhasil diupdate.`,
+        `Usaha Kelengkeng ${data.nama_kepala_keluarga} berhasil diupdate.`,
         5
       );
       onEditModalOpenChange(false);
@@ -362,23 +417,16 @@ const EditRutaModal = ({
 
   const handleCloseButton = () => {
     setErrors({});
-    setEditRutaData(oldRutaData);
+    setEditUsahaData(oldUsahaData);
     onEditModalOpenChange(false);
   };
-
-  function capitalizeFirstLetter(string) {
-    if (typeof string !== "string" || string.length === 0) {
-      return "";
-    }
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
 
   return (
     <Modal
       isOpen={isEditModalOpen}
       onOpenChange={onEditModalOpenChange}
       size="xl"
-      className="bg-slate-100 font-inter max-h-[90%]"
+      className="bg-slate-100 font-inter max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",
@@ -389,21 +437,21 @@ const EditRutaModal = ({
       isKeyboardDismissDisabled={true}
       hideCloseButton={true}
     >
-      <ModalContent className="font-inter text-pdarkblue">
+      <ModalContent className="font-inter text-pyellow">
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-              Edit Keluarga UMKM
+            <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
+              Edit Usaha Kelengkeng
             </ModalHeader>
             <ModalBody className="py-4">
-              <div className="space-y-4 simoanginangin-umkm-edit">
+              <div className="space-y-4 simoketawang-usaha-edit">
                 <Input
                   label="Kode"
                   // placeholder="Masukkan No. Urut Bangunan"
                   fullWidth
                   classNames={{ inputWrapper: "shadow", input: "text-black" }}
                   name="kode"
-                  value={editRutaData.kode}
+                  value={editUsahaData.kode}
                   onChange={handleInputChange}
                   isReadOnly
                 />
@@ -412,33 +460,18 @@ const EditRutaModal = ({
                   // placeholder="Masukkan No. Urut Bangunan"
                   fullWidth
                   classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="kode"
-                  value={editRutaData.rt_rw_dusun}
+                  name="sls"
+                  value={editUsahaData.rt_rw_dusun}
                   onChange={handleInputChange}
                   isReadOnly
                 />
-
-                <Input
-                  label="No. Urut Bangunan"
-                  placeholder="Masukkan No. Urut Bangunan"
-                  fullWidth
-                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="no_urut_bangunan"
-                  value={editRutaData.no_urut_bangunan}
-                  onChange={handleInputChange}
-                />
-                {errors.no_urut_bangunan && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.no_urut_bangunan}
-                  </p>
-                )}
                 <Input
                   label="Nama Kepala Keluarga"
                   placeholder="Masukkan Nama Kepala Keluarga"
                   fullWidth
                   classNames={{ inputWrapper: "shadow", input: "text-black" }}
                   name="nama_kepala_keluarga"
-                  value={editRutaData.nama_kepala_keluarga}
+                  value={editUsahaData.nama_kepala_keluarga}
                   onChange={handleInputChange}
                 />
                 {errors.nama_kepala_keluarga && (
@@ -446,241 +479,11 @@ const EditRutaModal = ({
                     {errors.nama_kepala_keluarga}
                   </p>
                 )}
-                <Input
-                  label="Nama Pemilik/Penanggungjawab"
-                  placeholder="Masukkan Nama Pemilik/Penanggungjawab"
-                  fullWidth
-                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="nama_pemilik_penanggungjawab"
-                  value={editRutaData.nama_pemilik_penanggungjawab}
-                  onChange={handleInputChange}
-                />
-                {errors.nama_pemilik_penanggungjawab && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.nama_pemilik_penanggungjawab}
-                  </p>
-                )}
-                <Select
-                  size="md"
-                  label="Jenis Kelamin"
-                  className="w-full"
-                  name="jenis_kelamin"
-                  // value={editRutaData.jenis_kelamin}
-                  selectedKeys={
-                    selectedJenisKelamin ? [selectedJenisKelamin] : []
-                  }
-                  placeholder="Pilih Jenis Kelamin"
-                  onChange={handleSelectChange}
-                >
-                  {jenis_kelamin.map((item) => (
-                    <SelectItem key={item.key} value={item.key}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.jenis_kelamin && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.jenis_kelamin}
-                  </p>
-                )}
-                {editRutaData.tanggal_lahir !== undefined && (
-                  <div className="relative w-full">
-                    <h2 className="absolute top-[4px] left-[14px] z-50 text-pdarkblue text-[14px] font-semibold">
-                      Tanggal Lahir
-                    </h2>
-                    {/* {console.log(editRutaData.tanggal_lahir)} */}
-                    <DatePicker
-                      label="Tanggal Lahir"
-                      placeholder="Pilih Tanggal Lahir"
-                      size="middle"
-                      className="w-full h-[50px] shadow rounded-xl border-none font-inter"
-                      name="tanggal_lahir"
-                      defaultValue={dayjs(
-                        editRutaData.tanggal_lahir,
-                        "DD-MM-YYYY"
-                      )}
-                      maxDate={dayjs()}
-                      format={dateFormat}
-                      onChange={handleDatePickerChange}
-                    />
-                  </div>
-                )}
-                {errors.tanggal_lahir && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.tanggal_lahir}
-                  </p>
-                )}
-                <Input
-                  label="NIK"
-                  placeholder="Masukkan NIK"
-                  fullWidth
-                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="nik"
-                  value={editRutaData.nik}
-                  onChange={handleInputChange}
-                />
-                {errors.nik && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.nik}
-                  </p>
-                )}
-                <Input
-                  label="No. HP"
-                  placeholder="Masukkan No. HP"
-                  fullWidth
-                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="no_hp"
-                  value={editRutaData.no_hp}
-                  onChange={handleInputChange}
-                />
-                {errors.no_hp && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.no_hp}
-                  </p>
-                )}
-                <Select
-                  size="md"
-                  label="Pendidikan Terakhir"
-                  className="w-full"
-                  name="pendidikan_terakhir"
-                  selectedKeys={
-                    selectedPendidikanTerakhir
-                      ? [selectedPendidikanTerakhir]
-                      : []
-                  }
-                  placeholder="Pilih Pendidikan Terakhir"
-                  onChange={handleSelectChange}
-                >
-                  {pendidikan_terakhir.map((item) => (
-                    <SelectItem key={item.key} value={item.label}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.pendidikan_terakhir && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.pendidikan_terakhir}
-                  </p>
-                )}
-                <Input
-                  label="Nama Usaha"
-                  placeholder="Masukkan Nama Usaha"
-                  fullWidth
-                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="nama_usaha"
-                  value={editRutaData.nama_usaha}
-                  onChange={handleInputChange}
-                />
-                {errors.nama_usaha && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.nama_usaha}
-                  </p>
-                )}
-                <Input
-                  label="Kegiatan Utama Usaha"
-                  placeholder="Masukkan Kegiatan Utama Usaha"
-                  fullWidth
-                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="kegiatan_utama_usaha"
-                  value={editRutaData.kegiatan_utama_usaha}
-                  onChange={handleInputChange}
-                />
-                {errors.kegiatan_utama_usaha && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.kegiatan_utama_usaha}
-                  </p>
-                )}
-                <Select
-                  size="md"
-                  label="Kategori Usaha"
-                  className="w-full"
-                  name="kategori_usaha"
-                  selectedKeys={
-                    selectedKategoriUsaha ? [selectedKategoriUsaha] : []
-                  }
-                  placeholder="Pilih Kategori Usaha"
-                  onChange={handleSelectChange}
-                >
-                  {kategori_usaha.map((item) => (
-                    <SelectItem key={item.key} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.kategori_usaha && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.kategori_usaha}
-                  </p>
-                )}
-                <Select
-                  size="md"
-                  label="Bentuk Badan Usaha"
-                  className="w-full"
-                  name="bentuk_badan_usaha"
-                  selectedKeys={
-                    selectedBentukBadanUsaha ? [selectedBentukBadanUsaha] : []
-                  }
-                  placeholder="Pilih Bentuk Badan Usaha"
-                  onChange={handleSelectChange}
-                >
-                  {bentuk_badan_usaha.map((item) => (
-                    <SelectItem key={item.key} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.bentuk_badan_usaha && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.bentuk_badan_usaha}
-                  </p>
-                )}
-                <Select
-                  size="md"
-                  label="Lokasi Tempat Usaha"
-                  className="w-full"
-                  name="lokasi_tempat_usaha"
-                  selectedKeys={
-                    selectedLokasiTempatUsaha ? [selectedLokasiTempatUsaha] : []
-                  }
-                  placeholder="Pilih Lokasi Tempat Usaha"
-                  onChange={handleSelectChange}
-                >
-                  {lokasi_tempat_usaha.map((item) => (
-                    <SelectItem key={item.key} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.lokasi_tempat_usaha && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.lokasi_tempat_usaha}
-                  </p>
-                )}
-                <Select
-                  size="md"
-                  label="Skala Usaha"
-                  className="w-full"
-                  name="skala_usaha"
-                  selectedKeys={selectedSkalaUsaha ? [selectedSkalaUsaha] : []}
-                  placeholder="Pilih Skala Usaha"
-                  onChange={handleSelectChange}
-                >
-                  {skala_usaha.map((item) => (
-                    <SelectItem key={item.key} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.skala_usaha && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.skala_usaha}
-                  </p>
-                )}
                 <Textarea
                   label="Alamat"
                   placeholder="Masukkan Alamat"
                   name="alamat"
-                  value={editRutaData.alamat}
+                  value={editUsahaData.alamat}
                   onChange={handleInputChange}
                 />
                 {errors.alamat && (
@@ -688,11 +491,118 @@ const EditRutaModal = ({
                     {errors.alamat}
                   </p>
                 )}
+                <Select
+                  size="md"
+                  label="Jenis Kelengkeng"
+                  className="w-full"
+                  name="jenis_klengkeng"
+                  selectedKeys={
+                    selectedJenisKlengkeng ? [selectedJenisKlengkeng] : []
+                  }
+                  placeholder="Pilih Jenis Kelengkeng"
+                  onChange={handleSelectChange}
+                >
+                  {jenis_klengkeng.map((item) => (
+                    <SelectItem key={item.key} value={item.key}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </Select>
+                {errors.jenis_klengkeng && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.jenis_klengkeng}
+                  </p>
+                )}
+                <Input
+                  label="Usia Pohon Kelengkeng"
+                  placeholder="Masukkan Usia Phon Kelengkeng"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="usia_pohon"
+                  value={editUsahaData.usia_pohon}
+                  onChange={handleInputChange}
+                />
+                {errors.usia_pohon && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.usia_pohon}
+                  </p>
+                )}
+                <Select
+                  size="md"
+                  label="Jenis Pupuk"
+                  className="w-full"
+                  name="jenis_pupuk"
+                  selectedKeys={selectedJenisPupuk ? [selectedJenisPupuk] : []}
+                  placeholder="Pilih Jenis Pupuk"
+                  onChange={handleSelectChange}
+                >
+                  {jenis_pupuk.map((item) => (
+                    <SelectItem key={item.key} value={item.key}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </Select>
+                {errors.jenis_pupuk && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.jenis_pupuk}
+                  </p>
+                )}
+                <Input
+                  label="Frekuensi Berbuah Pohon Kelengkeng (Kali)"
+                  placeholder="Masukkan Frekuensi Berbuah Pohon Kelengkeng"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="frekuensi_berbuah"
+                  value={editUsahaData.frekuensi_berbuah}
+                  onChange={handleInputChange}
+                />
+                {errors.frekuensi_berbuah && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.frekuensi_berbuah}
+                  </p>
+                )}
+                <Input
+                  label="Rata-Rata Volume Produksi per Panen (Kg)"
+                  placeholder="Masukkan Rata-Rata Volume Produksi per Panen"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="rata2_volume_produksi_per_panen"
+                  value={editUsahaData.rata2_volume_produksi_per_panen}
+                  onChange={handleInputChange}
+                />
+                {errors.rata2_volume_produksi_per_panen && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.rata2_volume_produksi_per_panen}
+                  </p>
+                )}
+                <Select
+                  size="md"
+                  label="Pemanfaatan Produk Kelengkeng"
+                  className="w-full"
+                  selectionMode="multiple"
+                  name="pemanfaatan_produk"
+                  selectedKeys={
+                    selectedPemanfaatanProduk ? selectedPemanfaatanProduk : []
+                  }
+                  placeholder="Pilih Pemanfaatan Produk Kelengkeng"
+                  onSelectionChange={handleOnSelectionChange}
+                >
+                  {pemanfaatan_produk.map((item) => (
+                    <SelectItem key={item.key} value={item.key}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </Select>
+                {errors.pemanfaatan_produk && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.pemanfaatan_produk}
+                  </p>
+                )}
                 <Textarea
                   label="Catatan"
                   placeholder="Masukkan Catatan"
                   name="catatan"
-                  value={editRutaData.catatan}
+                  value={editUsahaData.catatan}
                   onChange={handleInputChange}
                 />
                 {errors.catatan && (
@@ -705,7 +615,7 @@ const EditRutaModal = ({
                   placeholder="Masukkan nilai latitude"
                   fullWidth
                   name="latitude"
-                  value={editRutaData.latitude}
+                  value={editUsahaData.latitude}
                   classNames={{ inputWrapper: "shadow" }}
                   onChange={handleInputChange}
                 />
@@ -719,7 +629,7 @@ const EditRutaModal = ({
                   placeholder="Masukkan nilai longitude"
                   fullWidth
                   name="longitude"
-                  value={editRutaData.longitude}
+                  value={editUsahaData.longitude}
                   classNames={{ inputWrapper: "shadow" }}
                   onChange={handleInputChange}
                 />
@@ -751,11 +661,50 @@ const EditRutaModal = ({
                         />
                         <MapUpdater position={mapPosition} />
                         <Marker position={mapPosition}>
-                          <Popup>Posisi Keluarga UMKM</Popup>
+                          <Popup>Posisi Usaha Kelengkeng</Popup>
                         </Marker>
                       </MapContainer>
                     </div>
                   )}
+                <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">
+                  Foto Pohon Kelengkeng
+                </p>
+                <Upload
+                  // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                  customRequest={(options) =>
+                    customRequest({ ...options, filename: customFilename })
+                  }
+                  listType="picture-card"
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                  className="simoketawang-upload"
+                  disabled={
+                    editUsahaData.nama_kepala_keluarga === "" ||
+                    editUsahaData.nama_kepala_keluarga === undefined
+                  }
+                >
+                  {fileList.length >= 1 ? null : uploadButton}
+                </Upload>
+                {previewImage && (
+                  <Image
+                    wrapperStyle={{
+                      display: "none",
+                    }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(""),
+                    }}
+                    src={previewImage}
+                  />
+                )}
+                {errors.url_img && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.url_img}
+                  </p>
+                )}
               </div>
             </ModalBody>
             <ModalFooter>
@@ -767,7 +716,7 @@ const EditRutaModal = ({
                 Tutup
               </Button>
               <Button
-                className="bg-[#0B588F] text-white font-inter font-semibold"
+                className="font-semibold text-white bg-pyellow font-inter"
                 onPress={handleEditSave}
                 disabled={loading}
               >

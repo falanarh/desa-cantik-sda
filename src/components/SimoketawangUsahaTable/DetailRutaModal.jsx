@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalBody,
@@ -10,13 +10,26 @@ import {
   Button,
 } from "@nextui-org/react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import {
-  jenis_klengkeng,
-} from "./data";
+import { jenis_klengkeng, jenis_pupuk, pemanfaatan_produk } from "./data";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { Image, Upload } from "antd";
+import { FaImages } from "react-icons/fa6";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.key === key);
   return item ? item.label : "Label not found";
+};
+
+const convertKeysToString = (keys, array) => {
+  const labels = keys.map((key) => getLabelByKey(key, array));
+
+  if (labels.length === 0) return "";
+
+  if (labels.length === 1) return labels[0];
+
+  const lastLabel = labels.pop();
+  return `${labels.join(", ")}, dan ${lastLabel}`;
 };
 
 function formatNumber(num) {
@@ -54,11 +67,17 @@ const TableRow = ({ label, value }) => (
     <td className="p-3 text-right border border-gray-300">{value}</td>
   </tr>
 );
+const customMarker = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/8058/8058939.png", // Replace with your custom icon URL
+  iconSize: [45, 45], // Size of the icon
+  iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
+  popupAnchor: [0, -45], // Point from which the popup should open relative to the iconAnchor
+});
 
 const RutaMap = ({ latitude, longitude }) => (
   <div className="my-4">
-    <p className="text-[14px] font-semibold ml-3 my-2 text-pdarkblue">
-      Titik lokasi Rumah Tangga UMKM
+    <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">
+      Titik lokasi Usaha Kelengkeng
     </p>
     <MapContainer
       center={[latitude, longitude]}
@@ -71,12 +90,23 @@ const RutaMap = ({ latitude, longitude }) => (
         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         attribution="Tiles © Esri"
       />
-      <Marker position={[latitude, longitude]} />
+      <Marker position={[latitude, longitude]} icon={customMarker} />
     </MapContainer>
   </div>
 );
 
 const RutaDetail = ({ ruta }) => {
+  const [previewImage, setPreviewImage] = useState("");
+  const [fileList, setFileList] = useState([
+    {
+      uid: ruta._id,
+      name: ruta.nama_kepala_keluarga + ".png",
+      status: "done",
+      url: ruta.url_img,
+    },
+  ]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+
   if (!ruta) return null;
 
   const rows = [
@@ -84,30 +114,69 @@ const RutaDetail = ({ ruta }) => {
     { label: "Identitas SLS", value: ruta.rt_rw_dusun },
     { label: "Nama Kepala Keluarga", value: ruta.nama_kepala_keluarga },
     { label: "Alamat", value: ruta.alamat },
-    { label: "Jenis Klengkeng", value: getLabelByKey(ruta.jenis_klengkeng, jenis_klengkeng) },
-    { label: "Usia Pohon", value: ruta.usia_pohon },
-    
-    // {
-    //   label: "Pendidikan Terakhir",
-    //   value: getLabelByKey(ruta.pendidikan_terakhir, pendidikan_terakhir),
-    // },
-    { label: "Nama Usaha", value: ruta.nama_usaha },
-    { label: "Kegiatan Utama Usaha", value: ruta.kegiatan_utama_usaha },
-    // {
-    //   label: "Kategori Usaha",
-    //   value: getLabelByKey(ruta.kategori_usaha, kategori_usaha),
-    // },
-    // { label: "Bentuk Badan Usaha", value: getLabelByKey(ruta.bentuk_badan_usaha, bentuk_badan_usaha) },
-    // { label: "Lokasi Tempat Usaha", value: getLabelByKey(ruta.lokasi_tempat_usaha, lokasi_tempat_usaha) },
-    // { label: "Skala Usaha", value: getLabelByKey(ruta.skala_usaha, skala_usaha) },
-    // { label: "Alamat", value: ruta.alamat },
+    {
+      label: "Jenis Klengkeng",
+      value: getLabelByKey(ruta.jenis_klengkeng, jenis_klengkeng),
+    },
+    { label: "Usia Pohon (Tahun)", value: ruta.usia_pohon },
+    {
+      label: "Jenis Pupuk",
+      value: getLabelByKey(ruta.jenis_pupuk, jenis_pupuk),
+    },
+    { label: "Frekuensi Berbuah (Kali)", value: ruta.frekuensi_berbuah },
+    {
+      label: "Rata-rata Volume Produksi per Panen (Kg)",
+      value: ruta.rata2_volume_produksi_per_panen,
+    },
+    {
+      label: "Pemanfaat Produk Kelengkeng",
+      value: convertKeysToString(ruta.pemanfaatan_produk, pemanfaatan_produk),
+    },
+    { label: "Catatan", value: ruta.catatan },
     { label: "Latitude", value: ruta.latitude },
     { label: "Longitude", value: ruta.longitude },
   ];
 
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: "none",
+      }}
+      type="button"
+      disabled={true}
+    >
+      <FaImages size={30} className="mx-auto text-pyellow" />
+      <div
+        style={{
+          marginTop: 6,
+        }}
+        className="font-semibold text-pyellow"
+      >
+        Upload
+      </div>
+    </button>
+  );
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+
   return (
     <div className="p-4">
-      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-auto table-detail-ruta">
+      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-auto table-detail-usaha">
         <tbody className="text-[14px]">
           {rows.map((row, index) => (
             <TableRow key={index} label={row.label} value={row.value} />
@@ -116,6 +185,31 @@ const RutaDetail = ({ ruta }) => {
       </table>
       {ruta.latitude && ruta.longitude && (
         <RutaMap latitude={ruta.latitude} longitude={ruta.longitude} />
+      )}
+      <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">
+        Foto Pohon Kelengkeng
+      </p>
+      <Upload
+        listType="picture-card"
+        fileList={fileList}
+        onPreview={handlePreview}
+        className="simoketawang-upload"
+        disabled={true}
+      >
+        {fileList.length >= 1 ? null : uploadButton}
+      </Upload>
+      {previewImage && (
+        <Image
+          wrapperStyle={{
+            display: "none",
+          }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+            afterOpenChange: (visible) => !visible && setPreviewImage(""),
+          }}
+          src={previewImage}
+        />
       )}
     </div>
   );
@@ -127,7 +221,7 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       size="xl"
-      className="bg-slate-100 font-inter max-h-[90%]"
+      className="bg-slate-100 font-inter max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",
@@ -138,10 +232,10 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
       isKeyboardDismissDisabled={true}
       hideCloseButton={true}
     >
-      <ModalContent className="font-inter text-pdarkblue">
+      <ModalContent className="font-inter text-pyellow">
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
+            <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
               Detail Rumah Tangga UMKM
             </ModalHeader>
             <ModalBody className="py-4">
@@ -149,7 +243,7 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
             </ModalBody>
             <ModalFooter>
               <Button
-                className="bg-[#0B588F] text-white font-inter font-semibold"
+                className="font-semibold text-white bg-pyellow font-inter"
                 onPress={() => onOpenChange(false)}
               >
                 Tutup
