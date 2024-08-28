@@ -12,7 +12,7 @@ export default function SK() {
           (BPS RI)
         </>
       ),
-      img: "/pict/file.png",
+      img: "/pict/sk.png",
       link: "https://drive.usercontent.google.com/u/0/uc?id=1UOvdCQ95BtCMDDNOewXqb8LMcr0vKP-H&export=download"
     },
     {
@@ -23,18 +23,18 @@ export default function SK() {
         (BPS Provinsi Jawa Timur)
       </>
       ),
-      img: "/pict/file.png",
+      img: "/pict/sk.png",
       link: "https://drive.usercontent.google.com/u/0/uc?id=1W15jXwRPC7ozJQc7PgZJZxo5u54heS6Q&export=download"
     },
     {
       title: (
         <>
-          Surat Edaran Desa Cinta Statistik 2024
+          Surat Keputusan Desa Cinta Statistik 2024
           <br />
           (Bupati Kabupaten Sidoarjo)
         </>
       ),
-      img: "/pict/file.png",
+      img: "/pict/sk.png",
       link: "https://drive.usercontent.google.com/u/0/uc?id=14J5-WSjOF3LQfcHrDJZyMdl93__LfAvx&export=download"
     },
     {
@@ -45,7 +45,7 @@ export default function SK() {
           (BPS Kabupaten Sidoarjo)
         </>
       ),
-      img: "/pict/file.png",
+      img: "/pict/sk.png",
       link: "https://drive.usercontent.google.com/u/0/uc?id=14J5-WSjOF3LQfcHrDJZyMdl93__LfAvx&export=download"
     },
   ];

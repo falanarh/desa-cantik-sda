@@ -31,7 +31,7 @@ export default function TimKerja() {
     {
       title: "Kepala Sub Bagian Umum",
       subtitle: "Anggie Dian Pratiwi SST, M.Ec.Dev",
-      img: "/pict/anggie.png"
+      img: "/pict/anggi.png"
     },
     {
       title: "Tim IT",
@@ -55,7 +55,7 @@ export default function TimKerja() {
     },
     {
       title: "Tim Pelaksana Desa Cantik",
-      subtitle: "Nofriana Florida Djami Raga SST., M.Sc",
+      subtitle: "Nofriana Florida Djami R SST., M.Sc",
       img: "/pict/nofri.png"
     }
   ];
