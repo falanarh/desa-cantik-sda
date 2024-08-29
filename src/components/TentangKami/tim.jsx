@@ -1,11 +1,27 @@
-import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
+import React from "react";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure
+} from "@nextui-org/react";
 
 export default function TimKerja() {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedItem, setSelectedItem] = React.useState(null);
+
   const list = [
     {
       title: "Kepala BPS Kabupaten Sidoarjo",
       subtitle: "Mohamad Isma'il S.Si, M.Ec.Dev",
-      img: "/pict/ismail.pnf"
+      img: "/pict/ismail.png"
     },
     {
       title: "Statistisi Ahli Madya",
@@ -15,7 +31,7 @@ export default function TimKerja() {
     {
       title: "Kepala Sub Bagian Umum",
       subtitle: "Anggie Dian Pratiwi SST, M.Ec.Dev",
-      img: "/"
+      img: "/pict/anggi.png"
     },
     {
       title: "Tim IT",
@@ -39,18 +55,57 @@ export default function TimKerja() {
     },
     {
       title: "Tim Pelaksana Desa Cantik",
-      subtitle: "Nofriana Florida Djami Raga SST., M.Sc",
+      subtitle: "Nofriana Florida Djami R SST., M.Sc",
       img: "/pict/nofri.png"
     }
   ];
 
+  const handleCardClick = (item) => {
+    setSelectedItem(item);
+    onOpen();
+  };
+
   return (
-    <div className="container mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+    <div className="container mx-auto mt-5">
+      <h1
+        className="mb-6 text-center sub-header text-xl"
+        style={{
+          fontWeight: "bold",
+          fontFamily: "Inter",
+          marginTop: "40px",
+          marginBottom: "4px"
+        }}
+      >
+        Tim Kerja Desa Cantik
+      </h1>
+      <p
+        className="mb-6 text-center sub-header text-lg"
+        style={{ fontFamily: "Inter", marginBottom: "10px" }}
+      >
+        Berikut merupakan tim kerja Desa Cantik Kabupaten Sidoarjo tahun 2024.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 mb-10">
         {list.map((item, index) => (
-          <a key={index} href={item.link} target="_blank" rel="noopener noreferrer" className="card-link">
-            <Card className="max-w-xs mx-auto" style={{ backgroundColor: '#e1e1e2', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)', width: '250px', height: '350px' }} shadow="xl" isPressable onPress={() => console.log("item pressed")}>
-              <CardBody className="p-4 overflow-visible" style={{ height: '200px' }}>
+          <div
+            key={index}
+            onClick={() => handleCardClick(item)}
+            className="card-link cursor-pointer"
+          >
+            <Card
+              className="max-w-xs mx-auto"
+              style={{
+                marginTop: "10px",
+                backgroundColor: "#f0f0f0",
+                boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+                width: "250px",
+                height: "420px"
+              }}
+              shadow="xl"
+            >
+              <CardBody
+                className="p-4 overflow-visible"
+                style={{ height: "180px" }}
+              >
                 <Image
                   shadow="lg"
                   radius="md"
@@ -58,18 +113,87 @@ export default function TimKerja() {
                   height="100%"
                   alt={item.title}
                   className="object-cover w-full h-full"
-                  style={{ objectFit: 'cover', objectPosition: 'top' }}
+                  style={{ objectFit: "cover", objectPosition: "top" }}
                   src={item.img}
                 />
               </CardBody>
-              <CardFooter className="block text-small" style={{ height: '150px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-                <b className="text-title-card-lg" style={{ fontFamily: 'Inter', fontSize: '18px', marginBottom: '4px' }}>{item.title}</b>
-                <p className="text-content-card" style={{ fontFamily: 'Inter', fontSize: '16px' }}>{item.subtitle}</p>
+              <CardFooter
+                className="block text-small"
+                style={{
+                  height: "240px",
+                  marginTop: "5px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center"
+                }}
+              >
+                <b
+                  className="text-title-card-lg"
+                  style={{
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    marginTop: "135px",
+                    whiteSpace: "normal",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  {item.title}
+                </b>
+                <p
+                  className="text-content-card"
+                  style={{
+                    fontFamily: "Inter",
+                    fontSize: "12px",
+                    whiteSpace: "normal",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  {item.subtitle}
+                </p>
               </CardFooter>
             </Card>
-          </a>
+          </div>
         ))}
       </div>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent
+          style={{
+            width: "300px",  // Adjust the width here
+            maxWidth: "90%",  // Ensure it fits within smaller screens
+          }}
+        >
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                {selectedItem?.title}
+              </ModalHeader>
+              <ModalBody>
+                <Image
+                  shadow="lg"
+                  radius="md"
+                  width="100%"
+                  height="auto"
+                  alt={selectedItem?.title}
+                  className="object-cover w-full h-full"
+                  style={{ objectFit: "cover", objectPosition: "top" }}
+                  src={selectedItem?.img}
+                />
+                <p>{selectedItem?.subtitle}</p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Tutup
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
