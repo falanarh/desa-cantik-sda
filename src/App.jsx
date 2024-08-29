@@ -1,5 +1,7 @@
 import LoginSimoanginangin from "./pages/loginSimoanginangin";
+import LoginSimoKetawang from "./pages/loginSimoketawang";
 import AdminSimoanginangin from "./pages/adminSimoanginangin";
+import AdminSimoketawang from "./pages/adminSimoketawang";
 import Beranda from "./pages/beranda";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Buletin from "./pages/buletin";
