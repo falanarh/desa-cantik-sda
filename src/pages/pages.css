@@ -1,17 +1,26 @@
-/* .bg-default-100 {
-  background-color: #ffffffb4 !important;
-} */
-
-[data-slot="tabList"] {
+[aria-label="Simoanginangin Dynamic tabs"] [data-slot="tabList"] {
   background-color: #ffffffb4 !important;
 }
 
-[data-slot="tabContent"] {
+[aria-label="Simoanginangin Dynamic tabs"] [data-slot="tabContent"] {
   color: #0b588f !important;
 }
 
-[data-slot="cursor"] {
+[aria-label="Simoanginangin Dynamic tabs"] [data-slot="cursor"] {
   background-color: #a7daff !important;
+  box-shadow: none !important;
+}
+
+.simoketawang-tabs [data-slot="tabList"] {
+  background-color: #ffffffb4 !important;
+}
+
+.simoketawang-tabs [data-slot="tabContent"] {
+  color: #D4AC2B !important;
+}
+
+.simoketawang-tabs [data-slot="cursor"] {
+  background-color: #f3fdb2 !important;
   box-shadow: none !important;
   /* margin: 2px !important; */
 }

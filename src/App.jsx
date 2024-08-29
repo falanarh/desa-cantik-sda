@@ -27,11 +27,20 @@ function App() {
         <Route path="/tentangkami" element={<TentangKami />} />
         <Route path="/login" element={<Login />} />
         <Route path="/login-simoanginangin" element={<LoginSimoanginangin />} />
+        <Route path="/login-simoketawang" element={<LoginSimoKetawang />} />
         <Route
           path="/admin-simoanginangin"
           element={
             <ProtectedRoute>
               <AdminSimoanginangin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-simoketawang"
+          element={
+            <ProtectedRoute>
+              <AdminSimoketawang />
             </ProtectedRoute>
           }
         />

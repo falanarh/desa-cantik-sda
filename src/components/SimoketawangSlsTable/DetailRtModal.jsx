@@ -60,45 +60,25 @@ const RtDetail = ({ rt, geojson = null }) => {
     { label: 'RT', value: rt.rt },
     { label: 'RW', value: rt.rw },
     { label: 'Dusun', value: rt.dusun },
-    { label: 'Jumlah Ruta', value: rt.jml_ruta },
-    { label: 'Jumlah UMKM', value: rt.jml_umkm },
-    { label: 'Jumlah UMKM Ketegori A', value: rt.jml_umkm_kbli_a },
-    { label: 'Jumlah UMKM Ketegori B', value: rt.jml_umkm_kbli_b },
-    { label: 'Jumlah UMKM Ketegori C', value: rt.jml_umkm_kbli_c },
-    { label: 'Jumlah UMKM Ketegori D', value: rt.jml_umkm_kbli_d },
-    { label: 'Jumlah UMKM Ketegori E', value: rt.jml_umkm_kbli_e },
-    { label: 'Jumlah UMKM Ketegori F', value: rt.jml_umkm_kbli_f },
-    { label: 'Jumlah UMKM Ketegori G', value: rt.jml_umkm_kbli_g },
-    { label: 'Jumlah UMKM Ketegori H', value: rt.jml_umkm_kbli_h },
-    { label: 'Jumlah UMKM Ketegori I', value: rt.jml_umkm_kbli_i },
-    { label: 'Jumlah UMKM Ketegori J', value: rt.jml_umkm_kbli_j },
-    { label: 'Jumlah UMKM Ketegori K', value: rt.jml_umkm_kbli_k },
-    { label: 'Jumlah UMKM Ketegori L', value: rt.jml_umkm_kbli_l },
-    { label: 'Jumlah UMKM Ketegori M', value: rt.jml_umkm_kbli_m },
-    { label: 'Jumlah UMKM Ketegori N', value: rt.jml_umkm_kbli_n },
-    { label: 'Jumlah UMKM Ketegori O', value: rt.jml_umkm_kbli_o },
-    { label: 'Jumlah UMKM Ketegori P', value: rt.jml_umkm_kbli_p },
-    { label: 'Jumlah UMKM Ketegori Q', value: rt.jml_umkm_kbli_q },
-    { label: 'Jumlah UMKM Ketegori R', value: rt.jml_umkm_kbli_r },
-    { label: 'Jumlah UMKM Ketegori S', value: rt.jml_umkm_kbli_s },
-    { label: 'Jumlah UMKM Ketegori T', value: rt.jml_umkm_kbli_t },
-    { label: 'Jumlah UMKM Ketegori U', value: rt.jml_umkm_kbli_u },
-    { label: 'Jumlah UMKM Bangunan Khusus Usaha', value: rt.jml_umkm_lokasi_bangunan_khusus_usaha },
-    { label: 'Jumlah UMKM Bangunan Campuran', value: rt.jml_umkm_lokasi_bangunan_campuran },
-    { label: 'Jumlah UMKM Kaki Lima', value: rt.jml_umkm_lokasi_kaki_lima },
-    { label: 'Jumlah UMKM Keliling', value: rt.jml_umkm_lokasi_keliling },
-    { label: 'Jumlah UMKM di Dalam Bangunan Tempat Tinggal atau Online', value: rt.jml_umkm_lokasi_didalam_bangunan_tempat_tinggal_online },
-    { label: 'Jumlah UMKM PT/Persero/Sejenisnya', value: rt.jml_umkm_bentuk_pt_persero_sejenisnya },
-    { label: 'Jumlah UMKM Ijin Desa atau Ijin Lainnya', value: rt.jml_umkm_bentuk_ijin_desa_ijin_lainnya },
-    { label: 'Jumlah UMKM Tidak Berbadan Hukum', value: rt.jml_umkm_bentuk_tidak_berbadan_hukum },
-    { label: 'Jumlah UMKM Mikro', value: rt.jml_umkm_skala_usaha_mikro },
-    { label: 'Jumlah UMKM Kecil', value: rt.jml_umkm_skala_usaha_kecil },
-    { label: 'Jumlah UMKM Menengah', value: rt.jml_umkm_skala_usaha_menengah },
+    { label: 'Unit Usaha Klengkeng', value: rt.jml_unit_usaha_klengkeng },
+    { label: 'Unit Usaha Klengkeng New Crystal', value: rt.jml_unit_usaha_klengkeng_new_crystal },
+    { label: 'Unit Usaha Klengkeng Pingpong', value: rt.jml_unit_usaha_klengkeng_pingpong },
+    { label: 'Unit Usaha Klengkeng Matalada', value: rt.jml_unit_usaha_klengkeng_matalada },
+    { label: 'Unit Usaha Klengkeng Diamond River', value: rt.jml_unit_usaha_klengkeng_diamond_river },
+    { label: 'Unit Usaha Klengkeng Merah', value: rt.jml_unit_usaha_klengkeng_merah },
+    { label: 'Unit Usaha Klengkeng Pupuk Organik', value: rt.jml_unit_usaha_klengkeng_pupuk_organik },
+    { label: 'Unit Usaha Klengkeng Pupuk Anorganik', value: rt.jml_unit_usaha_klengkeng_pupuk_anorganik },
+    { label: 'Unit Usaha Klengkeng Tidak Ada Pupuk', value: rt.jml_unit_usaha_klengkeng_tidak_ada_pupuk },
+    { label: 'Unit Usaha Klengkeng Kopi Biji', value: rt.jml_unit_usaha_klengkeng_kopi_biji_klengkeng },
+    { label: 'Unit Usaha Klengkeng Kerajinan Tangan', value: rt.jml_unit_usaha_klengkeng_kerajinan_tangan },
+    { label: 'Unit Usaha Klengkeng Batik Ecoprint', value: rt.jml_unit_usaha_klengkeng_batik_ecoprint },
+    { label: 'Unit Usaha Klengkeng Minuman', value: rt.jml_unit_usaha_klengkeng_minuman },
+    { label: 'Unit Usaha Klengkeng Makanan', value: rt.jml_unit_usaha_klengkeng_makanan },
   ];
 
   return (
-    <div className="p-4 overflow-x-auto">
-      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-detail-rt">
+    <div className="p-4">
+      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-detail-sls">
         <tbody className="text-[14px]">
           {tableColumns.map((column, index) => (
             <tr key={index} className="bg-white/70">
@@ -114,7 +94,7 @@ const RtDetail = ({ rt, geojson = null }) => {
       </table>
       {geojson && (
         <div className="my-4">
-          <p className="text-[14px] font-bold ml-3 my-2 text-pdarkblue">Peta Wilayah SLS</p>
+          <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">Peta Wilayah SLS</p>
           <MapContainer
             key={JSON.stringify(geojson)} // Ensure a new key when geojson changes
             ref={mapRef}
@@ -144,17 +124,17 @@ const DetailRtModal = ({ isOpen, onOpenChange, selectedRt, geojsonRt }) => {
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       size="xl"
-      className="font-inter bg-slate-100 max-h-[90%] my-auto"
+      className="font-inter bg-slate-100 max-h-[90%]"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",
         wrapper: "overflow-y-hidden",
       }}
     >
-      <ModalContent className="font-inter text-pdarkblue">
+      <ModalContent className="font-inter text-pyellow">
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
+            <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
               Detail {selectedRt.label}
             </ModalHeader>
             <ModalBody className="py-4 overflow-y-auto">
@@ -162,7 +142,7 @@ const DetailRtModal = ({ isOpen, onOpenChange, selectedRt, geojsonRt }) => {
             </ModalBody>
             <ModalFooter>
               <Button
-                className="bg-[#0B588F] text-white font-inter font-semibold"
+                className="font-semibold text-white bg-pyellow font-inter"
                 onPress={() => onOpenChange(false)}
               >
                 Tutup

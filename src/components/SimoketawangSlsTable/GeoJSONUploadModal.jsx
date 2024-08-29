@@ -16,6 +16,7 @@ import { Bars } from "react-loader-spinner";
 import api from "../../utils/api";
 import { delay } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import api3 from "../../utils/api3";
 
 const GeoJSONUploadModal = ({
   isAddModalOpen,
@@ -90,10 +91,10 @@ const GeoJSONUploadModal = ({
       const geojsons = await Promise.all(fileReaders);
 
       // Debugging
-      console.log("RT Data GeoJSON:", geojsons);
+      console.log("SLS Data GeoJSON:", geojsons);
 
       // Mengirim data ke API
-      await api.post("/api/rt", geojsons);
+      await api3.post("/api/sls", geojsons);
 
       // Reset files dan tutup modal
       setFiles([]);
@@ -125,7 +126,7 @@ const GeoJSONUploadModal = ({
         isOpen={isAddModalOpen}
         onOpenChange={onAddModalOpenChange}
         size="lg"
-        className="bg-slate-100 font-inter max-h-[90%] my-auto"
+        className="bg-slate-100 font-inter max-h-[90%]"
         classNames={{
           header: "border-b-[1px] border-slate-300",
           footer: "border-t-[1px] border-slate-300",
@@ -133,20 +134,20 @@ const GeoJSONUploadModal = ({
           wrapper: "overflow-y-hidden",
         }}
       >
-        <ModalContent className="font-inter text-pdarkblue">
+        <ModalContent className="font-inter text-pyellow">
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-white bg-slate-600">
-                Tambah Rukun Tetangga (RT)
+              <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
+                Tambah Satuan Lingkungan Setempat (SLS)
               </ModalHeader>
               <ModalBody className="py-4">
-                <div className="flex flex-col text-pdarkblue font-inter">
-                  <p className="font-semibold text-[14px] mb-3">
+                <div className="flex flex-col text-pyellow font-inter">
+                  <p className="font-semibold text-[14px] mb-3 text-pyellow">
                     Upload geoJSON
                   </p>
                   <Dragger {...uploadProps}>
                     <p className="ant-upload-drag-icon">
-                      <InboxOutlined />
+                      <InboxOutlined style={{ color: "#d4ac2b" }} />
                     </p>
                     <p className="ant-upload-text">
                       Klik atau seret file geoJSON ke area ini
@@ -164,7 +165,7 @@ const GeoJSONUploadModal = ({
                   Tutup
                 </Button>
                 <Button
-                  className="bg-[#0B588F] text-white font-inter font-semibold"
+                  className="font-semibold text-white bg-pyellow font-inter"
                   onPress={handleAdd}
                   disabled={loading}
                 >

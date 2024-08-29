@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-undef */
 import {
   Table,
   TableHeader,
@@ -15,31 +17,29 @@ import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
 import { EyeIcon } from "./EyeIcon";
 import {
-  bentuk_badan_usaha,
   columns,
-  jenis_kelamin,
-  kategori_usaha,
-  lokasi_tempat_usaha,
-  pendidikan_terakhir,
-  skala_usaha,
+  jenis_klengkeng,
+  jenis_pupuk,
+  pemanfaatan_produk,
 } from "./data";
 import { SearchIcon } from "./SearchIcon";
 import "./table.css";
 import { FaPlus } from "react-icons/fa6";
-import { SiMicrosoftexcel } from "react-icons/si";
 import { message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import api from "../../utils/api";
 import { Bars } from "react-loader-spinner";
 import "leaflet/dist/leaflet.css";
 import AddRutaModal from "./AddRutaModal";
 import DetailRutaModal from "./DetailRutaModal";
 import EditRutaModal from "./EditRutaModal";
+import api3 from "../../utils/api3";
 import { useMediaQuery } from "react-responsive";
 import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
+import { SiMicrosoftexcel } from "react-icons/si";
+import { AiTwotoneDelete } from "react-icons/ai";
 
-const RutaTable = ({ fetchDataAggregate }) => {
+const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRuta, setSelectedRuta] = useState(null);
   const [dataRuta, setDataRuta] = useState([]);
@@ -62,13 +62,14 @@ const RutaTable = ({ fetchDataAggregate }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [isSatuan, setIsSatuan] = useState(true);
   const [loading, setLoading] = useState(true); // State untuk loading
+  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
 
   const fetchData = async () => {
     setLoading(true); // Mulai loading
     try {
       const [rtResponse, rutaResponse] = await Promise.all([
-        api.get("/api/rt"),
-        api.get("/api/rumahTangga"),
+        api3.get("/api/sls"),
+        api3.get("/api/usahaKlengkeng"),
       ]);
       setDataRt(rtResponse.data.data);
       console.log("Check dataRt", rtResponse.data.data);
@@ -94,12 +95,49 @@ const RutaTable = ({ fetchDataAggregate }) => {
   const deleteData = async (ruta) => {
     setLoading(true);
     try {
-      await api.delete(`/api/rumahTangga/${ruta._id}`);
+      await api3.delete(`/api/usahaKlengkeng/${ruta._id}`);
       setDataRuta(dataRuta.filter((item) => item._id !== ruta._id));
       message.success(
-        `UMKM ${ruta.nama_pemilik_penanggungjawab} berhasil dihapus.`,
+        `Usaha ${ruta.nama_kepala_keluarga} berhasil dihapus.`,
         5
       );
+      fetchData();
+      fetchDataAggregate();
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteManyData = async (idsArray) => {
+    setLoading(true);
+    try {
+      await api3.delete(`/api/usahaKlengkeng/many`, {
+        data: idsArray,
+      });
+      const successMessage = idsArray.includes("all")
+        ? "Berhasil menghapus semua usaha."
+        : `Berhasil menghapus ${idsArray.length} usaha.`;
+
+      message.success(successMessage, 5);
+      setSelectedKeys(new Set([]));
       fetchData();
       fetchDataAggregate();
     } catch (error) {
@@ -226,12 +264,28 @@ const RutaTable = ({ fetchDataAggregate }) => {
     }
   };
 
+  const keyToLabelMap = pemanfaatan_produk.reduce((map, item) => {
+    map[item.key] = item.label;
+    return map;
+  }, {});
+
+  const formatPemanfaatanProduk = (produkArray) => {
+    return produkArray
+      .map((key) => keyToLabelMap[key] || key) // Ganti key dengan label
+      .join(", ");
+  };
+
   const exportToExcel = (data, fileName) => {
     // Menghapus atribut _id dan __v dari setiap objek dalam data
     const filteredData = data.map(({ _id, __v, ...rest }) => rest);
 
+    const updatedData = filteredData.map((item) => ({
+      ...item,
+      pemanfaatan_produk: formatPemanfaatanProduk(item.pemanfaatan_produk),
+    }));
+
     // Membuat worksheet dari data yang sudah difilter
-    const ws = XLSX.utils.json_to_sheet(filteredData);
+    const ws = XLSX.utils.json_to_sheet(updatedData);
 
     // Mendapatkan range dari worksheet
     const range = XLSX.utils.decode_range(ws["!ref"]);
@@ -273,22 +327,39 @@ const RutaTable = ({ fetchDataAggregate }) => {
 
   const getFormattedDateTime = () => {
     const now = new Date();
-  
+
     // Ambil komponen tanggal dan waktu
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0
     const year = now.getFullYear();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-  
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+
     // Format tanggal dan waktu sesuai dengan "dd-MM-yyyy HH:mm"
     return `${day}-${month}-${year} ${hours}.${minutes}`;
   };
 
   const handleEksporButtonClick = () => {
     const formattedDateTime = getFormattedDateTime();
-    const fileName = `Data UMKM Simoangin-angin ${formattedDateTime}`;
+    const fileName = `Data Usaha Kelengkeng Simoketawang ${formattedDateTime}`;
     exportToExcel(dataRuta, fileName);
+  };
+
+  const containsAllElements = (arr, elements) => {
+    return elements.every((element) => arr.includes(element));
+  };
+
+  const handleDeleteManyUsaha = () => {
+    const allValue = ["a", "l", "l"];
+    const idsArray = [...selectedKeys];
+    console.log("idsArray: ", idsArray);
+    if (idsArray.length > 0) {
+      if (containsAllElements(idsArray, allValue)) {
+        deleteManyData([idsArray.join("")]);
+      } else {
+        deleteManyData(idsArray);
+      }
+    }
   };
 
   return (
@@ -300,10 +371,10 @@ const RutaTable = ({ fetchDataAggregate }) => {
           classNames={{
             inputWrapper: "shadow",
           }}
-          className="mb-4 w-[50%] simoanginangin-umkm-search"
+          className="mb-4 w-[50%] simoketawang-usaha-search"
           placeholder="Ketikkan kata kunci..."
           startContent={
-            <SearchIcon className="mb-0.5 text-pdarkblue pointer-events-none flex-shrink-0" />
+            <SearchIcon className="mb-0.5 text-pyellow pointer-events-none flex-shrink-0" />
           }
           value={searchTerm}
           onChange={handleSearchChange}
@@ -321,7 +392,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
             Tambah
           </Button>
           {dropdownVisible && (
-            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
+            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pyellow font-inter">
               <div className="py-1">
                 <a
                   href="#"
@@ -388,13 +459,25 @@ const RutaTable = ({ fetchDataAggregate }) => {
           </Button>
         </div>
       </div>
+      {/* <div className="relative"> */}
       <Table
         aria-label="Example table with custom cells"
         shadow="none"
-        className="shadow rounded-xl font-inter simoanginangin-umkm-table"
+        className="shadow rounded-xl font-inter simoketawang-usaha-table"
         classNames={{ loadingWrapper: "mx-auto" }}
         bottomContent={
-          <div className="flex justify-center w-full">
+          <div className="relative flex justify-center w-full">
+            <Popconfirm
+              title="Hapus Banyak Usaha Kelengkeng"
+              description="Anda yakin menghapus Usaha Kelengkeng ini?"
+              onConfirm={() => handleDeleteManyUsaha()}
+              onOpenChange={() => console.log("open change")}
+            >
+              <AiTwotoneDelete
+                className="absolute bottom-0 left-0 m-[10px] text-red-600 cursor-pointer"
+                size={25}
+              />
+            </Popconfirm>
             <Pagination
               isCompact
               showControls
@@ -406,8 +489,13 @@ const RutaTable = ({ fetchDataAggregate }) => {
             />
           </div>
         }
+        selectionMode="multiple"
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+        selectionBehavior="toggle"
+        onRowAction={() => null}
       >
-        <TableHeader columns={columns} className="font-inter text-pdarkblue">
+        <TableHeader columns={columns} className="font-inter text-pyellow">
           {(column) => (
             <TableColumn
               key={column.uid}
@@ -422,7 +510,7 @@ const RutaTable = ({ fetchDataAggregate }) => {
           emptyContent={"Tidak ada data."}
           isLoading={loading}
           loadingContent={
-            <Bars width="50" height="50" color="#0B588F" className="mx-auto" />
+            <Bars width="50" height="50" color="#D4AC2B" className="mx-auto" />
           }
         >
           {(item) => (
@@ -435,6 +523,8 @@ const RutaTable = ({ fetchDataAggregate }) => {
         </TableBody>
       </Table>
 
+      {/* </div> */}
+
       <DetailRutaModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -446,13 +536,10 @@ const RutaTable = ({ fetchDataAggregate }) => {
         onClose={onAddModalOpenChange}
         isSatuan={isSatuan}
         dataRuta={dataRuta}
-        daftarRt={dataRt}
-        jenis_kelamin={jenis_kelamin}
-        pendidikan_terakhir={pendidikan_terakhir}
-        kategori_usaha={kategori_usaha}
-        bentuk_badan_usaha={bentuk_badan_usaha}
-        lokasi_tempat_usaha={lokasi_tempat_usaha}
-        skala_usaha={skala_usaha}
+        daftarSls={dataRt}
+        jenis_klengkeng={jenis_klengkeng}
+        jenis_pupuk={jenis_pupuk}
+        pemanfaatan_produk={pemanfaatan_produk}
         fetchData={fetchData}
         fetchDataAggregate={fetchDataAggregate}
       />
@@ -463,16 +550,12 @@ const RutaTable = ({ fetchDataAggregate }) => {
         ruta={editRutaData}
         fetchData={fetchData}
         fetchDataAggregate={fetchDataAggregate}
-        daftarRt={dataRt}
-        jenis_kelamin={jenis_kelamin}
-        pendidikan_terakhir={pendidikan_terakhir}
-        kategori_usaha={kategori_usaha}
-        bentuk_badan_usaha={bentuk_badan_usaha}
-        lokasi_tempat_usaha={lokasi_tempat_usaha}
-        skala_usaha={skala_usaha}
+        jenis_klengkeng={jenis_klengkeng}
+        jenis_pupuk={jenis_pupuk}
+        pemanfaatan_produk={pemanfaatan_produk}
       />
     </div>
   );
 };
 
-export default RutaTable;
+export default SimoketawangUsahaTable;

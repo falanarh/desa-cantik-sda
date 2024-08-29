@@ -21,14 +21,14 @@ import "./table.css";
 import { FaPlus } from "react-icons/fa6";
 import { message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import api from "../../utils/api";
 import { Bars } from "react-loader-spinner";
 import GeoJSONUploadModal from "./GeoJSONUploadModal";
 import EditRtModal from "./EditRtModal";
 import DetailRtModal from "./DetailRtModal";
 import { useAsyncList } from "@react-stately/data";
+import api3 from "../../utils/api3";
 
-const RtTable = ({ fetchDataAggregate }) => {
+const SimoketawangSlsTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRt, setSelectedRt] = useState({}); // State untuk menyimpan RT yang dipilih
   const [data, setData] = useState([]); // State untuk data RT
@@ -63,10 +63,10 @@ const RtTable = ({ fetchDataAggregate }) => {
   const fetchData = async () => {
     setLoading(true); // Mulai loading
     try {
-      // const response = await api.get("/api/rt");
+      // const response = await api3.get("/api/rt");
       const [rtResponse, geojsonResponse] = await Promise.all([
-        api.get("/api/rt"),
-        api.get("/api/rt/all/geojson"),
+        api3.get("/api/sls"),
+        api3.get("/api/sls/all/geojson"),
       ]);
       setData(rtResponse.data.data); // Update state dengan data dari API
       setDataGeoJson(geojsonResponse.data.data);
@@ -92,9 +92,9 @@ const RtTable = ({ fetchDataAggregate }) => {
   const deleteData = async (rt) => {
     setLoading(true);
     try {
-      await api.delete(`/api/rt/${rt.kode}`);
+      await api3.delete(`/api/sls/${rt.kode}`);
       setData(data.filter((item) => item.kode !== rt.kode));
-      message.success(`RT ${rt.rt} berhasil dihapus.`, 5);
+      message.success(`SLS ${rt.label} berhasil dihapus.`, 5);
     } catch (error) {
       // Cek jika error memiliki respons body
       if (
@@ -174,8 +174,8 @@ const RtTable = ({ fetchDataAggregate }) => {
             </Tooltip>
             <Tooltip color="danger" content="Hapus">
               <Popconfirm
-                title="Hapus Rukun Tetangga (RT)"
-                description="Anda yakin menghapus RT ini?"
+                title="Hapus Satuan Lingkungan Setempat (SLS)"
+                description="Anda yakin menghapus SLS ini?"
                 onConfirm={() => handleDelete(rt)}
                 onOpenChange={() => console.log("open change")}
               >
@@ -246,21 +246,21 @@ const RtTable = ({ fetchDataAggregate }) => {
   });
 
   return (
-    <div className="p-4 bg-[#ffffffb4] rounded-xl">
+    <div className="p-4 bg-[#ffffffb4] rounded-xl simoketawang-sls-table">
       <div className="flex justify-between">
         <Input
           label="Pencarian"
           radius="lg"
           classNames={{
-            inputWrapper: "shadow",
+            inputWrapper: ["shadow"],
           }}
-          className="mb-4 w-[50%] simoanginangin-sls-search"
           placeholder="Ketikkan kata kunci..."
           startContent={
             <SearchIcon className="mb-0.5 text-pdarkblue pointer-events-none flex-shrink-0" />
           }
           value={searchTerm}
           onChange={handleSearchChange}
+          className="mb-4 w-[50%] simoketawang-sls-search"
         />
         <Button
           color="primary"
@@ -274,8 +274,14 @@ const RtTable = ({ fetchDataAggregate }) => {
       <Table
         aria-label="Example table with custom cells"
         shadow="none"
-        className="shadow rounded-xl font-inter simoanginangin-sls-table"
-        classNames={{ loadingWrapper: "mx-auto" }}
+        className="shadow rounded-xl font-inter"
+        classNames={{ 
+          loadingWrapper: "mx-auto", 
+          th: ["bg-[#f3fdb2]", "text-pyellow", "font-inter", "text-[14px]"],
+          // th: "text-red",
+          // td: "bg-pdarkblue",
+          // table: "bg-black",
+         }}
         bottomContent={
           <div className="flex justify-center w-full">
             <Pagination
@@ -308,7 +314,7 @@ const RtTable = ({ fetchDataAggregate }) => {
           emptyContent={"Tidak ada data."}
           isLoading={loading}
           loadingContent={
-            <Bars width="50" height="50" color="#0B588F" className="mx-auto" />
+            <Bars width="50" height="50" color="#D4AC2B" className="mx-auto" />
           }
         >
           {(item) => (
@@ -364,4 +370,4 @@ const RtTable = ({ fetchDataAggregate }) => {
   );
 };
 
-export default RtTable;
+export default SimoketawangSlsTable;
