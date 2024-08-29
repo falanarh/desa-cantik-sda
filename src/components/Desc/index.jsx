@@ -1,9 +1,8 @@
 import React from "react";
-import { Image } from "@nextui-org/react";
 
 export default function Desc() {
-  const videoId = "bm5YOUC_9MM"; // Replace with your actual video ID
-  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  const videoId = "err7OoUvO5w"; // Video ID from the new YouTube link
+  const videoUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
 
   return (
     <div className="flex justify-center items-center p-8 min-h-screen">
@@ -29,39 +28,17 @@ export default function Desc() {
           </p>
         </div>
         <div className="relative flex-1 flex justify-center items-center p-8">
-          <a
-            href={`https://www.youtube.com/watch?v=${videoId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full h-full relative"
-          >
-            <Image
-              src={thumbnailUrl}
-              alt="Desa Cantik Thumbnail"
-              css={{ 
-                width: "100%", 
-                height: "auto", 
-                maxHeight: "100%", 
-                objectFit: "cover", 
-                borderRadius: "0",
-              }}
+          <div className="w-full h-0 relative" style={{ paddingBottom: "56.25%" }}>
+            <iframe
+              src={videoUrl}
+              title="Desa Cantik Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              rel="0"
+              modestbranding="1"
+              className="absolute top-0 left-0 w-full h-full rounded-xl"
             />
-            <div className="absolute inset-0 flex justify-center items-center">
-              <button className="bg-white rounded-full p-4">
-                <svg
-                  className="w-10 h-10 text-blue-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.54-8.54a.75.75 0 010 1.08l-5.25 4.5a.75.75 0 01-1.29-.54v-9a.75.75 0 011.29-.54l5.25 4.5z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          </a>
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom'; 
-import { FaHome, FaUser, FaCog, FaBook, FaDoorOpen } from 'react-icons/fa';
-import styles from './sidebar.module.css'; // Corrected import for CSS modules
+import { useLocation, Link } from 'react-router-dom';
+import { FaHome, FaList, FaImages, FaUser, FaChartBar, FaYoutube, FaBook, FaDoorOpen } from 'react-icons/fa';
+import styles from './sidebar.module.css';
 
 const Sidebar = () => {
   const [hovered, setHovered] = useState(null);
@@ -9,15 +9,18 @@ const Sidebar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === '/admin' || location.pathname === '/admin/') {
-      setActiveMenu('Dashboard');
-    } else if (location.pathname === '/admin/buletin') {
-      setActiveMenu('Buletin');
-    } else if (location.pathname === '/admin/settings') {
-      setActiveMenu('Settings');
-    } else if (location.pathname === '/admin/logout') {
-      setActiveMenu('Logout');
-    }
+    const pathToMenuMap = {
+      '/admin': 'Desa',
+      '/admin/buletin': 'Buletin',
+      '/admin/navbar': 'Menu',
+      '/admin/dashboard': 'Beranda',
+      '/admin/desc': 'Deskripsi',
+      '/admin/stat': 'Statistik',
+      '/admin/us': 'Tentang Kami',
+      '/admin/logout': 'Keluar',
+    };
+    
+    setActiveMenu(pathToMenuMap[location.pathname] || '');
   }, [location.pathname]);
 
   const handleMouseEnter = (index) => setHovered(index);
@@ -26,15 +29,20 @@ const Sidebar = () => {
   return (
     <div className={styles.sidebar}>
       <div className={styles.logo}>
-        <h1 className="font-inter font-semibold text-[22px] text-white">Admin Panel</h1>
+        <h1 className={styles.logoText}>Admin Desa Cantik</h1>
       </div>
       <nav className={styles.navMenu}>
         {[
-          { icon: <FaHome />, text: 'Dashboard', path: '/admin' },
+          { icon: <FaHome />, text: 'Desa', path: '/admin' },
           { icon: <FaBook />, text: 'Buletin', path: '/admin/buletin' },
-          { icon: <FaDoorOpen />, text: 'Logout', path: '/admin/logout' }
+          { icon: <FaList />, text: 'Menu', path: '/admin/navbar' },
+          { icon: <FaImages />, text: 'Beranda', path: '/admin/dashboard' },
+          { icon: <FaYoutube />, text: 'Deskripsi', path: '/admin/desc' },
+          { icon: <FaChartBar />, text: 'Statistik', path: '/admin/stat' },
+          { icon: <FaUser />, text: 'Tentang Kami', path: '/admin/us' },
+          { icon: <FaDoorOpen />, text: 'Keluar', path: '/admin/logout' },
         ].map((item, index) => (
-          <Link key={index} to={item.path} style={{ textDecoration: 'none' }}>
+          <Link key={index} to={item.path} className={styles.navLink}>
             <div
               className={`${styles.button} ${hovered === index ? styles.buttonHover : ''} ${activeMenu === item.text ? styles.activeMenu : ''}`}
               onMouseEnter={() => handleMouseEnter(index)}
