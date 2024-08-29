@@ -263,7 +263,7 @@ const SimoketawangSlsTable = ({ fetchDataAggregate }) => {
           className="mb-4 w-[50%] simoketawang-sls-search"
         />
         <Button
-          color="success"
+          color="primary"
           className="text-[14px] font-semibold text-white"
           startContent={<FaPlus className="text-[20px] text-white" />}
           onClick={onAddModalOpen}

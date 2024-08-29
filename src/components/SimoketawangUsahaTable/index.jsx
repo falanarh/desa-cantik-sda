@@ -126,6 +126,43 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
     }
   };
 
+  const deleteManyData = async (idsArray) => {
+    setLoading(true);
+    try {
+      await api3.delete(`/api/usahaKlengkeng/many`, {
+        data: idsArray,
+      });
+      const successMessage = idsArray.includes("all")
+        ? "Berhasil menghapus semua usaha."
+        : `Berhasil menghapus ${idsArray.length} usaha.`;
+
+      message.success(successMessage, 5);
+      setSelectedKeys(new Set([]));
+      fetchData();
+      fetchDataAggregate();
+    } catch (error) {
+      // Cek jika error memiliki respons body
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.response.data.message}`,
+          5
+        );
+      } else {
+        // Jika error tidak memiliki respons body yang dapat diakses
+        message.error(
+          `Terjadi kesalahan pada proses hapus data: ${error.message}`,
+          5
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     // Fetch data from API
     fetchData();
@@ -227,12 +264,28 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
     }
   };
 
+  const keyToLabelMap = pemanfaatan_produk.reduce((map, item) => {
+    map[item.key] = item.label;
+    return map;
+  }, {});
+
+  const formatPemanfaatanProduk = (produkArray) => {
+    return produkArray
+      .map((key) => keyToLabelMap[key] || key) // Ganti key dengan label
+      .join(", ");
+  };
+
   const exportToExcel = (data, fileName) => {
     // Menghapus atribut _id dan __v dari setiap objek dalam data
     const filteredData = data.map(({ _id, __v, ...rest }) => rest);
 
+    const updatedData = filteredData.map((item) => ({
+      ...item,
+      pemanfaatan_produk: formatPemanfaatanProduk(item.pemanfaatan_produk),
+    }));
+
     // Membuat worksheet dari data yang sudah difilter
-    const ws = XLSX.utils.json_to_sheet(filteredData);
+    const ws = XLSX.utils.json_to_sheet(updatedData);
 
     // Mendapatkan range dari worksheet
     const range = XLSX.utils.decode_range(ws["!ref"]);
@@ -290,6 +343,23 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
     const formattedDateTime = getFormattedDateTime();
     const fileName = `Data Usaha Kelengkeng Simoketawang ${formattedDateTime}`;
     exportToExcel(dataRuta, fileName);
+  };
+
+  const containsAllElements = (arr, elements) => {
+    return elements.every((element) => arr.includes(element));
+  };
+
+  const handleDeleteManyUsaha = () => {
+    const allValue = ["a", "l", "l"];
+    const idsArray = [...selectedKeys];
+    console.log("idsArray: ", idsArray);
+    if (idsArray.length > 0) {
+      if (containsAllElements(idsArray, allValue)) {
+        deleteManyData([idsArray.join("")]);
+      } else {
+        deleteManyData(idsArray);
+      }
+    }
   };
 
   return (
@@ -397,21 +467,33 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
         classNames={{ loadingWrapper: "mx-auto" }}
         bottomContent={
           <div className="relative flex justify-center w-full">
-              <AiTwotoneDelete className="absolute bottom-0 left-0 m-[10px] text-red-600 cursor-pointer" size={25} />
-              <Pagination
-                isCompact
-                showControls
-                showShadow
-                color="secondary"
-                page={page}
-                total={pages}
-                onChange={(page) => setPage(page)}
+            <Popconfirm
+              title="Hapus Banyak Usaha Kelengkeng"
+              description="Anda yakin menghapus Usaha Kelengkeng ini?"
+              onConfirm={() => handleDeleteManyUsaha()}
+              onOpenChange={() => console.log("open change")}
+            >
+              <AiTwotoneDelete
+                className="absolute bottom-0 left-0 m-[10px] text-red-600 cursor-pointer"
+                size={25}
               />
-            </div>
+            </Popconfirm>
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
         }
         selectionMode="multiple"
         selectedKeys={selectedKeys}
         onSelectionChange={setSelectedKeys}
+        selectionBehavior="toggle"
+        onRowAction={() => null}
       >
         <TableHeader columns={columns} className="font-inter text-pyellow">
           {(column) => (
