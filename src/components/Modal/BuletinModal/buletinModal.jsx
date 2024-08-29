@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaCross } from 'react-icons/fa';
 import styles from './buletinModal.module.css';
 
 const BuletinModal = ({ show, onClose, onSubmit, modalType, currentItem }) => {
@@ -9,7 +10,7 @@ const BuletinModal = ({ show, onClose, onSubmit, modalType, currentItem }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <button className={styles.closeButton} onClick={onClose}>X</button>
+        <button className={styles.closeButton} onClick={onClose}>&times;</button>
         <form onSubmit={onSubmit} className={styles.modalForm}>
           <h3 className='font-bold font-inter text-center text-[18px] text-[#c46024]'>
             {modalType === 'add' ? 'Tambah Buletin' : 'Edit Buletin'}

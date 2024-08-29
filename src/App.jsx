@@ -10,6 +10,11 @@ import PetaUMKMSimonaginagin from "./pages/petaUMKMSimoanginagin";
 import ProtectedRoute from "./hooks/ProtectedRoute";
 import Admin from "./pages/admin";
 import BuletinAd from "./pages/buletinAdmin";
+import MenuAd from "./pages/menuAdm";
+import BerandaAdm from "./pages/berandaAdm";
+import DescAdmin from "./pages/deskripsiAdmin";
+import StatAdm  from "./pages/statAdmin";
+import UsAdm  from "./pages/usAdmin";
 
 function App() {
   const navigate = useNavigate();
@@ -36,6 +41,11 @@ function App() {
         />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/buletin" element={<BuletinAd />} />
+        <Route path="/admin/navbar" element={<MenuAd />} />
+        <Route path="/admin/dashboard" element={<BerandaAdm />} />
+        <Route path="/admin/desc" element={<DescAdmin />} />
+        <Route path="/admin/stat" element={<StatAdm />} />
+        <Route path="/admin/us" element={<UsAdm />} />
       </Routes>
     </NextUIProvider>
   );

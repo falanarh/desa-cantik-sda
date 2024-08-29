@@ -119,6 +119,7 @@ const BuletinAdm = () => {
           <button className={styles.addButton} onClick={handleAddClick}>
             <FaPlus className={styles.addIcon}/> Tambah Buletin
           </button>
+          <div className="bg-white p-10 rounded-xl shadow-lg max-w-full w-full mt-5">
           <table className={styles.table}>
             <thead>
               <tr>
@@ -164,7 +165,6 @@ const BuletinAdm = () => {
               ))}
             </tbody>
           </table>
-        </div>
         <div className={styles.pagination}>
           <button className={styles.pageButton} onClick={prevPage} disabled={currentPage === 1}>
             «
@@ -181,6 +181,8 @@ const BuletinAdm = () => {
           <button className={styles.pageButton} onClick={nextPage} disabled={currentPage === totalPages}>
             »
           </button>
+        </div>
+        </div>
         </div>
       </div>
       <Modal show={showModal} onClose={handleCloseModal}>

@@ -83,13 +83,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className={styles.dashboardContainer}>
+    <div className='flex min-h-screen'>
       <Sidebar />
       <main className={styles.mainContent}>
         <div className={styles.tableContainer}>
           <button className={styles.addButton} onClick={handleAddClick}>
             <FaPlus className={styles.addIcon} /> Tambah Desa
           </button>
+          <div className="bg-white p-10 rounded-xl shadow-lg max-w-full w-full mt-5">
           <table className={styles.table}>
             <thead>
               <tr>
@@ -129,7 +130,6 @@ const Dashboard = () => {
               ))}
             </tbody>
           </table>
-        </div>
         <div className={styles.pagination}>
           <button className={styles.pageButton} onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>«</button>
           {Array.from({ length: totalPages }, (_, i) => (
@@ -142,6 +142,8 @@ const Dashboard = () => {
             </button>
           ))}
           <button className={styles.pageButton} onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>»</button>
+        </div>
+        </div>
         </div>
       </main>
       <Modal show={showModal} onClose={handleCloseModal}>
