@@ -33,12 +33,12 @@ const Sidebar = () => {
       </div>
       <nav className={styles.navMenu}>
         {[
-          { icon: <FaHome />, text: 'Desa', path: '/admin' },
-          { icon: <FaBook />, text: 'Buletin', path: '/admin/buletin' },
           { icon: <FaList />, text: 'Menu', path: '/admin/navbar' },
           { icon: <FaImages />, text: 'Beranda', path: '/admin/dashboard' },
           { icon: <FaYoutube />, text: 'Deskripsi', path: '/admin/desc' },
           { icon: <FaChartBar />, text: 'Statistik', path: '/admin/stat' },
+          { icon: <FaHome />, text: 'Desa', path: '/admin' },
+          { icon: <FaBook />, text: 'Buletin', path: '/admin/buletin' },
           { icon: <FaUser />, text: 'Tentang Kami', path: '/admin/us' },
           { icon: <FaDoorOpen />, text: 'Keluar', path: '/admin/logout' },
         ].map((item, index) => (

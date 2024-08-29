@@ -26,7 +26,7 @@ p {
 /* Table Container */
 .tableContainer {
   position: relative;
-  margin-top: 20px;
+  margin: 25px;
 }
 
 /* Table */
@@ -132,3 +132,63 @@ p {
 .activePageButton {
   background-color: #f08619;
 }
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+}
+
+.formGroup {
+  margin-bottom: 12px;
+}
+
+.formGroup label {
+  margin-bottom: 7px;
+  display: block;
+  font-weight: 500;
+  font-family: 'Assistant';
+  color: black;
+}
+
+.formGroup input,
+.formGroup textarea {
+  padding: 8px;
+  border: 1px solid #ddd;
+  width: 100%;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.submitButton {
+  background-color: #f08619;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.submitButton:hover {
+  background-color: #fb6d17;
+}
+
+.flexRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flexColumn {
+  width: 48%; /* Adjust the width if necessary */
+}
+
+.flexColumn label {
+  display: block;
+  margin-bottom: 4px; /* Adjust as needed */
+}
+
+.flexColumn input {
+  width: 100%;
+}
+
