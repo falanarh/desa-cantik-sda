@@ -132,15 +132,37 @@ const AddRutaModal = ({
   };
 
   const customRequest = ({ file, onSuccess, onError, filename }) => {
+    const allowedTypes = [
+      "image/jpeg", "image/jpg", "image/png", "image/gif", "image/bmp", "image/webp", 
+      "image/svg+xml", "image/tiff", "image/x-icon", "image/heif", "image/heic"
+    ]; // Daftar tipe gambar yang lebih lengkap
+    
+    if (!allowedTypes.includes(file.type)) {
+      const errorMsg = "File harus berupa gambar dengan format yang didukung (JPEG, PNG, GIF, BMP, WEBP, SVG, TIFF, ICO, HEIF, atau HEIC).";
+      onError(new Error(errorMsg));
+      message.error(errorMsg, 8);
+      return;
+    }
+    
+  
+    // Validasi ukuran file (maksimum 1 MB)
+    const maxSize = 1 * 1024 * 1024; // 1 MB
+    if (file.size > maxSize) {
+      const errorMsg = "Ukuran gambar melebihi batas maksimal 1 MB.";
+      onError(new Error(errorMsg));
+      message.error(errorMsg, 8);
+      return;
+    }
+  
     const formData = new FormData();
-
+  
     // Gunakan parameter filename jika diberikan, jika tidak gunakan nama file asli
     const finalFilename = filename ? filename : file.name.split(".")[0];
-
+  
     // Tambahkan file dan nama file ke FormData
     formData.append("filename", finalFilename);
     formData.append("image", file);
-
+  
     // Kirimkan data menggunakan Axios
     api3
       .post("/api/photo/upload", formData)
@@ -162,6 +184,7 @@ const AddRutaModal = ({
         }
       });
   };
+  
 
   const uploadButton = (
     <button

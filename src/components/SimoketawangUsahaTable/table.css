@@ -11,6 +11,18 @@ tbody tr td:last-child {
   width: 100px;
 }
 
+.simoketawang-usaha-table .after\:bg-primary::after {
+  background-color: #d4ac2b !important;
+}
+
+.simoketawang-usaha-table [aria-selected="true"] {
+  background-color: #fdfff3 !important;
+}
+
+.simoketawang-usaha-table [aria-selected="true"] td {
+  color: #d4ac2b !important;
+}
+
 .bg-default-100,
 .group[data-focus="true"] .group-data-\[focus\=true\]\:bg-default-100,
 [data-slot="input-wrapper"]:hover {
@@ -27,7 +39,7 @@ tbody tr td:last-child {
 .simoketawang-usaha-search [data-slot="label"],
 .simoketawang-usaha-add [data-slot="label"],
 .simoketawang-usaha-edit [data-slot="label"] {
-  color: #D4AC2B !important;
+  color: #d4ac2b !important;
   font-size: 16px !important;
   font-weight: 600;
   margin: 2px 0 0 2px !important;

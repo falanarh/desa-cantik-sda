@@ -37,6 +37,7 @@ import { useMediaQuery } from "react-responsive";
 import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
 import { SiMicrosoftexcel } from "react-icons/si";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -61,6 +62,7 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [isSatuan, setIsSatuan] = useState(true);
   const [loading, setLoading] = useState(true); // State untuk loading
+  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
 
   const fetchData = async () => {
     setLoading(true); // Mulai loading
@@ -272,14 +274,14 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
 
   const getFormattedDateTime = () => {
     const now = new Date();
-  
+
     // Ambil komponen tanggal dan waktu
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0
     const year = now.getFullYear();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-  
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+
     // Format tanggal dan waktu sesuai dengan "dd-MM-yyyy HH:mm"
     return `${day}-${month}-${year} ${hours}.${minutes}`;
   };
@@ -387,24 +389,29 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
           </Button>
         </div>
       </div>
+      {/* <div className="relative"> */}
       <Table
         aria-label="Example table with custom cells"
         shadow="none"
         className="shadow rounded-xl font-inter simoketawang-usaha-table"
         classNames={{ loadingWrapper: "mx-auto" }}
         bottomContent={
-          <div className="flex justify-center w-full">
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              color="secondary"
-              page={page}
-              total={pages}
-              onChange={(page) => setPage(page)}
-            />
-          </div>
+          <div className="relative flex justify-center w-full">
+              <AiTwotoneDelete className="absolute bottom-0 left-0 m-[10px] text-red-600 cursor-pointer" size={25} />
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="secondary"
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
         }
+        selectionMode="multiple"
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
       >
         <TableHeader columns={columns} className="font-inter text-pyellow">
           {(column) => (
@@ -433,6 +440,8 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
           )}
         </TableBody>
       </Table>
+
+      {/* </div> */}
 
       <DetailRutaModal
         isOpen={isOpen}
