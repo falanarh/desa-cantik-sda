@@ -1,107 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  GeoJSON,
-  LayersControl,
-  Marker,
-  Popup,
-} from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, LayersControl, Marker, Popup} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
 import { Transition } from "@headlessui/react";
-import { DonutChart } from "./Doughnut.jsx";
-import api from "../../utils/api.js";
+import api2 from "../../utils/api2.js";
 import { message } from "antd";
 import CountUp from "react-countup";
+import { PiOrangeDuotone } from "react-icons/pi";
+import { renderToString } from 'react-dom/server';
 import { BeatLoader } from "react-spinners";
-
-const ExpandableList = () => {
-  const [expanded, setExpanded] = useState(false);
-
-  const handleToggle = () => {
-    setExpanded(!expanded);
-  };
-
-  return (
-    <div className="container flex flex-col items-start rounded shadow-lg">
-      <table className="w-full">
-        <tbody>
-          <tr className="flex items-center mb-2 mr-0 bg-[#101920] rounded-xl w-full">
-            <td className="items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 mr-0 text-sm text-left w-100">
-              Pertanian, Kehutanan, Perikanan
-            </td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">
-              Pertambangan dan Penggalian
-            </td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">Industri Pengolahan</td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">
-              Pengadaan Listrik dan Gas
-            </td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">
-              Pertanian, Kehutanan, Perikanan
-            </td>
-          </tr>
-          {expanded && (
-            <>
-              <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-                <td className="flex items-center justify-center w-8 h-8 p-2 font-bold text-white bg-blue-600 rounded-xl">
-                  55
-                </td>
-                <td className="ml-2 text-sm text-left">
-                  Pertanian, Kehutanan, Perikanan
-                </td>
-              </tr>
-              <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-                <td className="flex items-center justify-center w-8 h-8 p-2 font-bold text-white bg-blue-600 rounded-xl">
-                  55
-                </td>
-                <td className="ml-2 text-sm text-left">
-                  Pertanian, Kehutanan, Perikanan
-                </td>
-              </tr>
-              {/* Add more items as needed */}
-            </>
-          )}
-        </tbody>
-      </table>
-      <button
-        onClick={handleToggle}
-        className="mt-4 text-sm text-right text-gray-400 items-right"
-      >
-        {expanded ? "Kembali" : "Selengkapnya..."}
-      </button>
-    </div>
-  );
-};
 
 export default function MapSection() {
   const [selectedClassification, setSelectedClassification] = useState("all");
   const [selectedtUsaha, setSelectedtUsaha] = useState("all");
-  const [selectedskalaUsaha, setSelectedskalaUsaha] = useState("all");
   const [mapInstance, setMapInstance] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isVisualizationOpen, setIsVisualizationOpen] = useState(true);
@@ -114,17 +25,17 @@ export default function MapSection() {
   const [filteredData, setFilteredData] = useState(
     data ? (data.length > 0 ? data[0] : {}) : {}
   );
-  const [chartData, setChartData] = useState([]);
   const [showRT, setShowRT] = useState(true);
   const [showIndividu, setIndividu] = useState(true);
   const [visualization, setVisualization] = useState("umkm");
   const toggleRT = () => setShowRT(!showRT);
   const changeVisualization = (type) => setVisualization(type);
+  const iconHtml = renderToString(<PiOrangeDuotone />);
 
   const fetchData = async () => {
     setLoading(true); // Mulai loading
     try {
-      const response = await api.get("/api/rt/all/geojson");
+      const response = await api2.get("/api/sls/all/geojson");
       setData(response.data.data); // Update state dengan data dari API
       console.log("Data fetched:", response.data.data);
     } catch (error) {
@@ -147,7 +58,7 @@ export default function MapSection() {
   const fetchDataAgregat = async () => {
     setLoading(true); // Mulai loading
     try {
-      const response = await api.get("/api/rt/all/aggregate");
+      const response = await api2.get("/api/sls/all/aggregate");
       setDataAgregat(response.data.data); // Update state dengan data dari API
       console.log("Data fetched:", response.data.data);
     } catch (error) {
@@ -170,7 +81,7 @@ export default function MapSection() {
   const fetchDataRumahTangga = async () => {
     setLoading(true); // Mulai loading
     try {
-      const response = await api.get("/api/rumahTangga");
+      const response = await api2.get("/api/usahaKlengkeng");
       setDataRumahTangga(response.data.data); // Update state dengan data dari API
       console.log("Data fetched:", response.data.data);
     } catch (error) {
@@ -204,7 +115,7 @@ export default function MapSection() {
 
   // Function to determine style based on feature properties
   const getStyle = (data) => {
-    const density = data.features[0].properties.jml_umkm || 0;
+    const density = data.features[0].properties.jml_unit_usaha_klengkeng || 0;
     return {
       fillColor: getColor(density),
       weight: 2,
@@ -216,23 +127,20 @@ export default function MapSection() {
   };
 
   const getColor = (density) => {
-    return density > 100
-      ? "#800026"
-      : density > 50
-      ? "#BD0026"
+    return density > 50
+      ? "#7E370C"
       : density > 20
-      ? "#E31A1C"
+      ? "#B05E27"
       : density > 10
-      ? "#FC4E2A"
+      ? "#D4AC2B"
       : density > 5
-      ? "#FD8D3C"
+      ? "#FFCE45"
       : density > 2
       ? "#FEB24C"
       : density > 0
       ? "#FED976"
       : "#000000";
   };
-
 
   let selectedLayer = null; // Track the currently selected layer
 
@@ -253,15 +161,13 @@ export default function MapSection() {
         "RT",
         "RW",
         "Dusun",
-        "Jumlah Rumah Tangga",
-        "Jumlah UMKM",
+        "Jumlah Usaha",
       ];
       const keysToShow = [
         "rt",
         "rw",
         "dusun",
-        "jml_ruta",
-        "jml_umkm",
+        "jml_unit_usaha_klengkeng",
       ];
 
       const popupContent = `<div>
@@ -325,10 +231,6 @@ export default function MapSection() {
   });
 };
 
-  
-  
-  
-
   useEffect(() => {
     if (data && data.length > 0) {
       // Periksa apakah data ada dan tidak kosong
@@ -376,44 +278,21 @@ export default function MapSection() {
   }
 
   const tempatUsaha = {
-    all: "Semua Tempat Usaha",
-    "bangunan-khusus-usaha": "Bangunan Khusus Usaha",
-    "bangunan-campuran": "Bangunan Campuran",
-    "kaki-lima": "Kaki Lima",
-    "keliling": "Keliling",
-    "didalam-bangunan-tempat-tinggal/online": "Didalam Bangunan Tempat Tinggal/Online",
-  };
-
-  const skalaUsaha = {
-    all: "Semua Skala Usaha",
-    "usaha-mikro": "Skala Usaha Mikro",
-    "usaha-kecil": "Skala Usaha Kecil",
-    "usaha-menengah": "Skala Usaha Menengah",
+    all: "Semua Produk",
+    kopi_biji_klengkeng : "Kopi Biji Klengkeng",
+    Kerajinan_tangan : "Kerajinan Tangan dari Daun (contoh: pigura, kipas)",
+    batik_ecoprint : "Batik Ecoprint",
+    minuman : "Minuman Klengkeng (contoh: Susu jelly, sirup)",
+    makanan : "Makanan Kelengkeng (Selai, Strudel)",
   };
 
   const classifications = {
-    all: "Seluruh Lapangan Usaha",
+    all: "Semua Jenis",
     // kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
-    kbli_b: "B. Pertambangan dan Penggalian",
-    kbli_c: "C. Industri Pengolahan",
-    kbli_d: "D. Pengadaan Listrik dan Gas",
-    kbli_e: "E. Pengadaan Air; Pengelolaan Sampah, Limbah, dan Daur Ulang",
-    kbli_f: "F. Konstruksi",
-    kbli_g: "G. Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor",
-    kbli_h: "H. Transportasi dan Pergudangan",
-    kbli_i: "I. Penyediaan Akomodasi dan Makan Minum",
-    kbli_j: "J. Informasi dan Komunikasi",
-    kbli_k: "K. Jasa Keuangan dan Asuransi",
-    kbli_l: "L. Real Estat",
-    kbli_m: "M, N. Jasa Perusahaan",
-    kbli_n: "M, N. Jasa Perusahaan",
-    // kbli_o: "O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",
-    kbli_p: "P. Jasa Pendidikan",
-    kbli_q: "Q. Jasa Kesehatan dan Kegiatan Sosial",
-    kbli_r: "R, S, dan Jasa Lainnya",
-    kbli_s: "R, S, dan Jasa Lainnya",
-    // kbli_t: "R,S, T, U. Jasa Lainnya",
-    // kbli_u: "R,S, T, U. Jasa Lainnya"
+    new_crystal: "New Crystal",
+    pingpong: "Pingpong",
+    matalada: "Matalada",
+    diamond_river: "Diamond River",
   };
 
   const handleClassificationChange = (event) => {
@@ -423,17 +302,65 @@ export default function MapSection() {
   const handletUsahaChange = (event) => {
     setSelectedtUsaha(event.target.value);
   };
-
-  const handleskalaUsahaChange = (event) => {
-    setSelectedskalaUsaha(event.target.value);
+  const LegendMenu = () => {
+    const [isExpanded, setIsExpanded] = useState(false);
+  
+    const toggleExpand2 = () => {
+      setIsExpanded(!isExpanded);
+    };
+  
+    return (
+      <div className="relative">
+        {/* Tombol Simbol Legenda */}
+        <button
+          onClick={toggleExpand2}
+          className={`py-1 px-2 rounded-md focus:outline-none ${
+            isExpanded ? "bg-[#D4AC2B] text-white" : "bg-gray-200 text-gray-800"
+          }`}
+          aria-label="Toggle Legend"
+        >
+          {/* Ikon untuk tombol */}
+          <span className="material-icons">legend_toggle</span>
+        </button>
+  
+        {/* Menu yang akan diperluas ketika tombol diklik */}
+        {isExpanded && (
+          <div
+            className="absolute right-0 bottom-full mb-3 p-4 w-[20vh] bg-white rounded-md shadow-md text-gray-800"
+            style={{
+            backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent background
+            backdropFilter: "blur(12px)", // Blur effect
+          }}
+          >
+            <div className="mb-1 text-sm font-semibold text-right">
+              Jumlah Usaha
+            </div>
+            <div className="relative h-6 mb-2 rounded-full">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(to right, #FFCE45,#D4AC2B, #B05E27, #7E370C)",
+                  borderRadius: "99px",
+                }}
+              ></div>
+            </div>
+            <div className="flex justify-between px-2 mt-1">
+              <span className="text-xs">0</span>
+              <span className="text-xs">100+</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
     <div className="relative w-full h-[89vh] font-sfProDisplay">
       <div className="absolute top-0 left-0 z-0 w-full h-full">
         <MapContainer
-          center={[-7.4388978, 112.59942]} // lokasi desa simoanginangin
-          zoom={15}
+          center={[-7.446033620089397, 112.60262064240202]} // lokasi desa simoanginangin
+          zoom={16}
           scrollWheelZoom={true}
           className="w-full h-full"
           touchZoom={true}
@@ -496,11 +423,9 @@ export default function MapSection() {
                   dataRumahTangga
                   .filter(
                     (item) =>
-                      (selectedRT === "desa" || item.kodeRt === selectedRT)&&
-                      (selectedClassification === "all" || item.kategori_usaha === selectedClassification) &&
-                      (selectedtUsaha === "all" || item.lokasi_tempat_usaha === selectedtUsaha) &&
-                      (selectedskalaUsaha === "all" || item.skala_usaha === selectedskalaUsaha)
-                  )
+                      (selectedRT === "desa" || item.kodeSls === selectedRT)&&
+                      (selectedClassification === "all" || item.jenis_klengkeng === selectedClassification) &&
+                      (selectedtUsaha === "all" || item.pemanfaatan_produk === selectedtUsaha)                   )
                     .map((item) => (
                       <Marker
                         key={`marker-${item._id}`}
@@ -510,34 +435,42 @@ export default function MapSection() {
                         ]}
                         icon={divIcon({
                         className: "custom-label",
-                        html: `<div style="
-                          background-color: #AF282F;
-                          border-radius: 50%;
-                          width: 1.5rem;
-                          height: 1.5rem;
-                          border: 0.1rem solid white;
-                          display: flex;
-                          justify-content: center;
-                          align-items: center;
-                        ">
-                          <span class="material-icons" style="color: #FFFFFF; font-size: 1rem;">store</span>
+                        html: `
+                        <span
+                          class="material-symbols-outlined"
+                          style="
+                            color: #BD7A33;
+                            font-size: 1.5rem;
+                            font-variation-settings:
+                              'FILL' 1,
+                              'wght' 400,
+                              'GRAD' 0,
+                              'opsz' 24;
+                            -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.8); /* Menambahkan stroke putih */
+                          "
+                        >
+                          nutrition
+                        </span>
+
                         </div>`,
                       })}
                       >
                         <Popup>
                           <div className="z-100">
-                            <strong>Informasi UMKM:</strong>
+                            <strong>Informasi Usaha:</strong>
                             {console.log("Check items ", item)}
-                            <br />
-                            <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{item.nama_usaha} </span>
+                            {/* <img src= alt="Kelengkeng Image" className="w-full h-auto mb-4" /> */}
+                            <img src={item.url_img} alt="Kelengkeng Image" className="w-40 h-auto mb-4" />
+                            <br /> <b>Jenis Kelengkeng </b><br/>
+                            <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{capitalizeWords(item.jenis_klengkeng)} </span>
                             <br />
                             {item.rt_rw_dusun} 
                             <br />
-                            <b>Kategori: </b><br />{classifications[item.kategori_usaha]}
+                            <b>Usia Pohon: </b><br />{item.usia_pohon} Tahun
                             <br />
-                            <b>Tempat Usaha: </b><br />{capitalizeWords(item.lokasi_tempat_usaha)}
+                            <b>Pemanfaatan Produk: </b><br />{((item.pemanfaatan_produk))}
                             <br />
-                            <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)}
+                            {/* <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)} */}
                           </div>
                         </Popup>
                       </Marker>
@@ -552,7 +485,7 @@ export default function MapSection() {
 
       <div className="mx-[10%] font-sfProDisplay">
         <button
-          className="absolute top-4 right-[10%] z-10 px-11 py-2 bg-[#AF282F] text-white rounded-xl shadow-md flex items-center"
+          className="absolute top-4 right-[10%] z-10 px-11 py-2 bg-[#D4AC2B] text-white rounded-xl shadow-md flex items-center"
           onClick={() => setIsFilterOpen(!isFilterOpen)}
         >
           <span className="mr-2 material-icons">filter_list</span>
@@ -560,11 +493,11 @@ export default function MapSection() {
         </button>
 
         <button
-          className="absolute top-4 left-[10%] z-10 px-12 py-2 bg-[#AF282F] text-white rounded-xl shadow-md flex items-center"
+          className="absolute top-4 left-[10%] z-10 px-12 py-2 bg-[#D4AC2B] text-white rounded-xl shadow-md flex items-center"
           onClick={() => setIsVisualizationOpen(!isVisualizationOpen)}
         >
           <span className="mr-2 material-icons">analytics</span>
-          Visualisasi
+          Statistik
         </button>
 
         <Transition
@@ -622,7 +555,7 @@ export default function MapSection() {
             </div>
 
             <label className="block mt-4 text-sm font-medium text-white">
-              Jenis Kategori
+              Jenis Klengkeng
             </label>
             <select
               id="jenis-kbli"
@@ -639,7 +572,7 @@ export default function MapSection() {
             </select>
 
             <label className="block mt-4 text-sm font-medium text-white">
-              Tempat Usaha
+              Pemanfaatan Produk
             </label>
             <select
               id="tUsaha"
@@ -649,23 +582,6 @@ export default function MapSection() {
               value={selectedtUsaha}
             >
               {Object.entries(tempatUsaha).map(([key, value]) => (
-                <option key={key} value={key}>
-                  {value}
-                </option>
-              ))}
-            </select>
-
-            <label className="block mt-4 text-sm font-medium text-white">
-              Skala Usaha
-            </label>
-            <select
-              id="skala"
-              name="skala"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              onChange={handleskalaUsahaChange}
-              value={selectedskalaUsaha}
-            >
-              {Object.entries(skalaUsaha).map(([key, value]) => (
                 <option key={key} value={key}>
                   {value}
                 </option>
@@ -705,27 +621,21 @@ export default function MapSection() {
                       <div className="text-4xl font-bold">
                         <CountUp
                           start={0}
-                          end={filteredData.features[0].properties.jml_umkm}
+                          end={filteredData.features[0].properties.jml_unit_usaha_klengkeng}
                           duration={3}
                         />
                       </div>
-                      <p className="text-xm">Pelaku UMKM</p>
+                      <p className="text-xm">Pelaku Usaha</p>
                     </div>
                     <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
                       <div className="text-4xl font-bold">
                         <CountUp
                           start={0}
-                          end={(
-                            (filteredData.features[0].properties.jml_umkm /
-                              filteredData.features[0].properties.jml_ruta) *
-                            100
-                          ).toFixed(2)}
+                          end={filteredData.features[0].properties.jml_pohon}
                           duration={3}
-                          decimals={2}
                         />
-                        %
                       </div>
-                      <p className="text-xm">Keluarga UMKM</p>
+                      <p className="text-xm">Pohon Kelengkeng</p>
                     </div>
                   </>
                 ) : (
@@ -735,33 +645,28 @@ export default function MapSection() {
                         <span className="mr-1 text-sm material-icons">
                           location_on
                         </span>{" "}
-                        Desa Simoangin-angin
+                        Desa Simoketawang
                       </p>
                     </div>
                     <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
                       <div className="text-4xl font-bold">
                         <CountUp
                           start={0}
-                          end={dataAgregat.jml_umkm}
+                          end={dataAgregat.jml_unit_usaha_klengkeng}
                           duration={3}
                         />
                       </div>
-                      <p className="text-xm">Pelaku UMKM</p>
+                      <p className="text-xm">Pelaku Usaha</p>
                     </div>
                     <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
                       <div className="text-4xl font-bold">
                         <CountUp
                           start={0}
-                          end={(
-                            (dataAgregat.jml_umkm / dataAgregat.jml_ruta) *
-                            100
-                          ).toFixed(2)}
+                          end={dataAgregat.jml_pohon}
                           duration={3}
-                          decimals={2}
                         />
-                        %
                       </div>
-                      <p className="text-xm">Keluarga UMKM</p>
+                      <p className="text-xm">Pohon Kelengkeng</p>
                     </div>
                   </>
                 )}
@@ -781,38 +686,39 @@ export default function MapSection() {
           <div className="flex items-center justify-center">
             <button
               className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${
-                showRT ? "bg-[#BD0026] text-white" : "bg-gray-200 text-gray-800"
+                showRT ? "bg-[#7E370C] text-white" : "bg-gray-200 text-gray-800"
               }`}
               onClick={toggleRT}
             >
               {showRT ? (
                 <div className="flex items-center">
                   <span className="mr-2 text-xl material-icons">
-                    visibility_off
+                    visibility
                   </span>{" "}
                   RT
                 </div>
               ) : (
                 <div className="flex items-center">
                   <span className="mr-2 text-xl material-icons">
-                    visibility
+                  visibility_off
                   </span>{" "}
                   RT
                 </div>
               )}
             </button>
-            <div>
+            <LegendMenu />
+            {/* <div>
               {visualization === "umkm" ? (
                 <div className="w-[20vh]">
                   <div className="mb-1 text-sm font-semibold text-right">
-                    Jumlah UMKM
+                    Jumlah Usaha
                   </div>
                   <div className="relative h-6 mb-2 rounded-full">
                     <div
                       className="absolute inset-0"
                       style={{
                         background:
-                          "linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)",
+                          "linear-gradient(to right, #FFCE45,#D4AC2B, #B05E27, #7E370C)",
                         borderRadius: "99px",
                       }}
                     ></div>
@@ -843,7 +749,7 @@ export default function MapSection() {
                   </div>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import TentangKami from "./pages/tentangkami";
 import Login from "./pages/login";
 import { NextUIProvider } from "@nextui-org/system";
 import PetaUMKMSimonaginagin from "./pages/petaUMKMSimoanginagin";
+import PetaKelengkengSimoketawang from "./pages/petaKelengkengSimoketawang";
 import ProtectedRoute from "./hooks/ProtectedRoute";
 import Admin from "./pages/admin";
 import BuletinAd from "./pages/buletinAdmin";
@@ -33,6 +34,10 @@ function App() {
         <Route
           path="/peta-umkm-simoanginangin"
           element={<PetaUMKMSimonaginagin />}
+        />
+        <Route
+          path="/peta-kelengkeng-simoketawang"
+          element={<PetaKelengkengSimoketawang/>}
         />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/buletin" element={<BuletinAd />} />
