@@ -19,6 +19,7 @@ import StatAdm  from "./pages/statAdmin";
 import UsAdm  from "./pages/usAdmin";
 import ProtectedRouteSimoanginangin from "./hooks/ProtectedRouteSimoanginangin";
 import ProtectedRouteSimoketawang from "./hooks/ProtectedRouteSimoketawang";
+import NotFoundPage from "./pages/notFoundPage";
 
 function App() {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ function App() {
         <Route path="/admin/desc" element={<DescAdmin />} />
         <Route path="/admin/stat" element={<StatAdm />} />
         <Route path="/admin/us" element={<UsAdm />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </NextUIProvider>
   );

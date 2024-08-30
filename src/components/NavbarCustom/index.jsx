@@ -113,9 +113,9 @@ export default function NavbarCustom() {
               >
                 Simoanginangin
                 {activeNestedDropdown === "Simoanginangin" && (
-                  <div className="absolute top-0 left-full z-10 mt-0 border border-gray-300 rounded-lg shadow-lg bg-neutral-50">
+                  <div className="absolute top-0 z-10 mt-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
                     <Link
-                      href="/peta-tematik/pemetaan-umkm"
+                      href="/peta-umkm-simoanginangin"
                       className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
                       onClick={() => handleMenuClick("/peta-tematik/pemetaan-umkm")}
                     >
@@ -130,9 +130,9 @@ export default function NavbarCustom() {
               >
                 Simoketawang
                 {activeNestedDropdown === "Simoketawang" && (
-                  <div className="absolute top-0 left-full z-10 mt-0 border border-gray-300 rounded-lg shadow-lg bg-neutral-50">
+                  <div className="absolute top-0 z-10 mt-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
                     <Link
-                      href="/peta-tematik/pemetaan-pemanfaatan-kelengkeng"
+                      href="/peta-kelengkeng-simoketawang"
                       className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
                       onClick={() => handleMenuClick("/peta-tematik/pemetaan-pemanfaatan-kelengkeng")}
                     >
@@ -147,7 +147,7 @@ export default function NavbarCustom() {
               >
                 Grogol
                 {activeNestedDropdown === "Grogol" && (
-                  <div className="absolute top-0 left-full z-10 mt-0 border border-gray-300 rounded-lg shadow-lg bg-neutral-50">
+                  <div className="absolute top-0 z-10 mt-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
                     <Link
                       href="/peta-tematik/hortikultura"
                       className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
@@ -255,7 +255,7 @@ export default function NavbarCustom() {
         <NavbarMenuItem>
           <Link
             href="/login"
-            className="px-4 py-2 font-bold text-white bg-pdarkblue rounded-md"
+            className="px-4 py-2 font-bold text-white rounded-md bg-pdarkblue"
           >
             Login
           </Link>

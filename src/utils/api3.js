@@ -7,7 +7,7 @@ const api3 = axios.create({
 // Add a request interceptor
 api3.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token-simoketawang");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
