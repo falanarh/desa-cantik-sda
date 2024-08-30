@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from "../SideBar/sidebar.jsx";
-import { Accordion, AccordionItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Button, useDisclosure } from "@nextui-org/react";
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 
 const MenuAdm = () => {
@@ -11,10 +11,10 @@ const MenuAdm = () => {
     { id: 4, title: "Tentang Kami" },
   ]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currentItem, setCurrentItem] = useState(null);
   const [newTitle, setNewTitle] = useState("");
+  const [modalMode, setModalMode] = useState("add");
 
   // Open modal for add or edit
   const handleOpenModal = (mode, item = null) => {
@@ -26,11 +26,11 @@ const MenuAdm = () => {
       setNewTitle("");
       setCurrentItem(null);
     }
-    setIsModalOpen(true);
+    onOpen(); // Open the modal
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    onOpenChange(false); // Close the modal
     setNewTitle("");
     setCurrentItem(null);
   };
@@ -79,18 +79,18 @@ const MenuAdm = () => {
                 className="relative w-full"
               >
                 <div className="flex items-center justify-between p-1">
-                  <div className="flex gap-3">
-                    <Button auto flat onPress={() => handleOpenModal('edit', item)}>
-                      <FaEdit className="text-orange-700" />
-                    </Button>
-                    <Button auto flat>
-                      <FaTrash className="text-orange-700" />
-                    </Button>
-                  </div>
+                <div className="flex gap-3">
+                  <button className='bg-transparent m-0 p-0' auto flat onClick={() => handleOpenModal('edit', item)}>
+                    <FaEdit className="text-orange-700" />
+                  </button>
+                  <button className='bg-transparent m-0 p-0' auto flat>
+                    <FaTrash className="text-red-800" />
+                  </button>
+                </div>
                   <Button
                     auto
                     flat
-                    className="ml-5 flex items-center gap-2 font-assistant font-medium text-orange-700"
+                    className="ml-5 flex items-center gap-2 font-assistant font-medium text-orange-700 bg-transparent"
                     onPress={() => handleOpenModal('add')}
                   >
                     <FaPlus className="text-orange-700" /> Sub Menu
@@ -103,29 +103,47 @@ const MenuAdm = () => {
 
         {/* Add/Edit Modal */}
         <Modal
-          open={isModalOpen}
+          isOpen={isOpen}
+          className="bg-[#f5f5f5]"
+          isDismissable={false} 
+          isKeyboardDismissDisabled={true} 
+          hideCloseButton={true}
           onClose={handleCloseModal}
         >
           <ModalContent>
             <ModalHeader>
-              <h3 className="font-inter font-medium text-lg">
+            <div className="flex justify-between w-full">
+              <h3 className="text-[18px] text-[#c46024] font-inter font-bold">
                 {modalMode === 'add' ? "Tambah Menu" : "Edit Menu"}
               </h3>
+              <button 
+                className="text-xl text-[#BB5A5A]"
+                onClick={handleCloseModal} // Use the function that handles modal closing
+              >
+                &times;
+              </button>
+            </div>
             </ModalHeader>
             <ModalBody>
+              <label className="font-assistant">Judul Menu:</label>
               <Input
-                label="Judul Menu"
                 placeholder="Masukkan judul menu"
                 fullWidth
                 value={newTitle}
+                className="font-assistant border rounded-xl"
+                onChange={(e) => setNewTitle(e.target.value)}
+              />
+              <label className="font-assistant">Tautan:</label>
+              <Input
+                placeholder='Masukkan tautan'
+                fullWidth
+                value={newTitle}
+                className="font-assistant border rounded-xl"
                 onChange={(e) => setNewTitle(e.target.value)}
               />
             </ModalBody>
             <ModalFooter>
-              <Button auto flat color="error" onPress={handleCloseModal}>
-                Batal
-              </Button>
-              <Button auto onPress={handleSaveItem}>
+              <Button className='text-white font-inter font-semibold bg-[#fcc300]' auto onPress={handleSaveItem}>
                 Simpan
               </Button>
             </ModalFooter>

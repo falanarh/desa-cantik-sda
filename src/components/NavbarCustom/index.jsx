@@ -18,7 +18,7 @@ export default function NavbarCustom() {
   const [activeMenu, setActiveMenu] = useState("Beranda");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isNestedDropdownOpen, setIsNestedDropdownOpen] = useState(false);
+  const [activeNestedDropdown, setActiveNestedDropdown] = useState(null);
 
   useEffect(() => {
     if (location.pathname === "/" || location.pathname === "/beranda") {
@@ -32,15 +32,21 @@ export default function NavbarCustom() {
     setActiveMenu(route);
     setIsMenuOpen(false);
     setIsDropdownOpen(false);
-    setIsNestedDropdownOpen(false);
+    setActiveNestedDropdown(null);
     navigate(route);
   };
 
-  const handleDropdownClick = (route) => {
-    setActiveMenu(route);
-    setIsDropdownOpen(false);
-    setIsNestedDropdownOpen(false);
-    navigate(route);
+  const handleDropdownClick = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+    setActiveNestedDropdown(null); // Reset nested dropdown
+  };
+
+  const handleNestedDropdownClick = (menu) => {
+    if (activeNestedDropdown === menu) {
+      setActiveNestedDropdown(null); // Close if already open
+    } else {
+      setActiveNestedDropdown(menu); // Open the clicked nested dropdown
+    }
   };
 
   const getMenuClasses = (menu) => {
@@ -94,72 +100,63 @@ export default function NavbarCustom() {
           <Link
             href="#"
             className={getMenuClasses("/peta-tematik")}
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onClick={handleDropdownClick}
           >
             Peta Tematik
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
           </Link>
           {isDropdownOpen && (
-            <div className="absolute left-0 z-10 mt-4 border border-gray-300 rounded-lg shadow-xl top-full bg-base">
+            <div className="absolute left-0 z-10 mt-2 border border-gray-300 rounded-lg shadow-xl top-full bg-base">
               <div
-                href="#"
-                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md"
-                // onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
-                onMouseEnter={() => setIsNestedDropdownOpen(true)}
-                onMouseLeave={() => setIsNestedDropdownOpen(false)}
+                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md cursor-pointer relative"
+                onClick={() => handleNestedDropdownClick("Simoanginangin")}
               >
                 Simoanginangin
-                {isNestedDropdownOpen && (
-                <div className="absolute top-0 z-10 mt-0 ml-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
-                  <Link
-                    href="peta-umkm-simoanginangin"
-                    className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
-                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
-                  >
-                    Pemetaan UMKM
-                  </Link>
-                </div>
-              )}
+                {activeNestedDropdown === "Simoanginangin" && (
+                  <div className="absolute top-0 left-full z-10 mt-0 border border-gray-300 rounded-lg shadow-lg bg-neutral-50">
+                    <Link
+                      href="/peta-tematik/pemetaan-umkm"
+                      className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
+                      onClick={() => handleMenuClick("/peta-tematik/pemetaan-umkm")}
+                    >
+                      Pemetaan UMKM
+                    </Link>
+                  </div>
+                )}
               </div>
               <div
-                href="#"
-                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md"
-                // onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
-                onMouseEnter={() => setIsNestedDropdownOpen(true)}
-                onMouseLeave={() => setIsNestedDropdownOpen(false)}
+                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md cursor-pointer relative"
+                onClick={() => handleNestedDropdownClick("Simoketawang")}
               >
                 Simoketawang
-                {isNestedDropdownOpen && (
-                <div className="absolute top-0 z-10 mt-9 ml-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
-                  <Link
-                    href="peta-umkm-simoanginangin"
-                    className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
-                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
-                  >
-                    Pemetaan Pemanfaatan Kelengkeng
-                  </Link>
-                </div>
-              )}
+                {activeNestedDropdown === "Simoketawang" && (
+                  <div className="absolute top-0 left-full z-10 mt-0 border border-gray-300 rounded-lg shadow-lg bg-neutral-50">
+                    <Link
+                      href="/peta-tematik/pemetaan-pemanfaatan-kelengkeng"
+                      className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
+                      onClick={() => handleMenuClick("/peta-tematik/pemetaan-pemanfaatan-kelengkeng")}
+                    >
+                      Pemetaan Pemanfaatan Kelengkeng
+                    </Link>
+                  </div>
+                )}
               </div>
               <div
-                href="#"
-                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md"
-                // onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
-                onMouseEnter={() => setIsNestedDropdownOpen(true)}
-                onMouseLeave={() => setIsNestedDropdownOpen(false)}
+                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md cursor-pointer relative"
+                onClick={() => handleNestedDropdownClick("Grogol")}
               >
                 Grogol
-                {isNestedDropdownOpen && (
-                <div className="absolute top-8 z-9 mt-10 ml-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
-                  <Link
-                    href="peta-umkm-simoanginangin"
-                    className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
-                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
-                  >
-                    Hortikultura
-                  </Link>
-                </div>
-              )}
+                {activeNestedDropdown === "Grogol" && (
+                  <div className="absolute top-0 left-full z-10 mt-0 border border-gray-300 rounded-lg shadow-lg bg-neutral-50">
+                    <Link
+                      href="/peta-tematik/hortikultura"
+                      className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
+                      onClick={() => handleMenuClick("/peta-tematik/hortikultura")}
+                    >
+                      Hortikultura
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -206,7 +203,7 @@ export default function NavbarCustom() {
           <Link
             href="#"
             className={getMenuClasses("/peta-tematik")}
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            onClick={handleDropdownClick}
           >
             Peta Tematik
             <ChevronDown fill="currentColor" size={16} className="ml-1" />
@@ -215,23 +212,25 @@ export default function NavbarCustom() {
             <div className="mt-3 border border-gray-200 rounded-md shadow-md">
               <Link
                 href="#"
-                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-base hover:text-orange-500"
-                onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
-                onMouseEnter={() => setIsNestedDropdownOpen(true)}
+                className="block px-4 py-2 text-porange hover:bg-gray-200"
+                onClick={() => handleMenuClick("/peta-tematik/pemetaan-umkm")}
               >
                 Simoanginangin
               </Link>
-              {isNestedDropdownOpen && (
-                <div className="pl-4">
-                  <Link
-                    href="#"
-                    className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-orange-500"
-                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
-                  >
-                    Pemetaan UMKM
-                  </Link>
-                </div>
-              )}
+              <Link
+                href="#"
+                className="block px-4 py-2 text-porange hover:bg-gray-200"
+                onClick={() => handleMenuClick("/peta-tematik/pemetaan-pemanfaatan-kelengkeng")}
+              >
+                Simoketawang
+              </Link>
+              <Link
+                href="#"
+                className="block px-4 py-2 text-porange hover:bg-gray-200"
+                onClick={() => handleMenuClick("/peta-tematik/hortikultura")}
+              >
+                Grogol
+              </Link>
             </div>
           )}
         </NavbarMenuItem>
@@ -256,7 +255,7 @@ export default function NavbarCustom() {
         <NavbarMenuItem>
           <Link
             href="/login"
-            className="px-4 py-2 font-bold text-white transition-colors duration-100 rounded-lg bg-pdarkblue hover:bg-sky-700"
+            className="px-4 py-2 font-bold text-white bg-pdarkblue rounded-md"
           >
             Login
           </Link>
