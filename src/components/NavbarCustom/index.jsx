@@ -121,6 +121,46 @@ export default function NavbarCustom() {
                 </div>
               )}
               </div>
+              <div
+                href="#"
+                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md"
+                // onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
+                onMouseEnter={() => setIsNestedDropdownOpen(true)}
+                onMouseLeave={() => setIsNestedDropdownOpen(false)}
+              >
+                Simoketawang
+                {isNestedDropdownOpen && (
+                <div className="absolute top-0 z-10 mt-9 ml-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
+                  <Link
+                    href="peta-umkm-simoanginangin"
+                    className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
+                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
+                  >
+                    Pemetaan Pemanfaatan Kelengkeng
+                  </Link>
+                </div>
+              )}
+              </div>
+              <div
+                href="#"
+                className="block px-4 py-2 text-sm font-semibold text-porange hover:bg-[#f8f9fa] hover:text-[#F7BA74] rounded-md"
+                // onClick={() => handleDropdownClick("/peta-tematik/simoanginangin")}
+                onMouseEnter={() => setIsNestedDropdownOpen(true)}
+                onMouseLeave={() => setIsNestedDropdownOpen(false)}
+              >
+                Grogol
+                {isNestedDropdownOpen && (
+                <div className="absolute top-8 z-9 mt-10 ml-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
+                  <Link
+                    href="peta-umkm-simoanginangin"
+                    className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
+                    onClick={() => handleDropdownClick("/peta-tematik/pemetaan-umkm")}
+                  >
+                    Hortikultura
+                  </Link>
+                </div>
+              )}
+              </div>
             </div>
           )}
         </NavbarItem>

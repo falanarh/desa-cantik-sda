@@ -89,11 +89,10 @@ export default function ListDesa() {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 100,
+    speed: 500,
     slidesToShow: 4,
     slidesToScroll: 3,
-    autoplay: true,
-    autoplaySpeed: 2000,
+    autoplay: false,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [

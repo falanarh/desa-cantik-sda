@@ -1,72 +1,63 @@
 .sidebar {
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    height: 100vh;
-    background-color: #c46024;
-    padding: 20px;
-    box-sizing: border-box;
-    color: #ecf0f1;
-  }
-  
-  .logo {
-    margin-bottom: 20px;
-  }
-  
-  .navMenu {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .button {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    margin: 5px 0;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    position: relative;
-  }
-  
-  .icon {
-    margin-right: 20px;
-    font-size: 20px;
-  }
-  
-  .text {
-    font-size: 18px;
-    font-weight: 400;
-  }
-  
-  .buttonHover {
-    background-color: #f08619;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .activeMenu {
-    background-color: #f2a250;
-  }
-  
-  .tooltip {
-    visibility: hidden;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 5px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  
-  .button:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-    background-color: #fb6d17;
-  }
-  
+  width: 250px !important;
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  /* height: 100%; */
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logoText {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+}
+
+.navLink {
+  text-decoration: none;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  color: #f5f5f5;
+}
+
+.buttonHover {
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.activeMenu {
+  background-color: #d35400;
+  color: #ffffff;
+  box-shadow: 0px 4px 15px rgba(211, 84, 0, 0.4);
+}
+
+.icon {
+  margin-right: 15px;
+  font-size: 20px;
+}
+
+.text {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}

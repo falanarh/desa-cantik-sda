@@ -142,7 +142,7 @@ const EditRtModal = ({
         isOpen={isEditModalOpen}
         onOpenChange={onEditModalOpenChange}
         size="xl"
-        className="bg-slate-100 font-inter max-h-[90%]"
+        className="bg-slate-100 font-inter max-h-[90%] my-auto"
         classNames={{
           header: "border-b-[1px] border-slate-300",
           footer: "border-t-[1px] border-slate-300",
@@ -157,7 +157,7 @@ const EditRtModal = ({
                 Edit Rukun Tetangga (RT)
               </ModalHeader>
               <ModalBody className="py-4">
-                <div className="space-y-4">
+                <div className="space-y-4 simoanginangin-sls-edit">
                   <Input
                     label="Kode"
                     placeholder="Masukkan kode"
@@ -190,7 +190,7 @@ const EditRtModal = ({
                   />
                   <Input
                     label="Dusun"
-                    placeholder="Masukkan Dusun"
+                    placeholder="Masukkan dusun"
                     fullWidth
                     name="dusun"
                     value={editRtData?.dusun ?? ""}
@@ -199,8 +199,8 @@ const EditRtModal = ({
                     disabled
                   />
                   <Input
-                    label="Jumlah Ruta"
-                    placeholder="Masukkan jumlah Ruta"
+                    label="Jumlah Keluarga"
+                    placeholder="Masukkan jumlah keluarga"
                     fullWidth
                     name="jml_ruta"
                     value={editRtData?.jml_ruta ?? ""}

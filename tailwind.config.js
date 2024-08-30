@@ -15,6 +15,7 @@ module.exports = {
         pblue: "#26AAE1",
         porange: "#EB891B",
         pgreen: "#68B92E",
+        pyellow: "#D4AC2B",
         base: "#EEF0F2",
       },
       fontFamily: {

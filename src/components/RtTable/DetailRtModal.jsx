@@ -97,7 +97,7 @@ const RtDetail = ({ rt, geojson = null }) => {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-4 overflow-x-auto">
       <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-detail-rt">
         <tbody className="text-[14px]">
           {tableColumns.map((column, index) => (
@@ -114,7 +114,7 @@ const RtDetail = ({ rt, geojson = null }) => {
       </table>
       {geojson && (
         <div className="my-4">
-          <p className="text-[14px] font-semibold ml-3 my-2">Peta Wilayah RT</p>
+          <p className="text-[14px] font-bold ml-3 my-2 text-pdarkblue">Peta Wilayah SLS</p>
           <MapContainer
             key={JSON.stringify(geojson)} // Ensure a new key when geojson changes
             ref={mapRef}
@@ -144,7 +144,7 @@ const DetailRtModal = ({ isOpen, onOpenChange, selectedRt, geojsonRt }) => {
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       size="xl"
-      className="font-inter bg-slate-100 max-h-[90%]"
+      className="font-inter bg-slate-100 max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",
         footer: "border-t-[1px] border-slate-300",

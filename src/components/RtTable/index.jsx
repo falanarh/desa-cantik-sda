@@ -254,16 +254,16 @@ const RtTable = ({ fetchDataAggregate }) => {
           classNames={{
             inputWrapper: "shadow",
           }}
+          className="mb-4 w-[50%] simoanginangin-sls-search"
           placeholder="Ketikkan kata kunci..."
           startContent={
             <SearchIcon className="mb-0.5 text-pdarkblue pointer-events-none flex-shrink-0" />
           }
           value={searchTerm}
           onChange={handleSearchChange}
-          className="mb-4 w-[50%]"
         />
         <Button
-          color="success"
+          color="primary"
           className="text-[14px] font-semibold text-white"
           startContent={<FaPlus className="text-[20px] text-white" />}
           onClick={onAddModalOpen}
@@ -274,7 +274,7 @@ const RtTable = ({ fetchDataAggregate }) => {
       <Table
         aria-label="Example table with custom cells"
         shadow="none"
-        className="shadow rounded-xl font-inter"
+        className="shadow rounded-xl font-inter simoanginangin-sls-table"
         classNames={{ loadingWrapper: "mx-auto" }}
         bottomContent={
           <div className="flex justify-center w-full">

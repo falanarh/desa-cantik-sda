@@ -52,3 +52,20 @@ export const dataLabels = [
   { key: "jml_umkm_skala_usaha_kecil", label: "UMKM Kecil" },
   { key: "jml_umkm_skala_usaha_menengah", label: "UMKM Menengah" },
 ];
+
+export const dataLabelSimoketawang = [
+  { key: "jml_unit_usaha_klengkeng", label: "Unit Usaha Klengkeng" },
+  { key: "jml_unit_usaha_klengkeng_new_crystal", label: "Unit Usaha Klengkeng New Crystal" },
+  { key: "jml_unit_usaha_klengkeng_pingpong", label: "Unit Usaha Klengkeng Pingpong" },
+  { key: "jml_unit_usaha_klengkeng_matalada", label: "Unit Usaha Klengkeng Matalada" },
+  { key: "jml_unit_usaha_klengkeng_diamond_river", label: "Unit Usaha Klengkeng Diamond River" },
+  { key: "jml_unit_usaha_klengkeng_merah", label: "Unit Usaha Klengkeng Merah" },
+  { key: "jml_unit_usaha_klengkeng_pupuk_organik", label: "Unit Usaha Klengkeng Pupuk Organik" },
+  { key: "jml_unit_usaha_klengkeng_pupuk_anorganik", label: "Unit Usaha Klengkeng Pupuk Anorganik" },
+  { key: "jml_unit_usaha_klengkeng_tidak_ada_pupuk", label: "Unit Usaha Klengkeng Tidak Ada Pupuk" },
+  { key: "jml_unit_usaha_klengkeng_kopi_biji_klengkeng", label: "Unit Usaha Klengkeng Kopi Biji Klengkeng" },
+  { key: "jml_unit_usaha_klengkeng_kerajinan_tangan", label: "Unit Usaha Klengkeng Kerajinan Tangan" },
+  { key: "jml_unit_usaha_klengkeng_batik_ecoprint", label: "Unit Usaha Klengkeng Batik Ecoprint" },
+  { key: "jml_unit_usaha_klengkeng_minuman", label: "Unit Usaha Klengkeng Minuman" },
+  { key: "jml_unit_usaha_klengkeng_makanan", label: "Unit Usaha Klengkeng Makanan" },
+];
