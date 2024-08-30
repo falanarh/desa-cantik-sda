@@ -10,7 +10,6 @@ import Login from "./pages/login";
 import { NextUIProvider } from "@nextui-org/system";
 import PetaUMKMSimonaginagin from "./pages/petaUMKMSimoanginagin";
 import PetaKelengkengSimoketawang from "./pages/petaKelengkengSimoketawang";
-import ProtectedRoute from "./hooks/ProtectedRoute";
 import Admin from "./pages/admin";
 import BuletinAd from "./pages/buletinAdmin";
 import MenuAd from "./pages/menuAdm";
@@ -18,6 +17,8 @@ import BerandaAdm from "./pages/berandaAdm";
 import DescAdmin from "./pages/deskripsiAdmin";
 import StatAdm  from "./pages/statAdmin";
 import UsAdm  from "./pages/usAdmin";
+import ProtectedRouteSimoanginangin from "./hooks/ProtectedRouteSimoanginangin";
+import ProtectedRouteSimoketawang from "./hooks/ProtectedRouteSimoketawang";
 
 function App() {
   const navigate = useNavigate();
@@ -34,17 +35,17 @@ function App() {
         <Route
           path="/admin-simoanginangin"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteSimoanginangin>
               <AdminSimoanginangin />
-            </ProtectedRoute>
+            </ProtectedRouteSimoanginangin>
           }
         />
         <Route
           path="/admin-simoketawang"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteSimoketawang>
               <AdminSimoketawang />
-            </ProtectedRoute>
+            </ProtectedRouteSimoketawang>
           }
         />
         <Route

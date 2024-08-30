@@ -64,7 +64,7 @@ const LoginSimoKetawang = () => {
       if (response.status === 200) {
         // Handle successful login
         console.log(response.data);
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token-simoketawang", response.data.token);
         localStorage.setItem("username", username);
         setLoading(false);
         navigate("/admin-simoketawang");
