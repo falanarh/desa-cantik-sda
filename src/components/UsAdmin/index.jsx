@@ -7,11 +7,6 @@ import {
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react';
 
 const UsAdmin = () => {
-  const formFields = [
-    { id: 'name', label: 'Nama' },
-    { id: 'status', label: 'Jabatan' },
-  ];
-
   const initData = [
     { name: 'Simoketawang', role: 'Kecamatan Wonoayu', pict: 'https://example.com/file.pdf' },
     { name: 'Simoanginangin', role: 'Kecamatan Wonoayu', pict: 'https://example.com/file.pdf' },
@@ -32,6 +27,11 @@ const UsAdmin = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(initData.length / itemsPerPage);
+
+  const [modalType, setModalType] = useState(null); // State for modal type
+  const [editMode, setEditMode] = useState(false);  // State for edit mode
+  const [selectedItem, setSelectedItem] = useState(null); // State for selected item
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const sortTable = (key) => {
     let direction = 'ascending';
@@ -57,8 +57,12 @@ const UsAdmin = () => {
     }
   };
 
-  const { isOpen: isOpenAdd, onOpen: onOpenAdd, onOpenChange: onOpenChangeAdd } = useDisclosure();
-  const { isOpen: isOpenSK, onOpen: onOpenSK, onOpenChange: onOpenChangeSK } = useDisclosure();
+  const openModal = (type, item = null, isEdit = false) => {
+    setModalType(type);
+    setEditMode(isEdit);
+    setSelectedItem(item);
+    onOpen();
+  };
 
   const displayedData = initData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -71,11 +75,11 @@ const UsAdmin = () => {
       <main className="flex-1 overflow-y-auto p-12 bg-gray-100">
         <div className="flex space-x-5 mb-5">
           {/* Buttons to open modals */}
-          <Button className='text-white font-inter font-semibold bg-[#fcc300]' onPress={onOpenAdd}>
-            <FaPlus className={styles.addIcon} />
+          <Button className='text-white font-inter font-semibold text-md bg-[#fcc300]' onPress={() => openModal('timDesaCantik')}>
+            <FaPlus />
             Tambah Tim Desa Cantik
           </Button>
-          <Button className='text-white font-inter font-semibold bg-[#fcc300]' onPress={onOpenSK}>
+          <Button className='text-white font-inter font-semibold text-md bg-[#fcc300]' onPress={() => openModal('suratKeputusan')}>
             <FaPlus className={styles.addIcon} />
             Tambah Surat Keputusan
           </Button>
@@ -83,7 +87,7 @@ const UsAdmin = () => {
 
         {/* Tim Desa Cantik Table */}
         <div className="bg-white p-10 rounded-xl shadow-lg mt-10">
-          <h3 className="text-xl text-[#ff9c37] font-inter font-bold">Tabel Tim Desa Cantik</h3>
+          <h3 className="text-xl text-[#ff9c37] font-inter font-bold mb-3">Tabel Tim Desa Cantik</h3>
           <table className={styles.table}>
             <thead>
               <tr>
@@ -115,7 +119,7 @@ const UsAdmin = () => {
                   <td>
                     <button
                       className="text-orange-500 hover:text-orange-600"
-                      onClick={() => alert('Edit Item')}
+                      onClick={() => openModal('timDesaCantik', item, true)}  // Open modal in edit mode
                     >
                       <FaEdit />
                     </button>
@@ -155,7 +159,7 @@ const UsAdmin = () => {
 
         {/* Surat Keputusan Table */}
         <div className="bg-white p-10 rounded-xl shadow-lg mt-10">
-          <h3 className="text-xl text-[#ff9c37] font-inter font-bold">Tabel Surat Keputusan</h3>
+          <h3 className="text-xl text-[#ff9c37] font-inter font-bold mb-3">Tabel Surat Keputusan</h3>
           <table className={styles.table}>
             <thead>
               <tr>
@@ -181,7 +185,7 @@ const UsAdmin = () => {
                   <td>
                     <button
                       className="text-orange-500 hover:text-orange-600"
-                      onClick={() => alert('Edit Item')}
+                      onClick={() => openModal('suratKeputusan', sk, true)}  // Open modal in edit mode
                     >
                       <FaEdit />
                     </button>
@@ -198,134 +202,48 @@ const UsAdmin = () => {
           </table>
         </div>
 
-        {/* Modal for Tambah Tim Desa Cantik */}
-        <Modal isOpen={isOpenAdd} onOpenChange={onOpenChangeAdd} isDismissable={false} isKeyboardDismissDisabled={true} hideCloseButton={true}>
+        {/* Dynamic Modal for Both Tim Desa Cantik and Surat Keputusan */}
+        <Modal className="bg-[#f5f5f5]" isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} hideCloseButton={true}>
           <ModalContent>
-            {(onClose) => (
+            {onClose => (
               <>
-                <ModalHeader className="flex flex-col gap-2 p-4 border-b bg-[#f08f7a]">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-assistant font-semibold text-white">Tambah Tim Desa Cantik</h3>
+                <ModalHeader>
+                  <div className="flex justify-between w-full">
+                    <h3 className="text-[18px] text-[#c46024] font-inter font-bold">
+                      {editMode ? `Edit ${modalType === 'timDesaCantik' ? 'Tim Desa Cantik' : 'Surat Keputusan'}` : `Tambah ${modalType === 'timDesaCantik' ? 'Tim Desa Cantik' : 'Surat Keputusan'}`}
+                    </h3>
                     <button 
-                      className="text-white hover:text-gray-50 text-xl"
+                      className="text-xl text-[#BB5A5A]"
                       onClick={onClose}
                     >
                       &times;
                     </button>
                   </div>
                 </ModalHeader>
-                <ModalBody className="p-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label 
-                        htmlFor="nama"
-                        className="block text-gray-700 font-assistant font-semibold mb-1"
-                      >
-                        Nama
-                      </label>
-                      <input
-                        type="text"
-                        id="nama"
-                        placeholder="Masukkan Nama"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow"
-                      />
-                    </div>
-                    <div>
-                      <label 
-                        htmlFor="role"
-                        className="block text-gray-700 font-assistant font-semibold mb-1"
-                      >
-                        Jabatan
-                      </label>
-                      <input
-                        type="text"
-                        id="role"
-                        placeholder="Masukkan Jabatan"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow"
-                      />
-                    </div>
-                    <div>
-                      <label 
-                        htmlFor="unggah-gambar"
-                        className="block text-gray-700 font-assistant font-semibold mb-1"
-                      >
-                        Unggah Gambar
-                      </label>
-                      <input
-                        type="file"
-                        id="unggah-gambar"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow"
-                      />
-                    </div>
-                  </div>
-                </ModalBody>
-                <ModalFooter className="p-4 flex justify-end gap-2 ">
-                  <Button 
-                    color="primary" 
-                    className="px-4 py-2 bg-[#f49b88] text-white rounded-md font-assistant font-semibold hover:bg-[#c45f4a]"
-                  >
-                    Tambah
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+                <ModalBody>
+                  {modalType === 'timDesaCantik' ? (
+                    <>
+                      <label className="font-assistant">Nama:</label>
+                      <input type="text" className="w-full p-2 border rounded-lg" defaultValue={editMode && selectedItem ? selectedItem.name : ''} />
 
-        {/* Modal for Tambah Surat Keputusan */}
-        <Modal isOpen={isOpenSK} onOpenChange={onOpenChangeSK} isDismissable={false} isKeyboardDismissDisabled={true} hideCloseButton={true}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-2 p-4 border-b bg-[#f08f7a]">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-assistant font-semibold text-white">Tambah Surat Keputusan</h3>
-                    <button 
-                      className="text-white hover:text-gray-50 text-xl"
-                      onClick={onClose}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                </ModalHeader>
-                <ModalBody className="p-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label 
-                        htmlFor="judul"
-                        className="block text-gray-700 font-assistant font-semibold mb-1"
-                      >
-                        Judul Surat Keputusan
-                      </label>
-                      <input
-                        type="text"
-                        id="judul"
-                        placeholder="Masukkan Judul"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow"
-                      />
-                    </div>
-                    <div>
-                      <label 
-                        htmlFor="file"
-                        className="block text-gray-700 font-assistant font-semibold mb-1"
-                      >
-                        Unggah Surat Keputusan
-                      </label>
-                      <input
-                        type="file"
-                        id="file"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 transition-shadow"
-                      />
-                    </div>
-                  </div>
+                      <label className="font-assistant mt-4">Jabatan:</label>
+                      <input type="text" className="w-full p-2 border rounded-lg" defaultValue={editMode && selectedItem ? selectedItem.role : ''} />
+
+                      <label className="font-assistant mt-4">Unggah Foto:</label>
+                      <input type="file" className="w-full p-2 border rounded-lg bg-white" />
+                    </>
+                  ) : (
+                    <>
+                      <label className="font-inter">Judul Surat Keputusan:</label>
+                      <input type="text" className="w-full p-2 border rounded-lg" defaultValue={editMode && selectedItem ? selectedItem.title : ''} />
+
+                      <label className="font-inter mt-4">Unggah Surat Keputusan:</label>
+                      <input type="file" className="w-full p-2 border rounded-lg bg-white" />
+                    </>
+                  )}
                 </ModalBody>
-                <ModalFooter className="p-4 flex justify-end gap-2 ">
-                  <Button 
-                    color="primary" 
-                    className="px-4 py-2 bg-[#f49b88] text-white rounded-md font-assistant font-semibold hover:bg-[#c45f4a]"
-                  >
-                    Tambah
-                  </Button>
+                <ModalFooter>
+                  <Button className='text-white font-inter font-semibold bg-[#fcc300]' onPress={onClose}>{modalType === 'add' ? 'Tambah' : 'Simpan'}</Button>
                 </ModalFooter>
               </>
             )}
