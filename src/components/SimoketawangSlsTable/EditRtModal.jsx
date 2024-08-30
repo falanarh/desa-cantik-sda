@@ -54,6 +54,9 @@ const EditRtModal = ({
         jml_unit_usaha_klengkeng_batik_ecoprint: parseInt(editRtData.jml_unit_usaha_klengkeng_batik_ecoprint, 10) || 0,
         jml_unit_usaha_klengkeng_minuman: parseInt(editRtData.jml_unit_usaha_klengkeng_minuman, 10) || 0,
         jml_unit_usaha_klengkeng_makanan: parseInt(editRtData.jml_unit_usaha_klengkeng_makanan, 10) || 0,
+        jml_pohon: parseInt(editRtData.jml_pohon, 10) || 0,
+        jml_pohon_blm_berproduksi: parseInt(editRtData.jml_pohon_blm_berproduksi, 10) || 0,
+        jml_pohon_sdh_berproduksi: parseInt(editRtData.jml_pohon_sdh_berproduksi, 10) || 0,
       };
       console.log("Edit data:", convertedData);
       updateData(convertedData);
@@ -269,6 +272,33 @@ const EditRtModal = ({
                     fullWidth
                     name="jml_unit_usaha_klengkeng_makanan"
                     value={editRtData?.jml_unit_usaha_klengkeng_makanan ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Pohon Klengkeng"
+                    placeholder="Masukkan jumlah pohon klengkeng"
+                    fullWidth
+                    name="jml_pohon"
+                    value={editRtData?.jml_pohon ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Pohon Klengkeng Belum Berproduksi"
+                    placeholder="Masukkan jumlah pohon klengkeng belum berproduksi"
+                    fullWidth
+                    name="jml_pohon_blm_berproduksi"
+                    value={editRtData?.jml_pohon_blm_berproduksi ?? ""}
+                    onChange={handleEditChange}
+                    classNames={{ inputWrapper: "shadow" }}
+                  />
+                  <Input
+                    label="Pohon Klengkeng Sudah Berproduksi"
+                    placeholder="Masukkan jumlah pohon klengkeng sudah berproduksi"
+                    fullWidth
+                    name="jml_pohon_sdh_berproduksi"
+                    value={editRtData?.jml_pohon_sdh_berproduksi ?? ""}
                     onChange={handleEditChange}
                     classNames={{ inputWrapper: "shadow" }}
                   />

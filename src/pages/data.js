@@ -68,4 +68,7 @@ export const dataLabelSimoketawang = [
   { key: "jml_unit_usaha_klengkeng_batik_ecoprint", label: "Unit Usaha Klengkeng Batik Ecoprint" },
   { key: "jml_unit_usaha_klengkeng_minuman", label: "Unit Usaha Klengkeng Minuman" },
   { key: "jml_unit_usaha_klengkeng_makanan", label: "Unit Usaha Klengkeng Makanan" },
+  { key: "jml_pohon", label: "Pohon Klengeng" },
+  { key: "jml_pohon_sdh_berproduksi", label: "Pohon Klengeng Sudah Berproduksi" },
+  { key: "jml_pohon_blm_berproduksi", label: "Pohon Klengeng Belum Berproduksi" },
 ];
