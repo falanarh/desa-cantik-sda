@@ -413,7 +413,7 @@ const AddRutaModal = ({
     }));
     setSelectedJenisPupuk(new Set(keys));
   };
-  
+
   const handleOnPemanfaatanProdukSelectionChange = (keys) => {
     // Set the selected keys (Set) to the state
     console.log("Keys:", keys);
@@ -435,55 +435,77 @@ const AddRutaModal = ({
 
     // Validasi setiap field
     if (!addUsahaData.kodeSls)
-        newErrors.kodeSls = "Identitas SLS wajib dipilih.";
+      newErrors.kodeSls = "Identitas SLS wajib dipilih.";
     if (!addUsahaData.nama_kepala_keluarga)
-        newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
+      newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
     if (!addUsahaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
     if (!addUsahaData.jml_pohon)
-        newErrors.jml_pohon = "Jumlah Pohon Kelengkeng wajib diisi.";
+      newErrors.jml_pohon = "Jumlah Pohon Kelengkeng wajib diisi.";
     if (!addUsahaData.jml_pohon_new_crystal)
-        newErrors.jml_pohon_new_crystal =
-            "Jumlah Pohon Kelengkeng New Crystal wajib diisi.";
+      newErrors.jml_pohon_new_crystal =
+        "Jumlah Pohon Kelengkeng New Crystal wajib diisi.";
     if (!addUsahaData.jml_pohon_pingpong)
-        newErrors.jml_pohon_pingpong =
-            "Jumlah Pohon Kelengkeng Pingpong wajib diisi.";
+      newErrors.jml_pohon_pingpong =
+        "Jumlah Pohon Kelengkeng Pingpong wajib diisi.";
     if (!addUsahaData.jml_pohon_metalada)
-        newErrors.jml_pohon_metalada =
-            "Jumlah Pohon Kelengkeng Metalada wajib diisi.";
+      newErrors.jml_pohon_metalada =
+        "Jumlah Pohon Kelengkeng Metalada wajib diisi.";
     if (!addUsahaData.jml_pohon_diamond_river)
-        newErrors.jml_pohon_diamond_river =
-            "Jumlah Pohon Kelengkeng Diamond River wajib diisi.";
+      newErrors.jml_pohon_diamond_river =
+        "Jumlah Pohon Kelengkeng Diamond River wajib diisi.";
     if (!addUsahaData.jml_pohon_merah)
-        newErrors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah wajib diisi.";
+      newErrors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah wajib diisi.";
     if (!addUsahaData.jenis_pupuk)
-        newErrors.jenis_pupuk = "Jenis Pupuk wajib diisi.";
+      newErrors.jenis_pupuk = "Jenis Pupuk wajib diisi.";
     if (!addUsahaData.volume_produksi)
-        newErrors.volume_produksi =
-            "Volume Produksi Periode Agustus 2023-Juli 2024 wajib diisi.";
+      newErrors.volume_produksi =
+        "Volume Produksi Periode Agustus 2023-Juli 2024 wajib diisi.";
     if (!addUsahaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
     if (!addUsahaData.longitude) newErrors.longitude = "Longitude wajib diisi.";
     if (!addUsahaData.url_img)
-        newErrors.url_img = "Terjadi kesalahan upload foto.";
+      newErrors.url_img = "Terjadi kesalahan upload foto.";
 
     // Validasi total jumlah pohon
-    const totalPohonJenis = 
-        (parseInt(addUsahaData.jml_pohon_new_crystal) || 0) +
-        (parseInt(addUsahaData.jml_pohon_pingpong) || 0) +
-        (parseInt(addUsahaData.jml_pohon_metalada) || 0) +
-        (parseInt(addUsahaData.jml_pohon_diamond_river) || 0) +
-        (parseInt(addUsahaData.jml_pohon_merah) || 0);
-    
-    if (addUsahaData.jml_pohon && totalPohonJenis !== parseInt(addUsahaData.jml_pohon)) {
-        newErrors.jml_pohon = "Jumlah total pohon jenis harus sama dengan jumlah pohon keseluruhan.";
+    const totalPohonJenis =
+      (parseInt(addUsahaData.jml_pohon_new_crystal) || 0) +
+      (parseInt(addUsahaData.jml_pohon_pingpong) || 0) +
+      (parseInt(addUsahaData.jml_pohon_metalada) || 0) +
+      (parseInt(addUsahaData.jml_pohon_diamond_river) || 0) +
+      (parseInt(addUsahaData.jml_pohon_merah) || 0);
+
+    if (
+      addUsahaData.jml_pohon &&
+      totalPohonJenis !== parseInt(addUsahaData.jml_pohon)
+    ) {
+      newErrors.jml_pohon =
+        "Jumlah total pohon jenis harus sama dengan jumlah pohon keseluruhan.";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-};
+  };
 
+  const hasErrors = (errors) => {
+    console.log("Has Errors",errors);
+    // Iterate over the values of the errors object
+    for (let key in errors) {
+      // Check if the error message is not empty
+      if (errors[key] !== "") {
+        return true;
+      }
+    }
+    return false;
+  };
 
   const handleAddSave = async () => {
     if (addUsahaData && isSatuan) {
+      if (hasErrors(errors)) {
+        message.error(
+          "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
+          5
+        );
+        return;
+      }
       if (!validateForm(addUsahaData)) {
         message.error(
           "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
@@ -854,9 +876,7 @@ const AddRutaModal = ({
                     className="w-full"
                     selectionMode="multiple"
                     name="jenis_pupuk"
-                    selectedKeys={
-                      selectedJenisPupuk ? selectedJenisPupuk : []
-                    }
+                    selectedKeys={selectedJenisPupuk ? selectedJenisPupuk : []}
                     placeholder="Pilih Jenis Pupuk"
                     onSelectionChange={handleOnJenisPupukSelectionChange}
                   >

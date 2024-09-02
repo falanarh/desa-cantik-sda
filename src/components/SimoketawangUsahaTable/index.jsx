@@ -218,8 +218,8 @@ const SimoketawangUsahaTable = ({ fetchDataAggregate }) => {
             </Tooltip>
             <Tooltip color="danger" content="Hapus">
               <Popconfirm
-                title="Hapus Data UMKM"
-                description="Anda yakin menghapus data UMKM ini?"
+                title="Hapus Data Usaha Kelengkeng"
+                description="Anda yakin menghapus data usaha kelengkeng ini?"
                 onConfirm={() => handleDelete(ruta)}
                 onOpenChange={() => console.log("open change")}
               >
