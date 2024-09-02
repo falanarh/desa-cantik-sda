@@ -260,7 +260,7 @@ const AddRutaModal = ({
       if (!value) {
         errors.volume_produksi =
           "Volume Produksi Periode Agustus 2023-Juli 2024 harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
+      } else if (isNaN(value) || value < 0) {
         errors.volume_produksi =
           "Rata-rata Volume Produksi Per Panen harus berupa angka positif.";
       } else {
@@ -271,7 +271,7 @@ const AddRutaModal = ({
     if (name === "jml_pohon") {
       if (!value) {
         errors.jml_pohon = "Jumlah Pohon Kelengkeng harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
+      } else if (isNaN(value) || value < 0) {
         errors.jml_pohon =
           "Jumlah Pohon Kelengkeng harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
@@ -285,7 +285,7 @@ const AddRutaModal = ({
       if (!value) {
         errors.jml_pohon_new_crystal =
           "Jumlah Pohon Kelengkeng New Crystal harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
+      } else if (isNaN(value) || value < 0) {
         errors.jml_pohon_new_crystal =
           "Jumlah Pohon Kelengkeng New Crystal harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
@@ -300,7 +300,7 @@ const AddRutaModal = ({
       if (!value) {
         errors.jml_pohon_pingpong =
           "Jumlah Pohon Kelengkeng Pingpong harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
+      } else if (isNaN(value) || value < 0) {
         errors.jml_pohon_pingpong =
           "Jumlah Pohon Kelengkeng Pingpong harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
@@ -315,7 +315,7 @@ const AddRutaModal = ({
       if (!value) {
         errors.jml_pohon_metalada =
           "Jumlah Pohon Kelengkeng Metalada harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
+      } else if (isNaN(value) || value < 0) {
         errors.jml_pohon_metalada =
           "Jumlah Pohon Kelengkeng Metalada harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
@@ -330,7 +330,7 @@ const AddRutaModal = ({
       if (!value) {
         errors.jml_pohon_diamond_river =
           "Jumlah Pohon Kelengkeng Diamond River harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
+      } else if (isNaN(value) || value < 0) {
         errors.jml_pohon_diamond_river =
           "Jumlah Pohon Kelengkeng Diamond River harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
@@ -344,7 +344,7 @@ const AddRutaModal = ({
     if (name === "jml_pohon_merah") {
       if (!value) {
         errors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
+      } else if (isNaN(value) || value < 0) {
         errors.jml_pohon_merah =
           "Jumlah Pohon Kelengkeng Merah harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
