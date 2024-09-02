@@ -55,11 +55,6 @@ export const dataLabels = [
 
 export const dataLabelSimoketawang = [
   { key: "jml_unit_usaha_klengkeng", label: "Unit Usaha Klengkeng" },
-  { key: "jml_unit_usaha_klengkeng_new_crystal", label: "Unit Usaha Klengkeng New Crystal" },
-  { key: "jml_unit_usaha_klengkeng_pingpong", label: "Unit Usaha Klengkeng Pingpong" },
-  { key: "jml_unit_usaha_klengkeng_matalada", label: "Unit Usaha Klengkeng Matalada" },
-  { key: "jml_unit_usaha_klengkeng_diamond_river", label: "Unit Usaha Klengkeng Diamond River" },
-  { key: "jml_unit_usaha_klengkeng_merah", label: "Unit Usaha Klengkeng Merah" },
   { key: "jml_unit_usaha_klengkeng_pupuk_organik", label: "Unit Usaha Klengkeng Pupuk Organik" },
   { key: "jml_unit_usaha_klengkeng_pupuk_anorganik", label: "Unit Usaha Klengkeng Pupuk Anorganik" },
   { key: "jml_unit_usaha_klengkeng_tidak_ada_pupuk", label: "Unit Usaha Klengkeng Tidak Ada Pupuk" },
@@ -68,7 +63,14 @@ export const dataLabelSimoketawang = [
   { key: "jml_unit_usaha_klengkeng_batik_ecoprint", label: "Unit Usaha Klengkeng Batik Ecoprint" },
   { key: "jml_unit_usaha_klengkeng_minuman", label: "Unit Usaha Klengkeng Minuman" },
   { key: "jml_unit_usaha_klengkeng_makanan", label: "Unit Usaha Klengkeng Makanan" },
-  { key: "jml_pohon", label: "Pohon Klengeng" },
-  { key: "jml_pohon_sdh_berproduksi", label: "Pohon Klengeng Sudah Berproduksi" },
-  { key: "jml_pohon_blm_berproduksi", label: "Pohon Klengeng Belum Berproduksi" },
+  { key: "jml_unit_usaha_klengkeng_tidak_dimanfaatkan", label: "Unit Usaha Klengkeng Tidak Ada Pemanfaatan" }, // Menambahkan yang tidak ada sebelumnya
+  { key: "jml_pohon", label: "Pohon Klengkeng" },
+  { key: "jml_pohon_new_crystal", label: "Pohon Klengkeng New Crystal" },
+  { key: "jml_pohon_pingpong", label: "Pohon Klengkeng Pingpong" },
+  { key: "jml_pohon_metalada", label: "Pohon Klengkeng Metalada" },
+  { key: "jml_pohon_diamond_river", label: "Pohon Klengkeng Diamond River" },
+  { key: "jml_pohon_merah", label: "Pohon Klengkeng Merah" },
+  { key: "jml_pohon_blm_berproduksi", label: "Pohon Klengkeng Belum Berproduksi" },
+  { key: "jml_pohon_sdh_berproduksi", label: "Pohon Klengkeng Sudah Berproduksi" },
+  { key: "volume_produksi", label: "Volume Produksi Agustus 2023-Juli 2024 (Kg)" }, // Menambahkan yang tidak ada sebelumnya
 ];

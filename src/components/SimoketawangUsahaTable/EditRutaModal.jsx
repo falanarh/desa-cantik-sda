@@ -19,6 +19,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import api3 from "../../utils/api3";
 import { FaImages } from "react-icons/fa6";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.kode === key);
@@ -42,10 +44,6 @@ const isValidLatitude = (latitude) => {
 
 const isValidLongitude = (longitude) => {
   return !isNaN(longitude) && longitude >= -180 && longitude <= 180;
-};
-
-const isValidPendapatanSebulanTerakhir = (pendapatanSebulanTerakhir) => {
-  return pendapatanSebulanTerakhir >= 0;
 };
 
 const getBase64 = (file) =>
@@ -72,8 +70,7 @@ const EditRutaModal = ({
   const [loading, setLoading] = useState(false);
   const [mapPosition, setMapPosition] = useState([0, 0]); // Initialize map position
   const [selectedSls, setSelectedSls] = useState("");
-  const [selectedJenisKlengkeng, setSelectedJenisKlengkeng] = useState("");
-  const [selectedJenisPupuk, setSelectedJenisPupuk] = useState("");
+  const [selectedJenisPupuk, setSelectedJenisPupuk] = useState([]);
   const [selectedPemanfaatanProduk, setSelectedPemanfaatanProduk] = useState(
     []
   );
@@ -90,7 +87,6 @@ const EditRutaModal = ({
       setEditUsahaData(ruta);
       setOldUsahaData(ruta);
       setSelectedSls(ruta.kodeSls);
-      setSelectedJenisKlengkeng(ruta.jenis_klengkeng);
       setSelectedJenisPupuk(ruta.jenis_pupuk);
       setSelectedPemanfaatanProduk(ruta.pemanfaatan_produk);
       setFileList([
@@ -192,7 +188,11 @@ const EditRutaModal = ({
 
     let updatedValue = value;
 
-    if (name === "latitude" || name === "longitude" || name === "usia_pohon") {
+    if (
+      name === "latitude" ||
+      name === "longitude" ||
+      name === "volume_produksi"
+    ) {
       updatedValue = value.replace(",", "."); // Replace comma with dot for valid decimal format
     }
 
@@ -227,39 +227,102 @@ const EditRutaModal = ({
       }
     }
 
-    if (name === "usia_pohon") {
+    if (name === "volume_produksi") {
       if (!value) {
-        errors.usia_pohon = "Usia Pohon harus diisi.";
+        errors.volume_produksi =
+          "Volume Produksi Periode Agustus 2023-Juli 2024 harus diisi.";
       } else if (isNaN(value) || value <= 0) {
-        errors.usia_pohon = "Usia Pohon harus berupa angka positif.";
-      } else {
-        errors.usia_pohon = "";
-      }
-    }
-
-    if (name === "rata2_volume_produksi_per_panen") {
-      if (!value) {
-        errors.rata2_volume_produksi_per_panen =
-          "Rata-rata Volume Produksi Per Panen harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
-        errors.rata2_volume_produksi_per_panen =
+        errors.volume_produksi =
           "Rata-rata Volume Produksi Per Panen harus berupa angka positif.";
       } else {
-        errors.rata2_volume_produksi_per_panen = "";
+        errors.volume_produksi = "";
       }
     }
 
-    if (name === "frekuensi_berbuah") {
+    if (name === "jml_pohon") {
       if (!value) {
-        errors.frekuensi_berbuah = "Frekuensi Berbuah harus diisi.";
+        errors.jml_pohon = "Jumlah Pohon Kelengkeng harus diisi.";
       } else if (isNaN(value) || value <= 0) {
-        errors.frekuensi_berbuah =
-          "Frekuensi Berbuah harus berupa angka positif.";
+        errors.jml_pohon =
+          "Jumlah Pohon Kelengkeng harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
-        errors.frekuensi_berbuah =
-          "Frekuensi Berbuah harus berupa angka bulat.";
+        errors.jml_pohon = "Jumlah Pohon Kelengkeng harus berupa angka bulat.";
       } else {
-        errors.frekuensi_berbuah = "";
+        errors.jml_pohon = "";
+      }
+    }
+
+    if (name === "jml_pohon_new_crystal") {
+      if (!value) {
+        errors.jml_pohon_new_crystal =
+          "Jumlah Pohon Kelengkeng New Crystal harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.jml_pohon_new_crystal =
+          "Jumlah Pohon Kelengkeng New Crystal harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_new_crystal =
+          "Jumlah Pohon Kelengkeng New Crystal harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_new_crystal = "";
+      }
+    }
+
+    if (name === "jml_pohon_pingpong") {
+      if (!value) {
+        errors.jml_pohon_pingpong =
+          "Jumlah Pohon Kelengkeng Pingpong harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.jml_pohon_pingpong =
+          "Jumlah Pohon Kelengkeng Pingpong harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_pingpong =
+          "Jumlah Pohon Kelengkeng Pingpong harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_pingpong = "";
+      }
+    }
+
+    if (name === "jml_pohon_metalada") {
+      if (!value) {
+        errors.jml_pohon_metalada =
+          "Jumlah Pohon Kelengkeng Metalada harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.jml_pohon_metalada =
+          "Jumlah Pohon Kelengkeng Metalada harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_metalada =
+          "Jumlah Pohon Kelengkeng Metalada harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_metalada = "";
+      }
+    }
+
+    if (name === "jml_pohon_diamond_river") {
+      if (!value) {
+        errors.jml_pohon_diamond_river =
+          "Jumlah Pohon Kelengkeng Diamond River harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.jml_pohon_diamond_river =
+          "Jumlah Pohon Kelengkeng Diamond River harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_diamond_river =
+          "Jumlah Pohon Kelengkeng Diamond River harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_diamond_river = "";
+      }
+    }
+
+    if (name === "jml_pohon_merah") {
+      if (!value) {
+        errors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah harus diisi.";
+      } else if (isNaN(value) || value <= 0) {
+        errors.jml_pohon_merah =
+          "Jumlah Pohon Kelengkeng Merah harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_merah =
+          "Jumlah Pohon Kelengkeng Merah harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_merah = "";
       }
     }
 
@@ -309,11 +372,20 @@ const EditRutaModal = ({
     setEditUsahaData((prevValues) => ({ ...prevValues, [name]: value }));
 
     if (name === "kodeSls") setSelectedSls(value);
-    if (name === "jenis_klengkeng") setSelectedJenisKlengkeng(value);
-    if (name === "jenis_pupuk") setSelectedJenisPupuk(value);
+    // if (name === "jenis_pupuk") setSelectedJenisPupuk(value);
   };
 
-  const handleOnSelectionChange = (keys) => {
+  const handleOnJenisPupukSelectionChange = (keys) => {
+    // Set the selected keys (Set) to the state
+    console.log("Keys:", keys);
+    setEditUsahaData((prevValues) => ({
+      ...prevValues,
+      ["jenis_pupuk"]: [...keys],
+    }));
+    setSelectedJenisPupuk(new Set(keys));
+  };
+
+  const handleOnPemanfaatanProdukSelectionChange = (keys) => {
     // Set the selected keys (Set) to the state
     console.log("Keys:", keys);
     setEditUsahaData((prevValues) => ({
@@ -332,20 +404,48 @@ const EditRutaModal = ({
     if (!editUsahaData.nama_kepala_keluarga)
       newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
     if (!editUsahaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
-    if (!editUsahaData.jenis_klengkeng)
-      newErrors.jenis_klengkeng = "Jenis Klengkeng wajib diisi.";
+    if (!editUsahaData.jml_pohon)
+      newErrors.jml_pohon = "Jumlah Pohon Kelengkeng wajib diisi.";
+    if (!editUsahaData.jml_pohon_new_crystal)
+      newErrors.jml_pohon_new_crystal =
+        "Jumlah Pohon Kelengkeng New Crystal wajib diisi.";
+    if (!editUsahaData.jml_pohon_pingpong)
+      newErrors.jml_pohon_pingpong =
+        "Jumlah Pohon Kelengkeng Pingpong wajib diisi.";
+    if (!editUsahaData.jml_pohon_metalada)
+      newErrors.jml_pohon_metalada =
+        "Jumlah Pohon Kelengkeng Metalada wajib diisi.";
+    if (!editUsahaData.jml_pohon_diamond_river)
+      newErrors.jml_pohon_diamond_river =
+        "Jumlah Pohon Kelengkeng Diamond River wajib diisi.";
+    if (!editUsahaData.jml_pohon_merah)
+      newErrors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah wajib diisi.";
     if (!editUsahaData.jenis_pupuk)
       newErrors.jenis_pupuk = "Jenis Pupuk wajib diisi.";
-    if (!editUsahaData.frekuensi_berbuah)
-      newErrors.frekuensi_berbuah = "Frekuensi Berbuah wajib diisi.";
-    if (!editUsahaData.rata2_volume_produksi_per_panen)
-      newErrors.rata2_volume_produksi_per_panen =
-        "Rata-rata Volume Produksi Per Panen wajib diisi.";
+    if (!editUsahaData.volume_produksi)
+      newErrors.volume_produksi =
+        "Volume Produksi Periode Agustus 2023-Juli 2024 wajib diisi.";
     if (!editUsahaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
     if (!editUsahaData.longitude)
       newErrors.longitude = "Longitude wajib diisi.";
     if (!editUsahaData.url_img)
       newErrors.url_img = "Terjadi kesalahan upload foto.";
+
+    // Validasi total jumlah pohon
+    const totalPohonJenis =
+      (parseInt(editUsahaData.jml_pohon_new_crystal) || 0) +
+      (parseInt(editUsahaData.jml_pohon_pingpong) || 0) +
+      (parseInt(editUsahaData.jml_pohon_metalada) || 0) +
+      (parseInt(editUsahaData.jml_pohon_diamond_river) || 0) +
+      (parseInt(editUsahaData.jml_pohon_merah) || 0);
+
+    if (
+      editUsahaData.jml_pohon &&
+      totalPohonJenis !== parseInt(editUsahaData.jml_pohon)
+    ) {
+      newErrors.jml_pohon =
+        "Jumlah total pohon jenis harus sama dengan jumlah pohon keseluruhan.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -375,6 +475,13 @@ const EditRutaModal = ({
     if (editUsahaData) {
       const convertedData = {
         ...editUsahaData,
+        jml_pohon: parseInt(editUsahaData.jml_pohon),
+        jml_pohon_new_crystal: parseInt(editUsahaData.jml_pohon_new_crystal),
+        jml_pohon_pingpong: parseInt(editUsahaData.jml_pohon_pingpong),
+        jml_pohon_metalada: parseInt(editUsahaData.jml_pohon_metalada),
+        jml_pohon_diamond_river: parseInt(editUsahaData.jml_pohon_diamond_river),
+        jml_pohon_merah: parseInt(editUsahaData.jml_pohon_merah),
+        volume_produksi: parseFloat(editUsahaData.volume_produksi),
         latitude: parseFloat(editUsahaData.latitude),
         longitude: parseFloat(editUsahaData.longitude),
       };
@@ -420,6 +527,13 @@ const EditRutaModal = ({
     setEditUsahaData(oldUsahaData);
     onEditModalOpenChange(false);
   };
+
+  const customMarker = L.icon({
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/8058/8058939.png", // Replace with your custom icon URL
+    iconSize: [45, 45], // Size of the icon
+    iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -45], // Point from which the popup should open relative to the iconAnchor
+  });
 
   return (
     <Modal
@@ -491,50 +605,99 @@ const EditRutaModal = ({
                     {errors.alamat}
                   </p>
                 )}
-                <Select
-                  size="md"
-                  label="Jenis Kelengkeng"
-                  className="w-full"
-                  name="jenis_klengkeng"
-                  selectedKeys={
-                    selectedJenisKlengkeng ? [selectedJenisKlengkeng] : []
-                  }
-                  placeholder="Pilih Jenis Kelengkeng"
-                  onChange={handleSelectChange}
-                >
-                  {jenis_klengkeng.map((item) => (
-                    <SelectItem key={item.key} value={item.key}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.jenis_klengkeng && (
+                <Input
+                  label="Jumlah Pohon Kelengkeng"
+                  placeholder="Masukkan Jumlah Pohon Kelengkeng"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="jml_pohon"
+                  value={editUsahaData.jml_pohon}
+                  onChange={handleInputChange}
+                />
+                {errors.jml_pohon && (
                   <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.jenis_klengkeng}
+                    {errors.jml_pohon}
                   </p>
                 )}
                 <Input
-                  label="Usia Pohon Kelengkeng"
-                  placeholder="Masukkan Usia Phon Kelengkeng"
+                  label="Jumlah Pohon Kelengkeng New Crystal"
+                  placeholder="Masukkan Jumlah Pohon Kelengkeng New Crystal"
                   fullWidth
                   classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="usia_pohon"
-                  value={editUsahaData.usia_pohon}
+                  name="jml_pohon_new_crystal"
+                  value={editUsahaData.jml_pohon_new_crystal}
                   onChange={handleInputChange}
                 />
-                {errors.usia_pohon && (
+                {errors.jml_pohon_new_crystal && (
                   <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.usia_pohon}
+                    {errors.jml_pohon_new_crystal}
+                  </p>
+                )}
+                <Input
+                  label="Jumlah Pohon Kelengkeng Pingpong"
+                  placeholder="Masukkan Jumlah Pohon Kelengkeng Pingpong"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="jml_pohon_pingpong"
+                  value={editUsahaData.jml_pohon_pingpong}
+                  onChange={handleInputChange}
+                />
+                {errors.jml_pohon_pingpong && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.jml_pohon_pingpong}
+                  </p>
+                )}
+                <Input
+                  label="Jumlah Pohon Kelengkeng Metalada"
+                  placeholder="Masukkan Jumlah Pohon Kelengkeng Metalada"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="jml_pohon_metalada"
+                  value={editUsahaData.jml_pohon_metalada}
+                  onChange={handleInputChange}
+                />
+                {errors.jml_pohon_metalada && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.jml_pohon_metalada}
+                  </p>
+                )}
+                <Input
+                  label="Jumlah Pohon Kelengkeng Diamond River"
+                  placeholder="Masukkan Jumlah Pohon Kelengkeng Diamond River"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="jml_pohon_diamond_river"
+                  value={editUsahaData.jml_pohon_diamond_river}
+                  onChange={handleInputChange}
+                />
+                {errors.jml_pohon_diamond_river && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.jml_pohon_diamond_river}
+                  </p>
+                )}
+                <Input
+                  label="Jumlah Pohon Kelengkeng Merah"
+                  placeholder="Masukkan Jumlah Pohon Kelengkeng"
+                  fullWidth
+                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                  name="jml_pohon_merah"
+                  value={editUsahaData.jml_pohon_merah}
+                  onChange={handleInputChange}
+                />
+                {errors.jml_pohon_merah && (
+                  <p className="ml-3 text-sm text-red-600 font-inter">
+                    {errors.jml_pohon_merah}
                   </p>
                 )}
                 <Select
                   size="md"
                   label="Jenis Pupuk"
                   className="w-full"
+                  selectionMode="multiple"
                   name="jenis_pupuk"
-                  selectedKeys={selectedJenisPupuk ? [selectedJenisPupuk] : []}
+                  selectedKeys={selectedJenisPupuk ? selectedJenisPupuk : []}
                   placeholder="Pilih Jenis Pupuk"
-                  onChange={handleSelectChange}
+                  onSelectionChange={handleOnJenisPupukSelectionChange}
                 >
                   {jenis_pupuk.map((item) => (
                     <SelectItem key={item.key} value={item.key}>
@@ -548,31 +711,17 @@ const EditRutaModal = ({
                   </p>
                 )}
                 <Input
-                  label="Frekuensi Berbuah Pohon Kelengkeng (Kali)"
-                  placeholder="Masukkan Frekuensi Berbuah Pohon Kelengkeng"
+                  label="Volume Produksi periode Agustus 2023-Juli 2024 (Kg)"
+                  placeholder="Masukkan Volume Produksi periode Agustus 2023-Juli 2024"
                   fullWidth
                   classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="frekuensi_berbuah"
-                  value={editUsahaData.frekuensi_berbuah}
+                  name="volume_produksi"
+                  value={editUsahaData.volume_produksi}
                   onChange={handleInputChange}
                 />
-                {errors.frekuensi_berbuah && (
+                {errors.volume_produksi && (
                   <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.frekuensi_berbuah}
-                  </p>
-                )}
-                <Input
-                  label="Rata-Rata Volume Produksi per Panen (Kg)"
-                  placeholder="Masukkan Rata-Rata Volume Produksi per Panen"
-                  fullWidth
-                  classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                  name="rata2_volume_produksi_per_panen"
-                  value={editUsahaData.rata2_volume_produksi_per_panen}
-                  onChange={handleInputChange}
-                />
-                {errors.rata2_volume_produksi_per_panen && (
-                  <p className="ml-3 text-sm text-red-600 font-inter">
-                    {errors.rata2_volume_produksi_per_panen}
+                    {errors.volume_produksi}
                   </p>
                 )}
                 <Select
@@ -585,7 +734,7 @@ const EditRutaModal = ({
                     selectedPemanfaatanProduk ? selectedPemanfaatanProduk : []
                   }
                   placeholder="Pilih Pemanfaatan Produk Kelengkeng"
-                  onSelectionChange={handleOnSelectionChange}
+                  onSelectionChange={handleOnPemanfaatanProdukSelectionChange}
                 >
                   {pemanfaatan_produk.map((item) => (
                     <SelectItem key={item.key} value={item.key}>
@@ -641,8 +790,8 @@ const EditRutaModal = ({
                 {isValidLatitude(mapPosition[0]) &&
                   isValidLongitude(mapPosition[1]) && (
                     <div className="my-4">
-                      <p className="text-[14px] font-semibold ml-3 my-2">
-                        Titik lokasi Rumah Tangga UMKM
+                      <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">
+                        Titik lokasi Usaha Kelengkeng
                       </p>
                       <MapContainer
                         center={mapPosition}
@@ -660,7 +809,7 @@ const EditRutaModal = ({
                           attribution="Tiles © Esri"
                         />
                         <MapUpdater position={mapPosition} />
-                        <Marker position={mapPosition}>
+                        <Marker position={mapPosition} icon={customMarker}>
                           <Popup>Posisi Usaha Kelengkeng</Popup>
                         </Marker>
                       </MapContainer>
