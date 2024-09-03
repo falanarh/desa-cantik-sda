@@ -184,7 +184,7 @@ const EditRtModal = ({
         jml_pohon_blm_berproduksi:
           parseInt(editRtData.jml_pohon_blm_berproduksi, 10) || 0,
         jml_pohon_sdh_berproduksi:
-          parseInt(editRtData.jml_pohon_merah, 10) || 0,
+          parseInt(editRtData.jml_pohon_sdh_berproduksi, 10) || 0,
         volume_produksi: parseFloat(editRtData.volume_produksi) || 0,
       };
       console.log("Edit data:", convertedData);
