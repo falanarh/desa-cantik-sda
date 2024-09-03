@@ -25,6 +25,7 @@ const pemanfaatan_produk = [
   { key: "batik_ecoprint", label: "Batik ecoprint" },
   { key: "minuman", label: "Minuman klengkeng" },
   { key: "makanan", label: "Makanan klengkeng" },
+  { key: "tidak_dimanfaatkan", label: "Tidak dimanfaatkan" },
 ];
 
 export {

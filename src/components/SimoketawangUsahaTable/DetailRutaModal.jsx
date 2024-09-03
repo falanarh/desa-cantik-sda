@@ -114,19 +114,19 @@ const RutaDetail = ({ ruta }) => {
     { label: "Identitas SLS", value: ruta.rt_rw_dusun },
     { label: "Nama Kepala Keluarga", value: ruta.nama_kepala_keluarga },
     { label: "Alamat", value: ruta.alamat },
-    {
-      label: "Jenis Klengkeng",
-      value: getLabelByKey(ruta.jenis_klengkeng, jenis_klengkeng),
-    },
-    { label: "Usia Pohon (Tahun)", value: ruta.usia_pohon },
+    { label: "Jumlah Pohon Kelengkeng", value: ruta.jml_pohon },
+    { label: "Jumlah Pohon Kelengkeng New Crystal", value: ruta.jml_pohon_new_crystal },
+    { label: "Jumlah Pohon Kelengkeng Pingpong", value: ruta.jml_pohon_pingpong },
+    { label: "Jumlah Pohon Kelengkeng Metalada", value: ruta.jml_pohon_metalada },
+    { label: "Jumlah Pohon Kelengkeng Diamond River", value: ruta.jml_pohon_diamond_river },
+    { label: "Jumlah Pohon Kelengkeng Merah", value: ruta.jml_pohon_merah },
     {
       label: "Jenis Pupuk",
-      value: getLabelByKey(ruta.jenis_pupuk, jenis_pupuk),
+      value: convertKeysToString(ruta.jenis_pupuk, jenis_pupuk),
     },
-    { label: "Frekuensi Berbuah (Kali)", value: ruta.frekuensi_berbuah },
     {
-      label: "Rata-rata Volume Produksi per Panen (Kg)",
-      value: ruta.rata2_volume_produksi_per_panen,
+      label: "Volume Produksi Periode Agustus 2023-Juli 2024 (Kg)",
+      value: ruta.volume_produksi,
     },
     {
       label: "Pemanfaat Produk Kelengkeng",
@@ -220,7 +220,7 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      size="xl"
+      size="3xl"
       className="bg-slate-100 font-inter max-h-[90%] my-auto"
       classNames={{
         header: "border-b-[1px] border-slate-300",

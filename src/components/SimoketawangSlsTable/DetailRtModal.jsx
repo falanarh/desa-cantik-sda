@@ -60,21 +60,28 @@ const RtDetail = ({ rt, geojson = null }) => {
     { label: 'RT', value: rt.rt },
     { label: 'RW', value: rt.rw },
     { label: 'Dusun', value: rt.dusun },
+    { label: 'Jumlah Penduduk', value: rt.jml_penduduk },
     { label: 'Unit Usaha Klengkeng', value: rt.jml_unit_usaha_klengkeng },
-    { label: 'Unit Usaha Klengkeng New Crystal', value: rt.jml_unit_usaha_klengkeng_new_crystal },
-    { label: 'Unit Usaha Klengkeng Pingpong', value: rt.jml_unit_usaha_klengkeng_pingpong },
-    { label: 'Unit Usaha Klengkeng Matalada', value: rt.jml_unit_usaha_klengkeng_matalada },
-    { label: 'Unit Usaha Klengkeng Diamond River', value: rt.jml_unit_usaha_klengkeng_diamond_river },
-    { label: 'Unit Usaha Klengkeng Merah', value: rt.jml_unit_usaha_klengkeng_merah },
     { label: 'Unit Usaha Klengkeng Pupuk Organik', value: rt.jml_unit_usaha_klengkeng_pupuk_organik },
     { label: 'Unit Usaha Klengkeng Pupuk Anorganik', value: rt.jml_unit_usaha_klengkeng_pupuk_anorganik },
     { label: 'Unit Usaha Klengkeng Tidak Ada Pupuk', value: rt.jml_unit_usaha_klengkeng_tidak_ada_pupuk },
-    { label: 'Unit Usaha Klengkeng Kopi Biji', value: rt.jml_unit_usaha_klengkeng_kopi_biji_klengkeng },
+    { label: 'Unit Usaha Klengkeng Kopi Biji Klengkeng', value: rt.jml_unit_usaha_klengkeng_kopi_biji_klengkeng },
     { label: 'Unit Usaha Klengkeng Kerajinan Tangan', value: rt.jml_unit_usaha_klengkeng_kerajinan_tangan },
     { label: 'Unit Usaha Klengkeng Batik Ecoprint', value: rt.jml_unit_usaha_klengkeng_batik_ecoprint },
     { label: 'Unit Usaha Klengkeng Minuman', value: rt.jml_unit_usaha_klengkeng_minuman },
     { label: 'Unit Usaha Klengkeng Makanan', value: rt.jml_unit_usaha_klengkeng_makanan },
+    { label: 'Unit Usaha Klengkeng Tidak Ada Pemanfaatan', value: rt.jml_unit_usaha_klengkeng_tidak_dimanfaatkan },
+    { label: 'Pohon Klengkeng', value: rt.jml_pohon },
+    { label: 'Pohon Klengkeng New Crystal', value: rt.jml_pohon_new_crystal },
+    { label: 'Pohon Klengkeng Pingpong', value: rt.jml_pohon_pingpong },
+    { label: 'Pohon Klengkeng Metalada', value: rt.jml_pohon_metalada },
+    { label: 'Pohon Klengkeng Diamond River', value: rt.jml_pohon_diamond_river },
+    { label: 'Pohon Klengkeng Merah', value: rt.jml_pohon_merah },
+    { label: 'Pohon Klengkeng Belum Berproduksi', value: rt.jml_pohon_blm_berproduksi },
+    { label: 'Pohon Klengkeng Sudah Berproduksi', value: rt.jml_pohon_sdh_berproduksi },
+    { label: 'Volume Produksi Agustus 2023-Juli 2024 (Kg)', value: rt.volume_produksi },
   ];
+  
 
   return (
     <div className="p-4">
@@ -123,7 +130,7 @@ const DetailRtModal = ({ isOpen, onOpenChange, selectedRt, geojsonRt }) => {
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      size="xl"
+      size="2xl"
       className="font-inter bg-slate-100 max-h-[90%]"
       classNames={{
         header: "border-b-[1px] border-slate-300",

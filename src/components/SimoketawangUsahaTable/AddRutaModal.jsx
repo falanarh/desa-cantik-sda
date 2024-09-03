@@ -70,7 +70,6 @@ const AddRutaModal = ({
   fetchData,
   fetchDataAggregate,
   daftarSls,
-  jenis_klengkeng,
   jenis_pupuk,
   pemanfaatan_produk,
 }) => {
@@ -81,8 +80,7 @@ const AddRutaModal = ({
   const [loading, setLoading] = useState(false);
   const [mapPosition, setMapPosition] = useState(initialCoordinate); // Default position
   const [selectedSls, setSelectedSls] = useState("");
-  const [selectedJenisKlengkeng, setSelectedJenisKlengkeng] = useState("");
-  const [selectedJenisPupuk, setSelectedJenisPupuk] = useState("");
+  const [selectedJenisPupuk, setSelectedJenisPupuk] = useState([]);
   const [selectedPemanfaatanProduk, setSelectedPemanfaatanProduk] = useState(
     []
   );
@@ -99,7 +97,6 @@ const AddRutaModal = ({
     if (Object.keys(addUsahaDataCache).length > 0 && createError === true) {
       setAddUsahaData(addUsahaDataCache);
       setSelectedSls(addUsahaDataCache.kodeSls);
-      setSelectedJenisKlengkeng(addUsahaDataCache.jenis_klengkeng);
       setSelectedJenisPupuk(addUsahaDataCache.jenis_pupuk);
       setSelectedPemanfaatanProduk(addUsahaDataCache.pemanfaatan_produk);
       console.log("createError", createError);
@@ -133,18 +130,27 @@ const AddRutaModal = ({
 
   const customRequest = ({ file, onSuccess, onError, filename }) => {
     const allowedTypes = [
-      "image/jpeg", "image/jpg", "image/png", "image/gif", "image/bmp", "image/webp", 
-      "image/svg+xml", "image/tiff", "image/x-icon", "image/heif", "image/heic"
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/bmp",
+      "image/webp",
+      "image/svg+xml",
+      "image/tiff",
+      "image/x-icon",
+      "image/heif",
+      "image/heic",
     ]; // Daftar tipe gambar yang lebih lengkap
-    
+
     if (!allowedTypes.includes(file.type)) {
-      const errorMsg = "File harus berupa gambar dengan format yang didukung (JPEG, PNG, GIF, BMP, WEBP, SVG, TIFF, ICO, HEIF, atau HEIC).";
+      const errorMsg =
+        "File harus berupa gambar dengan format yang didukung (JPEG, PNG, GIF, BMP, WEBP, SVG, TIFF, ICO, HEIF, atau HEIC).";
       onError(new Error(errorMsg));
       message.error(errorMsg, 8);
       return;
     }
-    
-  
+
     // Validasi ukuran file (maksimum 1 MB)
     const maxSize = 1 * 1024 * 1024; // 1 MB
     if (file.size > maxSize) {
@@ -153,16 +159,16 @@ const AddRutaModal = ({
       message.error(errorMsg, 8);
       return;
     }
-  
+
     const formData = new FormData();
-  
+
     // Gunakan parameter filename jika diberikan, jika tidak gunakan nama file asli
     const finalFilename = filename ? filename : file.name.split(".")[0];
-  
+
     // Tambahkan file dan nama file ke FormData
     formData.append("filename", finalFilename);
     formData.append("image", file);
-  
+
     // Kirimkan data menggunakan Axios
     api3
       .post("/api/photo/upload", formData)
@@ -184,7 +190,6 @@ const AddRutaModal = ({
         }
       });
   };
-  
 
   const uploadButton = (
     <button
@@ -212,7 +217,11 @@ const AddRutaModal = ({
 
     let updatedValue = value;
 
-    if (name === "latitude" || name === "longitude" || name === "usia_pohon") {
+    if (
+      name === "latitude" ||
+      name === "longitude" ||
+      name === "volume_produksi"
+    ) {
       updatedValue = value.replace(",", "."); // Replace comma with dot for valid decimal format
     }
 
@@ -247,39 +256,102 @@ const AddRutaModal = ({
       }
     }
 
-    if (name === "usia_pohon") {
+    if (name === "volume_produksi") {
       if (!value) {
-        errors.usia_pohon = "Usia Pohon harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
-        errors.usia_pohon = "Usia Pohon harus berupa angka positif.";
-      } else {
-        errors.usia_pohon = "";
-      }
-    }
-
-    if (name === "rata2_volume_produksi_per_panen") {
-      if (!value) {
-        errors.rata2_volume_produksi_per_panen =
-          "Rata-rata Volume Produksi Per Panen harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
-        errors.rata2_volume_produksi_per_panen =
+        errors.volume_produksi =
+          "Volume Produksi Periode Agustus 2023-Juli 2024 harus diisi.";
+      } else if (isNaN(value) || value < 0) {
+        errors.volume_produksi =
           "Rata-rata Volume Produksi Per Panen harus berupa angka positif.";
       } else {
-        errors.rata2_volume_produksi_per_panen = "";
+        errors.volume_produksi = "";
       }
     }
 
-    if (name === "frekuensi_berbuah") {
+    if (name === "jml_pohon") {
       if (!value) {
-        errors.frekuensi_berbuah = "Frekuensi Berbuah harus diisi.";
-      } else if (isNaN(value) || value <= 0) {
-        errors.frekuensi_berbuah =
-          "Frekuensi Berbuah harus berupa angka positif.";
+        errors.jml_pohon = "Jumlah Pohon Kelengkeng harus diisi.";
+      } else if (isNaN(value) || value < 0) {
+        errors.jml_pohon =
+          "Jumlah Pohon Kelengkeng harus berupa angka positif.";
       } else if (!Number.isInteger(Number(value))) {
-        errors.frekuensi_berbuah =
-          "Frekuensi Berbuah harus berupa angka bulat.";
+        errors.jml_pohon = "Jumlah Pohon Kelengkeng harus berupa angka bulat.";
       } else {
-        errors.frekuensi_berbuah = "";
+        errors.jml_pohon = "";
+      }
+    }
+
+    if (name === "jml_pohon_new_crystal") {
+      if (!value) {
+        errors.jml_pohon_new_crystal =
+          "Jumlah Pohon Kelengkeng New Crystal harus diisi.";
+      } else if (isNaN(value) || value < 0) {
+        errors.jml_pohon_new_crystal =
+          "Jumlah Pohon Kelengkeng New Crystal harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_new_crystal =
+          "Jumlah Pohon Kelengkeng New Crystal harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_new_crystal = "";
+      }
+    }
+
+    if (name === "jml_pohon_pingpong") {
+      if (!value) {
+        errors.jml_pohon_pingpong =
+          "Jumlah Pohon Kelengkeng Pingpong harus diisi.";
+      } else if (isNaN(value) || value < 0) {
+        errors.jml_pohon_pingpong =
+          "Jumlah Pohon Kelengkeng Pingpong harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_pingpong =
+          "Jumlah Pohon Kelengkeng Pingpong harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_pingpong = "";
+      }
+    }
+
+    if (name === "jml_pohon_metalada") {
+      if (!value) {
+        errors.jml_pohon_metalada =
+          "Jumlah Pohon Kelengkeng Metalada harus diisi.";
+      } else if (isNaN(value) || value < 0) {
+        errors.jml_pohon_metalada =
+          "Jumlah Pohon Kelengkeng Metalada harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_metalada =
+          "Jumlah Pohon Kelengkeng Metalada harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_metalada = "";
+      }
+    }
+
+    if (name === "jml_pohon_diamond_river") {
+      if (!value) {
+        errors.jml_pohon_diamond_river =
+          "Jumlah Pohon Kelengkeng Diamond River harus diisi.";
+      } else if (isNaN(value) || value < 0) {
+        errors.jml_pohon_diamond_river =
+          "Jumlah Pohon Kelengkeng Diamond River harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_diamond_river =
+          "Jumlah Pohon Kelengkeng Diamond River harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_diamond_river = "";
+      }
+    }
+
+    if (name === "jml_pohon_merah") {
+      if (!value) {
+        errors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah harus diisi.";
+      } else if (isNaN(value) || value < 0) {
+        errors.jml_pohon_merah =
+          "Jumlah Pohon Kelengkeng Merah harus berupa angka positif.";
+      } else if (!Number.isInteger(Number(value))) {
+        errors.jml_pohon_merah =
+          "Jumlah Pohon Kelengkeng Merah harus berupa angka bulat.";
+      } else {
+        errors.jml_pohon_merah = "";
       }
     }
 
@@ -329,11 +401,20 @@ const AddRutaModal = ({
     setAddUsahaData((prevValues) => ({ ...prevValues, [name]: value }));
 
     if (name === "kodeSls") setSelectedSls(value);
-    if (name === "jenis_klengkeng") setSelectedJenisKlengkeng(value);
-    if (name === "jenis_pupuk") setSelectedJenisPupuk(value);
+    // if (name === "jenis_pupuk") setSelectedJenisPupuk(value);
   };
 
-  const handleOnSelectionChange = (keys) => {
+  const handleOnJenisPupukSelectionChange = (keys) => {
+    // Set the selected keys (Set) to the state
+    console.log("Keys:", keys);
+    setAddUsahaData((prevValues) => ({
+      ...prevValues,
+      ["jenis_pupuk"]: [...keys],
+    }));
+    setSelectedJenisPupuk(new Set(keys));
+  };
+
+  const handleOnPemanfaatanProdukSelectionChange = (keys) => {
     // Set the selected keys (Set) to the state
     console.log("Keys:", keys);
     setAddUsahaData((prevValues) => ({
@@ -345,8 +426,7 @@ const AddRutaModal = ({
 
   const resetSelect = () => {
     setSelectedSls("");
-    setSelectedJenisKlengkeng("");
-    setSelectedJenisPupuk("");
+    setSelectedJenisPupuk([]);
     setSelectedPemanfaatanProduk([]);
   };
 
@@ -359,26 +439,73 @@ const AddRutaModal = ({
     if (!addUsahaData.nama_kepala_keluarga)
       newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
     if (!addUsahaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
-    if (!addUsahaData.jenis_klengkeng)
-      newErrors.jenis_klengkeng = "Jenis Klengkeng wajib diisi.";
+    if (!addUsahaData.jml_pohon)
+      newErrors.jml_pohon = "Jumlah Pohon Kelengkeng wajib diisi.";
+    if (!addUsahaData.jml_pohon_new_crystal)
+      newErrors.jml_pohon_new_crystal =
+        "Jumlah Pohon Kelengkeng New Crystal wajib diisi.";
+    if (!addUsahaData.jml_pohon_pingpong)
+      newErrors.jml_pohon_pingpong =
+        "Jumlah Pohon Kelengkeng Pingpong wajib diisi.";
+    if (!addUsahaData.jml_pohon_metalada)
+      newErrors.jml_pohon_metalada =
+        "Jumlah Pohon Kelengkeng Metalada wajib diisi.";
+    if (!addUsahaData.jml_pohon_diamond_river)
+      newErrors.jml_pohon_diamond_river =
+        "Jumlah Pohon Kelengkeng Diamond River wajib diisi.";
+    if (!addUsahaData.jml_pohon_merah)
+      newErrors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah wajib diisi.";
     if (!addUsahaData.jenis_pupuk)
       newErrors.jenis_pupuk = "Jenis Pupuk wajib diisi.";
-    if (!addUsahaData.frekuensi_berbuah)
-      newErrors.frekuensi_berbuah = "Frekuensi Berbuah wajib diisi.";
-    if (!addUsahaData.rata2_volume_produksi_per_panen)
-      newErrors.rata2_volume_produksi_per_panen =
-        "Rata-rata Volume Produksi Per Panen wajib diisi.";
+    if (!addUsahaData.volume_produksi)
+      newErrors.volume_produksi =
+        "Volume Produksi Periode Agustus 2023-Juli 2024 wajib diisi.";
     if (!addUsahaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
     if (!addUsahaData.longitude) newErrors.longitude = "Longitude wajib diisi.";
     if (!addUsahaData.url_img)
       newErrors.url_img = "Terjadi kesalahan upload foto.";
 
+    // Validasi total jumlah pohon
+    const totalPohonJenis =
+      (parseInt(addUsahaData.jml_pohon_new_crystal) || 0) +
+      (parseInt(addUsahaData.jml_pohon_pingpong) || 0) +
+      (parseInt(addUsahaData.jml_pohon_metalada) || 0) +
+      (parseInt(addUsahaData.jml_pohon_diamond_river) || 0) +
+      (parseInt(addUsahaData.jml_pohon_merah) || 0);
+
+    if (
+      addUsahaData.jml_pohon &&
+      totalPohonJenis !== parseInt(addUsahaData.jml_pohon)
+    ) {
+      newErrors.jml_pohon =
+        "Jumlah total pohon jenis harus sama dengan jumlah pohon keseluruhan.";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  const hasErrors = (errors) => {
+    console.log("Has Errors",errors);
+    // Iterate over the values of the errors object
+    for (let key in errors) {
+      // Check if the error message is not empty
+      if (errors[key] !== "") {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleAddSave = async () => {
     if (addUsahaData && isSatuan) {
+      if (hasErrors(errors)) {
+        message.error(
+          "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
+          5
+        );
+        return;
+      }
       if (!validateForm(addUsahaData)) {
         message.error(
           "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
@@ -400,6 +527,13 @@ const AddRutaModal = ({
       const convertedData = {
         ...addUsahaData,
         rt_rw_dusun: getLabelByKey(addUsahaData.kodeSls, daftarSls),
+        jml_pohon: parseInt(addUsahaData.jml_pohon),
+        jml_pohon_new_crystal: parseInt(addUsahaData.jml_pohon_new_crystal),
+        jml_pohon_pingpong: parseInt(addUsahaData.jml_pohon_pingpong),
+        jml_pohon_metalada: parseInt(addUsahaData.jml_pohon_metalada),
+        jml_pohon_diamond_river: parseInt(addUsahaData.jml_pohon_diamond_river),
+        jml_pohon_merah: parseInt(addUsahaData.jml_pohon_merah),
+        volume_produksi: parseFloat(addUsahaData.volume_produksi),
         latitude: parseFloat(addUsahaData.latitude),
         longitude: parseFloat(addUsahaData.longitude),
         // jumlahUmkm, // Tambahkan jumlah UMKM ke data yang akan disimpan
@@ -630,7 +764,7 @@ const AddRutaModal = ({
                       {errors.alamat}
                     </p>
                   )}
-                  <Select
+                  {/* <Select
                     size="md"
                     label="Jenis Kelengkeng"
                     className="w-full"
@@ -651,31 +785,100 @@ const AddRutaModal = ({
                     <p className="ml-3 text-sm text-red-600 font-inter">
                       {errors.jenis_klengkeng}
                     </p>
-                  )}
+                  )} */}
                   <Input
-                    label="Usia Pohon Kelengkeng"
-                    placeholder="Masukkan Usia Phon Kelengkeng"
+                    label="Jumlah Pohon Kelengkeng"
+                    placeholder="Masukkan Jumlah Pohon Kelengkeng"
                     fullWidth
                     classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="usia_pohon"
-                    value={addUsahaData.usia_pohon}
+                    name="jml_pohon"
+                    value={addUsahaData.jml_pohon}
                     onChange={handleInputChange}
                   />
-                  {errors.usia_pohon && (
+                  {errors.jml_pohon && (
                     <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.usia_pohon}
+                      {errors.jml_pohon}
+                    </p>
+                  )}
+                  <Input
+                    label="Jumlah Pohon Kelengkeng New Crystal"
+                    placeholder="Masukkan Jumlah Pohon Kelengkeng New Crystal"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="jml_pohon_new_crystal"
+                    value={addUsahaData.jml_pohon_new_crystal}
+                    onChange={handleInputChange}
+                  />
+                  {errors.jml_pohon_new_crystal && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.jml_pohon_new_crystal}
+                    </p>
+                  )}
+                  <Input
+                    label="Jumlah Pohon Kelengkeng Pingpong"
+                    placeholder="Masukkan Jumlah Pohon Kelengkeng Pingpong"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="jml_pohon_pingpong"
+                    value={addUsahaData.jml_pohon_pingpong}
+                    onChange={handleInputChange}
+                  />
+                  {errors.jml_pohon_pingpong && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.jml_pohon_pingpong}
+                    </p>
+                  )}
+                  <Input
+                    label="Jumlah Pohon Kelengkeng Metalada"
+                    placeholder="Masukkan Jumlah Pohon Kelengkeng Metalada"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="jml_pohon_metalada"
+                    value={addUsahaData.jml_pohon_metalada}
+                    onChange={handleInputChange}
+                  />
+                  {errors.jml_pohon_metalada && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.jml_pohon_metalada}
+                    </p>
+                  )}
+                  <Input
+                    label="Jumlah Pohon Kelengkeng Diamond River"
+                    placeholder="Masukkan Jumlah Pohon Kelengkeng Diamond River"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="jml_pohon_diamond_river"
+                    value={addUsahaData.jml_pohon_diamond_river}
+                    onChange={handleInputChange}
+                  />
+                  {errors.jml_pohon_diamond_river && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.jml_pohon_diamond_river}
+                    </p>
+                  )}
+                  <Input
+                    label="Jumlah Pohon Kelengkeng Merah"
+                    placeholder="Masukkan Jumlah Pohon Kelengkeng"
+                    fullWidth
+                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
+                    name="jml_pohon_merah"
+                    value={addUsahaData.jml_pohon_merah}
+                    onChange={handleInputChange}
+                  />
+                  {errors.jml_pohon_merah && (
+                    <p className="ml-3 text-sm text-red-600 font-inter">
+                      {errors.jml_pohon_merah}
                     </p>
                   )}
                   <Select
                     size="md"
                     label="Jenis Pupuk"
                     className="w-full"
+                    selectionMode="multiple"
                     name="jenis_pupuk"
-                    selectedKeys={
-                      selectedJenisPupuk ? [selectedJenisPupuk] : []
-                    }
+                    selectedKeys={selectedJenisPupuk ? selectedJenisPupuk : []}
                     placeholder="Pilih Jenis Pupuk"
-                    onChange={handleSelectChange}
+                    onSelectionChange={handleOnJenisPupukSelectionChange}
                   >
                     {jenis_pupuk.map((item) => (
                       <SelectItem key={item.key} value={item.key}>
@@ -689,31 +892,17 @@ const AddRutaModal = ({
                     </p>
                   )}
                   <Input
-                    label="Frekuensi Berbuah Pohon Kelengkeng (Kali)"
-                    placeholder="Masukkan Frekuensi Berbuah Pohon Kelengkeng"
+                    label="Volume Produksi periode Agustus 2023-Juli 2024 (Kg)"
+                    placeholder="Masukkan Volume Produksi periode Agustus 2023-Juli 2024"
                     fullWidth
                     classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="frekuensi_berbuah"
-                    value={addUsahaData.frekuensi_berbuah}
+                    name="volume_produksi"
+                    value={addUsahaData.volume_produksi}
                     onChange={handleInputChange}
                   />
-                  {errors.frekuensi_berbuah && (
+                  {errors.volume_produksi && (
                     <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.frekuensi_berbuah}
-                    </p>
-                  )}
-                  <Input
-                    label="Rata-Rata Volume Produksi per Panen (Kg)"
-                    placeholder="Masukkan Rata-Rata Volume Produksi per Panen"
-                    fullWidth
-                    classNames={{ inputWrapper: "shadow", input: "text-black" }}
-                    name="rata2_volume_produksi_per_panen"
-                    value={addUsahaData.rata2_volume_produksi_per_panen}
-                    onChange={handleInputChange}
-                  />
-                  {errors.rata2_volume_produksi_per_panen && (
-                    <p className="ml-3 text-sm text-red-600 font-inter">
-                      {errors.rata2_volume_produksi_per_panen}
+                      {errors.volume_produksi}
                     </p>
                   )}
                   <Select
@@ -726,7 +915,7 @@ const AddRutaModal = ({
                       selectedPemanfaatanProduk ? selectedPemanfaatanProduk : []
                     }
                     placeholder="Pilih Pemanfaatan Produk Kelengkeng"
-                    onSelectionChange={handleOnSelectionChange}
+                    onSelectionChange={handleOnPemanfaatanProdukSelectionChange}
                   >
                     {pemanfaatan_produk.map((item) => (
                       <SelectItem key={item.key} value={item.key}>

@@ -2,8 +2,8 @@
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+const ProtectedRouteSimoanginangin = ({ children }) => {
+  const token = localStorage.getItem("token-simoanginangin");
 
   if (!token) {
     return <Navigate to="/login-simoanginangin" replace />;
@@ -26,4 +26,4 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-export default ProtectedRoute;
+export default ProtectedRouteSimoanginangin;
