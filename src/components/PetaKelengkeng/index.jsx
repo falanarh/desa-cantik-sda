@@ -248,13 +248,27 @@ export default function MapSection() {
     }
   }, [selectedRT, data]);
 
-  function capitalizeWords(str) {
-    return str
-      .split(/[-/]/) // Pisahkan berdasarkan "-" dan "/"
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ")
-      .replace(/\s\/\s/, "/"); // Gabungkan kembali "/" tanpa spasi
-  }
+  function capitalizeWords(arr) {
+    if (!Array.isArray(arr)) {
+        console.error("capitalizeWords expects an array but received:", arr);
+        return arr; // Or handle the error as needed
+    }
+
+    return arr
+        .map((str) => {
+            if (typeof str !== 'string') {
+                str = String(str); // Convert to string if it's not already
+            }
+            return str
+                .split(/[-_/]/) // Pisahkan berdasarkan "-" dan "/"
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ");
+        })
+        .join(" ") // Combine the processed strings with a space
+        .replace(/\s\/\s/, "/"); // Gabungkan kembali "/" tanpa spasi
+}
+
+  
 
   function calculateCentroid(multiPolygon) {
     let totalX = 0,
@@ -284,15 +298,24 @@ export default function MapSection() {
     batik_ecoprint : "Batik Ecoprint",
     minuman : "Minuman Klengkeng (contoh: Susu jelly, sirup)",
     makanan : "Makanan Kelengkeng (Selai, Strudel)",
+    tidak_dimanfaatkan: "Tidak Dimanfaatkan",
   };
 
   const classifications = {
     all: "Semua Jenis",
-    // kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
-    new_crystal: "New Crystal",
-    pingpong: "Pingpong",
-    matalada: "Matalada",
-    diamond_river: "Diamond River",
+    jml_pohon_new_crystal : "New Crystal",
+    jml_pohon_pingpong : "Pingpong",
+    jml_pohon_metalada : "Matalada",
+    jml_pohon_diamond_river : "Diamond River",
+    jml_pohon_merah : "Merah",
+  };
+
+  const variables = {
+    jml_pohon_new_crystal: 'jml_pohon_new_crystal',
+    jml_pohon_pingpong: 'jml_pohon_pingpong',
+    jml_pohon_metalada: 'jml_pohon_metalada',
+    jml_pohon_diamond_river: 'jml_pohon_diamond_river',
+    jml_pohon_merah: 'jml_pohon_merah'
   };
 
   const handleClassificationChange = (event) => {
@@ -421,11 +444,17 @@ export default function MapSection() {
                 )}
                 {showIndividu &&
                   dataRumahTangga
-                  .filter(
-                    (item) =>
-                      (selectedRT === "desa" || item.kodeSls === selectedRT)&&
-                      (selectedClassification === "all" || item.jenis_klengkeng === selectedClassification) &&
-                      (selectedtUsaha === "all" || item.pemanfaatan_produk === selectedtUsaha)                   )
+                  .filter((item) => {
+                      const isSelectedRT = selectedRT === "desa" || item.kodeSls === selectedRT;
+                      const isSelectedClassification = selectedClassification === "all" ||
+                                                      (selectedClassification in variables &&
+                                                        item[variables[selectedClassification]] !== 0);
+                      const isSelectedUsaha = selectedtUsaha === "all" || 
+                                              (Array.isArray(item.pemanfaatan_produk) &&
+                                              item.pemanfaatan_produk.includes(selectedtUsaha));
+                      
+                      return isSelectedRT && isSelectedClassification && isSelectedUsaha;
+                    })
                     .map((item) => (
                       <Marker
                         key={`marker-${item._id}`}
@@ -459,18 +488,53 @@ export default function MapSection() {
                           <div className="z-100">
                             <strong>Informasi Usaha:</strong>
                             {console.log("Check items ", item)}
-                            {/* <img src= alt="Kelengkeng Image" className="w-full h-auto mb-4" /> */}
-                            <img src={item.url_img} alt="Kelengkeng Image" className="w-40 h-auto mb-4" />
-                            <br /> <b>Jenis Kelengkeng </b><br/>
-                            <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{capitalizeWords(item.jenis_klengkeng)} </span>
+                            <img
+                              src={item.url_img}
+                              alt="Kelengkeng Image"
+                              className="w-full h-40 object-cover rounded-lg mb-3"
+                            />
+                            <b>{item.nama_kepala_keluarga}</b>
                             <br />
                             {item.rt_rw_dusun} 
                             <br />
-                            <b>Usia Pohon: </b><br />{item.usia_pohon} Tahun
+                            <b>Jumlah Pohon: </b><br />{item.jml_pohon}
                             <br />
-                            <b>Pemanfaatan Produk: </b><br />{((item.pemanfaatan_produk))}
+                            <b>Jenis Kelengkeng:</b>
                             <br />
-                            {/* <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)} */}
+                            {item.jml_pohon_new_crystal > 0 && (
+                              <>
+                                New Crystal: {item.jml_pohon_new_crystal} Pohon
+                                <br />
+                              </>
+                            )}
+                            {item.jml_pohon_pingpong > 0 && (
+                              <>
+                                Pingpong: {item.jml_pohon_pingpong} Pohon
+                                <br />
+                              </>
+                            )}
+                            {item.jml_pohon_metalada > 0 && (
+                              <>
+                                Metalada: {item.jml_pohon_metalada} Pohon
+                                <br />
+                              </>
+                            )}
+                            {item.jml_pohon_diamond_river > 0 && (
+                              <>
+                                Diamond River: {item.jml_pohon_diamond_river} Pohon
+                                <br />
+                              </>
+                            )}
+                            {item.jml_pohon_merah > 0 && (
+                              <>
+                                Merah: {item.jml_pohon_merah} Pohon
+                                <br />
+                              </>
+                            )}
+                            <b>Volume Produksi: </b><br />{item.volume_produksi} kg
+                            <br />
+                            <b>Pemanfaatan Produk: </b><br />{capitalizeWords(item.pemanfaatan_produk)}
+                            <br />
                           </div>
                         </Popup>
                       </Marker>
@@ -555,11 +619,11 @@ export default function MapSection() {
             </div>
 
             <label className="block mt-4 text-sm font-medium text-white">
-              Jenis Klengkeng
+              Jenis Kelengkeng
             </label>
             <select
-              id="jenis-kbli"
-              name="jenis-kbli"
+              id="jenis"
+              name="jenis"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-[#2E2E2E] text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               onChange={handleClassificationChange}
               value={selectedClassification}

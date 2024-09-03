@@ -8,95 +8,14 @@ import {
   Popup,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import 'react-leaflet-markercluster/dist/styles.min.css';
 import L, { divIcon } from "leaflet";
 import { Transition } from "@headlessui/react";
-import { DonutChart } from "./Doughnut.jsx";
 import api from "../../utils/api.js";
 import { message } from "antd";
 import CountUp from "react-countup";
 import { BeatLoader } from "react-spinners";
-
-const ExpandableList = () => {
-  const [expanded, setExpanded] = useState(false);
-
-  const handleToggle = () => {
-    setExpanded(!expanded);
-  };
-
-  return (
-    <div className="container flex flex-col items-start rounded shadow-lg">
-      <table className="w-full">
-        <tbody>
-          <tr className="flex items-center mb-2 mr-0 bg-[#101920] rounded-xl w-full">
-            <td className="items-center justify-center font-bold w-8 h-8 bg-[#012640] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 mr-0 text-sm text-left w-100">
-              Pertanian, Kehutanan, Perikanan
-            </td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#014A77] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">
-              Pertambangan dan Penggalian
-            </td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#27273D] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">Industri Pengolahan</td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#6B2836] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">
-              Pengadaan Listrik dan Gas
-            </td>
-          </tr>
-          <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-            <td className="flex items-center justify-center font-bold w-8 h-8 bg-[#AF282F] text-white rounded-xl p-2">
-              55
-            </td>
-            <td className="ml-2 text-sm text-left">
-              Pertanian, Kehutanan, Perikanan
-            </td>
-          </tr>
-          {expanded && (
-            <>
-              <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-                <td className="flex items-center justify-center w-8 h-8 p-2 font-bold text-white bg-blue-600 rounded-xl">
-                  55
-                </td>
-                <td className="ml-2 text-sm text-left">
-                  Pertanian, Kehutanan, Perikanan
-                </td>
-              </tr>
-              <tr className="flex items-center mb-2 bg-[#101920] rounded-xl">
-                <td className="flex items-center justify-center w-8 h-8 p-2 font-bold text-white bg-blue-600 rounded-xl">
-                  55
-                </td>
-                <td className="ml-2 text-sm text-left">
-                  Pertanian, Kehutanan, Perikanan
-                </td>
-              </tr>
-              {/* Add more items as needed */}
-            </>
-          )}
-        </tbody>
-      </table>
-      <button
-        onClick={handleToggle}
-        className="mt-4 text-sm text-right text-gray-400 items-right"
-      >
-        {expanded ? "Kembali" : "Selengkapnya..."}
-      </button>
-    </div>
-  );
-};
+import { MarkerClusterGroup } from 'react-leaflet-markercluster';
 
 export default function MapSection() {
   const [selectedClassification, setSelectedClassification] = useState("all");
@@ -114,12 +33,10 @@ export default function MapSection() {
   const [filteredData, setFilteredData] = useState(
     data ? (data.length > 0 ? data[0] : {}) : {}
   );
-  const [chartData, setChartData] = useState([]);
   const [showRT, setShowRT] = useState(true);
   const [showIndividu, setIndividu] = useState(true);
   const [visualization, setVisualization] = useState("umkm");
   const toggleRT = () => setShowRT(!showRT);
-  const changeVisualization = (type) => setVisualization(type);
 
   const fetchData = async () => {
     setLoading(true); // Mulai loading
@@ -466,11 +383,8 @@ export default function MapSection() {
                 <GeoJSON
                   key={index}
                   data={geoJsonData}
-                  style={
-                    visualization === "umkm"
-                      ? getStyle(geoJsonData)
-                      : getStyleIncome(geoJsonData)
-                  }
+                  style={getStyle(geoJsonData)
+              }
                   onEachFeature={onEachFeature}
                 />
                 {showRT && (
@@ -492,7 +406,8 @@ export default function MapSection() {
                     })}
                   />
                 )}
-                {showIndividu &&
+                
+                {showIndividu && 
                   dataRumahTangga
                   .filter(
                     (item) =>
@@ -502,6 +417,7 @@ export default function MapSection() {
                       (selectedskalaUsaha === "all" || item.skala_usaha === selectedskalaUsaha)
                   )
                     .map((item) => (
+                      
                       <Marker
                         key={`marker-${item._id}`}
                         position={[
@@ -543,12 +459,18 @@ export default function MapSection() {
                           </div>
                         </Popup>
                       </Marker>
-                    ))}
+                        ))
+                        }
               </>
             ))
           ) : (
             <BeatLoader />
           )}
+          {/* <MarkerClusterGroup>
+            <Marker position={[49.8397, 24.0297]} />
+            <Marker position={[52.2297, 21.0122]} />
+            <Marker position={[51.5074, -0.0901]} />
+          </MarkerClusterGroup>; */}
         </MapContainer>
       </div>
 
