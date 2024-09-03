@@ -397,6 +397,7 @@ const EditRutaModal = ({
 
   const validateForm = (editUsahaData) => {
     const newErrors = {};
+    console.log("Edit Usaha Data:", editUsahaData);
 
     // Validasi setiap field
     if (!editUsahaData.kodeSls)
@@ -404,44 +405,46 @@ const EditRutaModal = ({
     if (!editUsahaData.nama_kepala_keluarga)
       newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
     if (!editUsahaData.alamat) newErrors.alamat = "Alamat wajib diisi.";
-    if (!editUsahaData.jml_pohon)
+    if (editUsahaData.jml_pohon === undefined || editUsahaData.jml_pohon === null)
       newErrors.jml_pohon = "Jumlah Pohon Kelengkeng wajib diisi.";
-    if (!editUsahaData.jml_pohon_new_crystal)
+    if (editUsahaData.jml_pohon_new_crystal === undefined || editUsahaData.jml_pohon_new_crystal === null)
       newErrors.jml_pohon_new_crystal =
         "Jumlah Pohon Kelengkeng New Crystal wajib diisi.";
-    if (!editUsahaData.jml_pohon_pingpong)
+    if (editUsahaData.jml_pohon_pingpong === undefined || editUsahaData.jml_pohon_pingpong === null)
       newErrors.jml_pohon_pingpong =
         "Jumlah Pohon Kelengkeng Pingpong wajib diisi.";
-    if (!editUsahaData.jml_pohon_metalada)
+    if (editUsahaData.jml_pohon_metalada === undefined || editUsahaData.jml_pohon_metalada === null)
       newErrors.jml_pohon_metalada =
         "Jumlah Pohon Kelengkeng Metalada wajib diisi.";
-    if (!editUsahaData.jml_pohon_diamond_river)
+    if (editUsahaData.jml_pohon_diamond_river === undefined || editUsahaData.jml_pohon_diamond_river === null)
       newErrors.jml_pohon_diamond_river =
         "Jumlah Pohon Kelengkeng Diamond River wajib diisi.";
-    if (!editUsahaData.jml_pohon_merah)
+    if (editUsahaData.jml_pohon_merah === undefined || editUsahaData.jml_pohon_merah === null)
       newErrors.jml_pohon_merah = "Jumlah Pohon Kelengkeng Merah wajib diisi.";
-    if (!editUsahaData.jenis_pupuk)
+    if (editUsahaData.jenis_pupuk === undefined || editUsahaData.jenis_pupuk === null)
       newErrors.jenis_pupuk = "Jenis Pupuk wajib diisi.";
-    if (!editUsahaData.volume_produksi)
+    if (editUsahaData.volume_produksi === undefined || editUsahaData.volume_produksi === null)
       newErrors.volume_produksi =
         "Volume Produksi Periode Agustus 2023-Juli 2024 wajib diisi.";
-    if (!editUsahaData.latitude) newErrors.latitude = "Latitude wajib diisi.";
-    if (!editUsahaData.longitude)
+    if (editUsahaData.latitude === undefined || editUsahaData.latitude === null)
+      newErrors.latitude = "Latitude wajib diisi.";
+    if (editUsahaData.longitude === undefined || editUsahaData.longitude === null)
       newErrors.longitude = "Longitude wajib diisi.";
-    if (!editUsahaData.url_img)
+    if (editUsahaData.url_img === undefined || editUsahaData.url_img === null)
       newErrors.url_img = "Terjadi kesalahan upload foto.";
 
     // Validasi total jumlah pohon
     const totalPohonJenis =
-      (parseInt(editUsahaData.jml_pohon_new_crystal) || 0) +
-      (parseInt(editUsahaData.jml_pohon_pingpong) || 0) +
-      (parseInt(editUsahaData.jml_pohon_metalada) || 0) +
-      (parseInt(editUsahaData.jml_pohon_diamond_river) || 0) +
-      (parseInt(editUsahaData.jml_pohon_merah) || 0);
+      (parseInt(editUsahaData.jml_pohon_new_crystal, 10) || 0) +
+      (parseInt(editUsahaData.jml_pohon_pingpong, 10) || 0) +
+      (parseInt(editUsahaData.jml_pohon_metalada, 10) || 0) +
+      (parseInt(editUsahaData.jml_pohon_diamond_river, 10) || 0) +
+      (parseInt(editUsahaData.jml_pohon_merah, 10) || 0);
 
     if (
-      editUsahaData.jml_pohon &&
-      totalPohonJenis !== parseInt(editUsahaData.jml_pohon)
+      editUsahaData.jml_pohon !== undefined &&
+      editUsahaData.jml_pohon !== null &&
+      totalPohonJenis !== parseInt(editUsahaData.jml_pohon, 10)
     ) {
       newErrors.jml_pohon =
         "Jumlah total pohon jenis harus sama dengan jumlah pohon keseluruhan.";
@@ -451,7 +454,28 @@ const EditRutaModal = ({
     return Object.keys(newErrors).length === 0;
   };
 
+
+  const hasErrors = (errors) => {
+    console.log("Has Errors",errors);
+    // Iterate over the values of the errors object
+    for (let key in errors) {
+      // Check if the error message is not empty
+      if (errors[key] !== "") {
+        return true;
+      }
+    }
+    return false;
+  };
+
+
   const handleEditSave = async () => {
+    if (hasErrors(errors)) {
+      message.error(
+        "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
+        5
+      );
+      return;
+    }
     if (!validateForm(editUsahaData)) {
       message.error(
         "Mohon lengkapi semua field yang diperlukan dan perbaiki kesalahan.",
