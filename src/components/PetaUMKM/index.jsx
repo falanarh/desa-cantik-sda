@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useRef, memo, useMemo } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -8,14 +10,14 @@ import {
   Popup,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import 'react-leaflet-markercluster/dist/styles.min.css';
+import "react-leaflet-markercluster/dist/styles.min.css";
 import L, { divIcon } from "leaflet";
 import { Transition } from "@headlessui/react";
 import api from "../../utils/api.js";
 import { message } from "antd";
 import CountUp from "react-countup";
 import { BeatLoader } from "react-spinners";
-import { MarkerClusterGroup } from 'react-leaflet-markercluster';
+import { MarkerClusterGroup } from "react-leaflet-markercluster";
 
 export default function MapSection() {
   const [selectedClassification, setSelectedClassification] = useState("all");
@@ -95,53 +97,31 @@ export default function MapSection() {
       : "#000000";
   };
 
-  const markerIcon = divIcon({
-    className: "custom-label",
-    html: `<div style="
-      background-color: #AF282F;
-      border-radius: 50%;
-      width: 1.5rem;
-      height: 1.5rem;
-      border: 0.1rem solid white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    ">
-      <span class="material-icons" style="color: #FFFFFF; font-size: 1rem;">store</span>
-    </div>`,
-    });
-    
   let selectedLayer = null; // Track the currently selected layer
 
   const onEachFeature = (feature, layer) => {
-  layer.on({
-    mouseover: (e) => {
-      const layer = e.target;
-      if (layer !== selectedLayer) {
-        layer.setStyle({
-          weight: 4,
-          color: "#fff",
-          dashArray: "",
-          fillOpacity: 0.8,
-        });
-      }
+    layer.on({
+      mouseover: (e) => {
+        const layer = e.target;
+        if (layer !== selectedLayer) {
+          layer.setStyle({
+            weight: 4,
+            color: "#fff",
+            dashArray: "",
+            fillOpacity: 0.8,
+          });
+        }
 
-      const keysLayer = [
-        "RT",
-        "RW",
-        "Dusun",
-        "Jumlah Rumah Tangga",
-        "Jumlah UMKM",
-      ];
-      const keysToShow = [
-        "rt",
-        "rw",
-        "dusun",
-        "jml_ruta",
-        "jml_umkm",
-      ];
+        const keysLayer = [
+          "RT",
+          "RW",
+          "Dusun",
+          "Jumlah Rumah Tangga",
+          "Jumlah UMKM",
+        ];
+        const keysToShow = ["rt", "rw", "dusun", "jml_ruta", "jml_umkm"];
 
-      const popupContent = `<div>
+        const popupContent = `<div>
         <strong>Informasi RT:</strong><br>
         ${keysToShow
           .map(
@@ -151,56 +131,58 @@ export default function MapSection() {
           .join("<br>")}
       </div>`;
 
-      const popup = layer.bindPopup(popupContent, {
-        autoPan: false,
-      }).openPopup(e.latlng);
+        const popup = layer
+          .bindPopup(popupContent, {
+            autoPan: false,
+          })
+          .openPopup(e.latlng);
 
-      popup.setLatLng(e.latlng);
-    },
+        popup.setLatLng(e.latlng);
+      },
 
-    mouseout: (e) => {
-      const layer = e.target;
-      if (layer !== selectedLayer) {
-        layer.setStyle({
-          weight: 2,
-          color: "white",
-          dashArray: "3",
-          fillOpacity: 0.3,
-        });
-      }
-      layer.closePopup();
-    },
+      mouseout: (e) => {
+        const layer = e.target;
+        if (layer !== selectedLayer) {
+          layer.setStyle({
+            weight: 2,
+            color: "white",
+            dashArray: "3",
+            fillOpacity: 0.3,
+          });
+        }
+        layer.closePopup();
+      },
 
-    click: (e) => {
-      const layer = e.target;
-      
-      // Reset previous selected layer style
-      if (selectedLayer) {
-        selectedLayer.setStyle({
-          weight: 2,
-          color: "white",
-          dashArray: "3",
-          fillOpacity: 0.3,
-        });
-      }
-      
-      // Set the current layer as the selected layer
-      if (selectedLayer === layer) {
-        selectedLayer = null;
-        setSelectedRT("desa");
-      } else {
-        selectedLayer = layer;
-        setSelectedRT(feature.properties.kode);
-        layer.setStyle({
-          weight: 4,
-          color: "#fff",
-          dashArray: "",
-          fillOpacity: 0.8, // Ensure opacity is set to 0.8 when clicked
-        });
-      }
-    },
-  });
-};
+      click: (e) => {
+        const layer = e.target;
+
+        // Reset previous selected layer style
+        if (selectedLayer) {
+          selectedLayer.setStyle({
+            weight: 2,
+            color: "white",
+            dashArray: "3",
+            fillOpacity: 0.3,
+          });
+        }
+
+        // Set the current layer as the selected layer
+        if (selectedLayer === layer) {
+          selectedLayer = null;
+          setSelectedRT("desa");
+        } else {
+          selectedLayer = layer;
+          setSelectedRT(feature.properties.kode);
+          layer.setStyle({
+            weight: 4,
+            color: "#fff",
+            dashArray: "",
+            fillOpacity: 0.8, // Ensure opacity is set to 0.8 when clicked
+          });
+        }
+      },
+    });
+  };
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -253,8 +235,9 @@ export default function MapSection() {
     "bangunan-khusus-usaha": "Bangunan Khusus Usaha",
     "bangunan-campuran": "Bangunan Campuran",
     "kaki-lima": "Kaki Lima",
-    "keliling": "Keliling",
-    "didalam-bangunan-tempat-tinggal/online": "Didalam Bangunan Tempat Tinggal/Online",
+    keliling: "Keliling",
+    "didalam-bangunan-tempat-tinggal/online":
+      "Didalam Bangunan Tempat Tinggal/Online",
   };
 
   const skalaUsaha = {
@@ -301,9 +284,101 @@ export default function MapSection() {
     setSelectedskalaUsaha(event.target.value);
   };
 
-  
+  const MemoizedGeoJSON = memo(({ data, style, onEachFeature }) => (
+    <GeoJSON data={data} style={style} onEachFeature={onEachFeature} />
+  ));
 
-  
+  MemoizedGeoJSON.displayName = "MemoizedGeoJSON";
+
+  const filteredData2 = useMemo(() => {
+    return dataRumahTangga.filter(
+      (item) =>
+        (selectedRT === "desa" || item.kodeRt === selectedRT) &&
+        (selectedClassification === "all" ||
+          item.kategori_usaha === selectedClassification) &&
+        (selectedtUsaha === "all" ||
+          item.lokasi_tempat_usaha === selectedtUsaha) &&
+        (selectedskalaUsaha === "all" ||
+          item.skala_usaha === selectedskalaUsaha)
+    );
+  }, [
+    dataRumahTangga,
+    selectedRT,
+    selectedClassification,
+    selectedtUsaha,
+    selectedskalaUsaha,
+  ]);
+
+  const storeIcon = useMemo(
+    () =>
+      divIcon({
+        className: "custom-label",
+        html: `<div style="
+             background-color: #AF282F;
+             border-radius: 50%;
+             width: 1.5rem;
+             height: 1.5rem;
+             border: 0.1rem solid white;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+           ">
+             <span class="material-icons" style="color: #FFFFFF; font-size: 1rem;">store</span>
+           </div>`,
+      }),
+    []
+  );
+
+  const CustomMarker = memo(
+    ({ item }) => (
+      <Marker
+        position={[parseFloat(item.latitude), parseFloat(item.longitude)]}
+        icon={storeIcon}
+      >
+        <Popup>
+          <div className="z-100">
+            <strong>Informasi UMKM:</strong>
+            <br />
+            <span className="text-[1rem] font-bold p-0 mt-0 mb-0">
+              {item.nama_usaha ? item.nama_usaha : "Tidak ada informasi"}{" "}
+            </span>
+            <br />
+            {item.rt_rw_dusun ? item.rt_rw_dusun : "Tidak ada informasi"}
+            <br />
+            <b>Kegiatan Utama Usaha: </b>
+            <br />
+            {item.kegiatan_utama_usaha
+              ? item.kegiatan_utama_usaha
+              : "Tidak ada informasi"}
+            <br />
+            <b>Kategori: </b>
+            <br />
+            {classifications[item.kategori_usaha ? item.kategori_usaha : ""]
+              ? classifications[item.kategori_usaha ? item.kategori_usaha : ""]
+              : "Tidak ada informasi"}
+            <br />
+            <b>Tempat Usaha: </b>
+            <br />
+            {capitalizeWords(
+              item.lokasi_tempat_usaha
+                ? item.lokasi_tempat_usaha
+                : "Tidak ada informasi"
+            )}
+            <br />
+            <b>Skala Usaha: </b>
+            <br />
+            {capitalizeWords(
+              item.skala_usaha ? item.skala_usaha : "Tidak ada informasi"
+            )}
+          </div>
+        </Popup>
+      </Marker>
+    ),
+    []
+  );
+
+  CustomMarker.displayName = "CustomMarker";
+
   return (
     <div className="relative w-full h-[89vh] font-sfProDisplay">
       <div className="absolute top-0 left-0 z-0 w-full h-full">
@@ -339,7 +414,7 @@ export default function MapSection() {
             data.length > 0 &&
             data.map((geoJsonData, index) => (
               <>
-                <GeoJSON
+                <MemoizedGeoJSON
                   key={index}
                   data={geoJsonData}
                   style={getStyle(geoJsonData)}
@@ -362,49 +437,20 @@ export default function MapSection() {
                     })}
                   />
                 )}
-
-                {showIndividu && 
-                    dataRumahTangga
-                      .filter(
-                        (item) =>
-                          (selectedRT === "desa" || item.kodeRt === selectedRT) &&
-                          (selectedClassification === "all" || item.kategori_usaha === selectedClassification) &&
-                          (selectedtUsaha === "all" || item.lokasi_tempat_usaha === selectedtUsaha) &&
-                          (selectedskalaUsaha === "all" || item.skala_usaha === selectedskalaUsaha)
-                      )
-                      .map((item) => (
-                        <Marker
-                          key={`marker-${item._id}`}
-                          position={[
-                            parseFloat(item.latitude),
-                            parseFloat(item.longitude),
-                          ]}
-                          icon={markerIcon}
-                        >
-                          <Popup>
-                            <div className="z-100">
-                              <strong>Informasi UMKM:</strong>
-                              <br />
-                              <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{item.nama_usaha}</span>
-                              <br />
-                              {item.rt_rw_dusun}
-                              <br />
-                              <b>Kegiatan Utama Usaha: </b><br />{item.kegiatan_utama_usaha}
-                              <br />
-                              <b>Kategori: </b><br />{classifications[item.kategori_usaha]}
-                              <br />
-                              <b>Tempat Usaha: </b><br />{capitalizeWords(item.lokasi_tempat_usaha)}
-                              <br />
-                              <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)}
-                            </div>
-                          </Popup>
-                        </Marker>
-                      ))}
               </>
             ))
           ) : (
             <BeatLoader />
           )}
+          {/* <MarkerClusterGroup>
+            <Marker position={[49.8397, 24.0297]} />
+            <Marker position={[52.2297, 21.0122]} />
+            <Marker position={[51.5074, -0.0901]} />
+          </MarkerClusterGroup>; */}
+          {showIndividu &&
+            filteredData2.map((item) => (
+              <CustomMarker key={`marker-${item._id}`} item={item} />
+            ))}
         </MapContainer>
       </div>
 

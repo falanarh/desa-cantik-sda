@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@changey/react-leaflet-markercluster": "^4.0.0-rc1",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
-    "@headlessui/react": "^2.1.2",
+    "@headlessui/react": "^2.1.4",
     "@internationalized/date": "^3.5.5",
     "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
@@ -22,7 +23,7 @@
     "@nextui-org/theme": "^2.2.9",
     "@react-stately/data": "^3.11.6",
     "@turf/turf": "^7.0.0",
-    "antd": "^5.19.3",
+    "antd": "^5.20.5",
     "aos": "^2.3.4",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
