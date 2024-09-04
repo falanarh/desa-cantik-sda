@@ -39,6 +39,15 @@ export default function NavbarPeta() {
             <span className="md:hidden material-icons">account_circle</span>
           </Link>
           </NavbarItem>
+          <NavbarItem>
+              <Link
+                to="/dokumen-simoanginangin"
+                className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base cursor-pointer mr-2"
+              >
+                <span className="hidden md:inline material-icons">folder</span>
+                <span className="md:hidden material-icons">folder</span>
+              </Link>
+          </NavbarItem>
         </NavbarContent>
       </Navbar>
     </div>

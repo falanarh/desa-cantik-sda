@@ -38,81 +38,26 @@ export default function MapSection() {
   const [visualization, setVisualization] = useState("umkm");
   const toggleRT = () => setShowRT(!showRT);
 
-  const fetchData = async () => {
-    setLoading(true); // Mulai loading
+  const fetchData = async (url, setDataCallback) => {
+    setLoading(true);
     try {
-      const response = await api.get("/api/rt/all/geojson");
-      setData(response.data.data); // Update state dengan data dari API
+      const response = await api.get(url);
+      setDataCallback(response.data.data);
       console.log("Data fetched:", response.data.data);
     } catch (error) {
-      // Cek jika error memiliki respons body
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
-      } else {
-        // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
+      const errorMessage = error.response?.data?.message || error.message;
+      message.error(`Terjadi kesalahan: ${errorMessage}`, 5);
     } finally {
-      setLoading(false); // Akhiri loading
-    }
-  };
-
-  const fetchDataAgregat = async () => {
-    setLoading(true); // Mulai loading
-    try {
-      const response = await api.get("/api/rt/all/aggregate");
-      setDataAgregat(response.data.data); // Update state dengan data dari API
-      console.log("Data fetched:", response.data.data);
-    } catch (error) {
-      // Cek jika error memiliki respons body
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
-      } else {
-        // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
-    } finally {
-      setLoading(false); // Akhiri loading
-    }
-  };
-
-  const fetchDataRumahTangga = async () => {
-    setLoading(true); // Mulai loading
-    try {
-      const response = await api.get("/api/rumahTangga");
-      setDataRumahTangga(response.data.data); // Update state dengan data dari API
-      console.log("Data fetched:", response.data.data);
-    } catch (error) {
-      // Cek jika error memiliki respons body
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
-      } else {
-        // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
-    } finally {
-      setLoading(false); // Akhiri loading
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (!isFetched) {
-      fetchData().then(() => {
-        fetchDataAgregat().then(() => {
-          fetchDataRumahTangga().then(() => {
-            setIsFetched(true); // Set isFetched to true after all data is fetched
+      fetchData("/api/rt/all/geojson", setData).then(() => {
+        fetchData("/api/rt/all/aggregate", setDataAgregat).then(() => {
+          fetchData("/api/rumahTangga/", setDataRumahTangga).then(() => {
+            setIsFetched(true);
           });
         });
       });
@@ -150,7 +95,22 @@ export default function MapSection() {
       : "#000000";
   };
 
-
+  const markerIcon = divIcon({
+    className: "custom-label",
+    html: `<div style="
+      background-color: #AF282F;
+      border-radius: 50%;
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 0.1rem solid white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    ">
+      <span class="material-icons" style="color: #FFFFFF; font-size: 1rem;">store</span>
+    </div>`,
+    });
+    
   let selectedLayer = null; // Track the currently selected layer
 
   const onEachFeature = (feature, layer) => {
@@ -241,10 +201,6 @@ export default function MapSection() {
     },
   });
 };
-
-  
-  
-  
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -345,6 +301,9 @@ export default function MapSection() {
     setSelectedskalaUsaha(event.target.value);
   };
 
+  
+
+  
   return (
     <div className="relative w-full h-[89vh] font-sfProDisplay">
       <div className="absolute top-0 left-0 z-0 w-full h-full">
@@ -383,16 +342,13 @@ export default function MapSection() {
                 <GeoJSON
                   key={index}
                   data={geoJsonData}
-                  style={getStyle(geoJsonData)
-              }
+                  style={getStyle(geoJsonData)}
                   onEachFeature={onEachFeature}
                 />
                 {showRT && (
                   <Marker
                     key={`marker-${geoJsonData.features[0].properties.kode}`}
-                    position={calculateCentroid(
-                      geoJsonData.features[0].geometry
-                    )}
+                    position={calculateCentroid(geoJsonData.features[0].geometry)}
                     icon={divIcon({
                       className: "custom-label",
                       html: `<div class="w-[75px] text-white text-[0.8rem] font-bold absolute p-2"
@@ -406,71 +362,49 @@ export default function MapSection() {
                     })}
                   />
                 )}
-                
+
                 {showIndividu && 
-                  dataRumahTangga
-                  .filter(
-                    (item) =>
-                      (selectedRT === "desa" || item.kodeRt === selectedRT)&&
-                      (selectedClassification === "all" || item.kategori_usaha === selectedClassification) &&
-                      (selectedtUsaha === "all" || item.lokasi_tempat_usaha === selectedtUsaha) &&
-                      (selectedskalaUsaha === "all" || item.skala_usaha === selectedskalaUsaha)
-                  )
-                    .map((item) => (
-                      
-                      <Marker
-                        key={`marker-${item._id}`}
-                        position={[
-                          parseFloat(item.latitude),
-                          parseFloat(item.longitude),
-                        ]}
-                        icon={divIcon({
-                        className: "custom-label",
-                        html: `<div style="
-                          background-color: #AF282F;
-                          border-radius: 50%;
-                          width: 1.5rem;
-                          height: 1.5rem;
-                          border: 0.1rem solid white;
-                          display: flex;
-                          justify-content: center;
-                          align-items: center;
-                        ">
-                          <span class="material-icons" style="color: #FFFFFF; font-size: 1rem;">store</span>
-                        </div>`,
-                      })}
-                      >
-                        <Popup>
-                          <div className="z-100">
-                            <strong>Informasi UMKM:</strong>
-                            {console.log("Check items ", item)}
-                            <br />
-                            <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{item.nama_usaha} </span>
-                            <br />
-                            {item.rt_rw_dusun} 
-                            <br />
-                            <b>Kegiatan Utama Usaha: </b><br />{item.kegiatan_utama_usaha}
-                            <br />
-                            <b>Kategori: </b><br />{classifications[item.kategori_usaha]}
-                            <br />
-                            <b>Tempat Usaha: </b><br />{capitalizeWords(item.lokasi_tempat_usaha)}
-                            <br />
-                            <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)}
-                          </div>
-                        </Popup>
-                      </Marker>
-                        ))
-                        }
+                    dataRumahTangga
+                      .filter(
+                        (item) =>
+                          (selectedRT === "desa" || item.kodeRt === selectedRT) &&
+                          (selectedClassification === "all" || item.kategori_usaha === selectedClassification) &&
+                          (selectedtUsaha === "all" || item.lokasi_tempat_usaha === selectedtUsaha) &&
+                          (selectedskalaUsaha === "all" || item.skala_usaha === selectedskalaUsaha)
+                      )
+                      .map((item) => (
+                        <Marker
+                          key={`marker-${item._id}`}
+                          position={[
+                            parseFloat(item.latitude),
+                            parseFloat(item.longitude),
+                          ]}
+                          icon={markerIcon}
+                        >
+                          <Popup>
+                            <div className="z-100">
+                              <strong>Informasi UMKM:</strong>
+                              <br />
+                              <span className="text-[1rem] font-bold p-0 mt-0 mb-0">{item.nama_usaha}</span>
+                              <br />
+                              {item.rt_rw_dusun}
+                              <br />
+                              <b>Kegiatan Utama Usaha: </b><br />{item.kegiatan_utama_usaha}
+                              <br />
+                              <b>Kategori: </b><br />{classifications[item.kategori_usaha]}
+                              <br />
+                              <b>Tempat Usaha: </b><br />{capitalizeWords(item.lokasi_tempat_usaha)}
+                              <br />
+                              <b>Skala Usaha: </b><br />{capitalizeWords(item.skala_usaha)}
+                            </div>
+                          </Popup>
+                        </Marker>
+                      ))}
               </>
             ))
           ) : (
             <BeatLoader />
           )}
-          {/* <MarkerClusterGroup>
-            <Marker position={[49.8397, 24.0297]} />
-            <Marker position={[52.2297, 21.0122]} />
-            <Marker position={[51.5074, -0.0901]} />
-          </MarkerClusterGroup>; */}
         </MapContainer>
       </div>
 
@@ -703,72 +637,42 @@ export default function MapSection() {
           }}
         >
           <div className="flex items-center justify-center">
-            <button
-              className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${
-                showRT ? "bg-[#BD0026] text-white" : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={toggleRT}
-            >
-              {showRT ? (
-                <div className="flex items-center">
-                  <span className="mr-2 text-xl material-icons">
-                    visibility_off
-                  </span>{" "}
-                  RT
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  <span className="mr-2 text-xl material-icons">
-                    visibility
-                  </span>{" "}
-                  RT
-                </div>
-              )}
-            </button>
-            <div>
-              {visualization === "umkm" ? (
-                <div className="w-[20vh]">
-                  <div className="mb-1 text-sm font-semibold text-right">
-                    Jumlah UMKM
-                  </div>
-                  <div className="relative h-6 mb-2 rounded-full">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)",
-                        borderRadius: "99px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between px-2 mt-1">
-                    <span className="text-xs">0</span>
-                    <span className="text-xs">100+</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="w-[20vh]">
-                  <div className="mb-1 text-sm font-semibold text-right">
-                    Jumlah Pendapatan
-                  </div>
-                  <div className="relative h-6 mb-2 rounded-full">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #C6DBEF,#9ECAE1, #6BAED6, #4292C6, #2171B5,#08519C, #08306B)",
-                        borderRadius: "99px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between px-2 mt-1">
-                    <span className="text-xs">0</span>
-                    <span className="text-xs">100 Juta+</span>
-                  </div>
-                </div>
-              )}
+          <button
+            className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${
+              showRT ? "bg-[#BD0026] text-white" : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={toggleRT}
+          >
+            {showRT ? (
+              <div className="flex items-center">
+                <span className="mr-2 text-xl material-icons">visibility_off</span> RT
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <span className="mr-2 text-xl material-icons">visibility</span> RT
+              </div>
+            )}
+          </button>
+          <div>
+            <div className="w-[20vh]">
+              <div className="mb-1 text-sm font-semibold text-right">Jumlah UMKM</div>
+              <div className="relative h-6 mb-2 rounded-full">
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)",
+                    borderRadius: "99px",
+                  }}
+                ></div>
+              </div>
+              <div className="flex justify-between px-2 mt-1">
+                <span className="text-xs">0</span>
+                <span className="text-xs">100+</span>
+              </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

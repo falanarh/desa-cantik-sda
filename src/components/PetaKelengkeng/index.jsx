@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo} from "react";
 import { MapContainer, TileLayer, GeoJSON, LayersControl, Marker, Popup} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
@@ -6,9 +6,11 @@ import { Transition } from "@headlessui/react";
 import api2 from "../../utils/api2.js";
 import { message } from "antd";
 import CountUp from "react-countup";
+import { MarkerClusterGroup } from 'react-leaflet-markercluster';
 import { PiOrangeDuotone } from "react-icons/pi";
 import { renderToString } from 'react-dom/server';
 import { BeatLoader } from "react-spinners";
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 export default function MapSection() {
   const [selectedClassification, setSelectedClassification] = useState("all");
@@ -30,7 +32,6 @@ export default function MapSection() {
   const [visualization, setVisualization] = useState("umkm");
   const toggleRT = () => setShowRT(!showRT);
   const changeVisualization = (type) => setVisualization(type);
-  const iconHtml = renderToString(<PiOrangeDuotone />);
 
   const fetchData = async () => {
     setLoading(true); // Mulai loading
@@ -103,15 +104,15 @@ export default function MapSection() {
 
   useEffect(() => {
     if (!isFetched) {
-      fetchData().then(() => {
-        fetchDataAgregat().then(() => {
-          fetchDataRumahTangga().then(() => {
-            setIsFetched(true); // Set isFetched to true after all data is fetched
-          });
-        });
-      });
+      setLoading(true);
+      Promise.all([fetchData(), fetchDataAgregat(), fetchDataRumahTangga()])
+        .then(() => setIsFetched(true))
+        .catch((error) => {
+          message.error(`Terjadi kesalahan: ${error.message}`, 5);
+        })
+        .finally(() => setLoading(false));
     }
-  }, [isFetched]);
+  }, [isFetched]);  
 
   // Function to determine style based on feature properties
   const getStyle = (data) => {
@@ -127,20 +128,43 @@ export default function MapSection() {
   };
 
   const getColor = (density) => {
-    return density > 50
+    return density > 32
       ? "#7E370C"
-      : density > 20
+      : density > 16
       ? "#B05E27"
-      : density > 10
+      : density > 8
       ? "#D4AC2B"
-      : density > 5
+      : density > 4
       ? "#FFCE45"
       : density > 2
       ? "#FEB24C"
-      : density > 0
+      : density > 1
       ? "#FED976"
       : "#000000";
   };
+
+  const markerIcon = divIcon({
+  className: "custom-label",
+  html: `
+    <span
+      class="material-symbols-outlined"
+      style="
+        color: #BD7A33;
+        font-size: 1.5rem;
+        font-variation-settings:
+          'FILL' 1,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+        -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.8); /* Menambahkan stroke putih */
+      "
+    >
+      nutrition
+    </span>
+  `,
+  });
+  
+  
 
   let selectedLayer = null; // Track the currently selected layer
 
@@ -318,6 +342,17 @@ export default function MapSection() {
     jml_pohon_merah: 'jml_pohon_merah'
   };
 
+  const dataJenis = [
+    {
+      name: 'Belum',
+      value: dataAgregat.jml_pohon_blm_berproduksi,
+    },
+    {
+      name: 'Sudah',
+      value: dataAgregat.jml_pohon_sdh_berproduksi,
+    },
+  ];
+
   const handleClassificationChange = (event) => {
     setSelectedClassification(event.target.value);
   };
@@ -325,6 +360,8 @@ export default function MapSection() {
   const handletUsahaChange = (event) => {
     setSelectedtUsaha(event.target.value);
   };
+
+  const Colors = ['#FED976','#d4ac2b']; // Two colors: base color and a lighter tint
   const LegendMenu = () => {
     const [isExpanded, setIsExpanded] = useState(false);
   
@@ -455,6 +492,7 @@ export default function MapSection() {
                       
                       return isSelectedRT && isSelectedClassification && isSelectedUsaha;
                     })
+                    
                     .map((item) => (
                       <Marker
                         key={`marker-${item._id}`}
@@ -462,27 +500,7 @@ export default function MapSection() {
                           parseFloat(item.latitude),
                           parseFloat(item.longitude),
                         ]}
-                        icon={divIcon({
-                        className: "custom-label",
-                        html: `
-                        <span
-                          class="material-symbols-outlined"
-                          style="
-                            color: #BD7A33;
-                            font-size: 1.5rem;
-                            font-variation-settings:
-                              'FILL' 1,
-                              'wght' 400,
-                              'GRAD' 0,
-                              'opsz' 24;
-                            -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.8); /* Menambahkan stroke putih */
-                          "
-                        >
-                          nutrition
-                        </span>
-
-                        </div>`,
-                      })}
+                        icon={markerIcon}
                       >
                         <Popup>
                           <div className="z-100">
@@ -492,6 +510,7 @@ export default function MapSection() {
                               src={item.url_img}
                               alt="Kelengkeng Image"
                               className="w-full h-40 object-cover rounded-lg mb-3"
+                              loading="lazy"
                             />
                             <b>{item.nama_kepala_keluarga}</b>
                             <br />
@@ -533,12 +552,15 @@ export default function MapSection() {
                             )}
                             <b>Volume Produksi: </b><br />{item.volume_produksi} kg
                             <br />
+                            <b>Jenis Pupuk: </b><br />{capitalizeWords(item.jenis_pupuk)}
+                            <br />
                             <b>Pemanfaatan Produk: </b><br />{capitalizeWords(item.pemanfaatan_produk)}
                             <br />
                           </div>
                         </Popup>
                       </Marker>
-                    ))}
+                    ))
+                    }
               </>
             ))
           ) : (
@@ -619,7 +641,7 @@ export default function MapSection() {
             </div>
 
             <label className="block mt-4 text-sm font-medium text-white">
-              Jenis Kelengkeng
+              Produksi
             </label>
             <select
               id="jenis"
@@ -665,80 +687,118 @@ export default function MapSection() {
           className="absolute top-16 left-[10%] z-10 w-64 max-h-[77vh] p-4 bg-[#1D262C] rounded-md shadow-md text-white overflow-y-auto"
         >
           <div className="text-center">
-            {filteredData &&
-            filteredData.features &&
-            filteredData.features[0] ? (
-              <>
-                {selectedRT !== "desa" ? (
-                  <>
-                    <div className="mb-4">
-                      <p className="bg-[#2E2E2E] rounded-full p-1 text-sm text-[#fff] font-medium">
-                        <span className="mr-1 text-sm material-icons text-[#fff] ">
-                          location_on
-                        </span>{" "}
-                        RT {filteredData.features[0].properties.rt} RW{" "}
-                        {filteredData.features[0].properties.rw} Dsn{" "}
-                        {filteredData.features[0].properties.dusun}
-                      </p>
+          {filteredData?.features?.[0] ? (
+            <>
+              {selectedRT !== "desa" ? (
+                <>
+                  <div className="mb-4">
+                    <p className="bg-[#2E2E2E] rounded-full p-1 text-sm text-white font-medium">
+                      <span className="mr-1 text-sm material-icons text-white">location_on</span>
+                      RT {filteredData.features[0].properties.rt} RW {filteredData.features[0].properties.rw} Dsn {filteredData.features[0].properties.dusun}
+                    </p>
+                  </div>
+
+                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                    <div className="text-4xl font-bold">
+                      <CountUp
+                        start={0}
+                        end={filteredData.features[0].properties.jml_unit_usaha_klengkeng}
+                        duration={3}
+                      />
                     </div>
-                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                      <div className="text-4xl font-bold">
-                        <CountUp
-                          start={0}
-                          end={filteredData.features[0].properties.jml_unit_usaha_klengkeng}
-                          duration={3}
-                        />
-                      </div>
-                      <p className="text-xm">Pelaku Usaha</p>
+                    <p className="text-xm">Pohon Kelengkeng</p>
+                  </div>
+
+                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                    <p className="text-xm mb-1">Produksi</p>
+                    <PieChart width={175} height={175}>
+                      <Pie
+                        data={[
+                          { name: "Belum", value: filteredData.features[0].properties.jml_pohon_blm_berproduksi },
+                          { name: "Sudah", value: filteredData.features[0].properties.jml_pohon_sdh_berproduksi },
+                        ]}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={75}
+                        innerRadius={50}
+                      >
+                        {[
+                          { name: "Belum", value: filteredData.features[0].properties.jml_pohon_blm_berproduksi },
+                          { name: "Sudah", value: filteredData.features[0].properties.jml_pohon_sdh_berproduksi },
+                        ].map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={Colors[index % Colors.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend
+                        layout="horizontal"
+                        align="center"
+                        verticalAlign="bottom"
+                        wrapperStyle={{
+                          fontSize: "12px",
+                          marginTop: "1rem",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      />
+                    </PieChart>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="mb-4">
+                    <p className="bg-[#2E2E2E] rounded-full text-white p-1 text-sm font-medium">
+                      <span className="mr-1 text-sm material-icons">location_on</span>
+                      Desa Simoketawang
+                    </p>
+                  </div>
+
+                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                    <div className="text-4xl font-bold">
+                      <CountUp start={0} end={dataAgregat.jml_pohon} duration={3} />
                     </div>
-                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                      <div className="text-4xl font-bold">
-                        <CountUp
-                          start={0}
-                          end={filteredData.features[0].properties.jml_pohon}
-                          duration={3}
-                        />
-                      </div>
-                      <p className="text-xm">Pohon Kelengkeng</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="mb-4">
-                      <p className="bg-[#2E2E2E] rounded-full text-[#fff] p-1 text-sm font-medium">
-                        <span className="mr-1 text-sm material-icons">
-                          location_on
-                        </span>{" "}
-                        Desa Simoketawang
-                      </p>
-                    </div>
-                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                      <div className="text-4xl font-bold">
-                        <CountUp
-                          start={0}
-                          end={dataAgregat.jml_unit_usaha_klengkeng}
-                          duration={3}
-                        />
-                      </div>
-                      <p className="text-xm">Pelaku Usaha</p>
-                    </div>
-                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                      <div className="text-4xl font-bold">
-                        <CountUp
-                          start={0}
-                          end={dataAgregat.jml_pohon}
-                          duration={3}
-                        />
-                      </div>
-                      <p className="text-xm">Pohon Kelengkeng</p>
-                    </div>
-                  </>
-                )}
-              </>
-            ) : (
-              <p>Data tidak tersedia</p>
-            )}
+                    <p className="text-xm">Pohon Kelengkeng</p>
+                  </div>
+
+                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                    <p className="text-xm mb-1">Produksi</p>
+                    <PieChart width={175} height={175}>
+                      <Pie
+                        data={dataJenis}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={75}
+                        innerRadius={50}
+                      >
+                        {dataJenis.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={Colors[index % Colors.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend
+                        layout="horizontal"
+                        align="center"
+                        verticalAlign="bottom"
+                        wrapperStyle={{
+                          fontSize: "12px",
+                          marginTop: "2rem",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      />
+                    </PieChart>
+                  </div>
+                </>
+              )}
+            </>
+          ) : null}
           </div>
+
+
         </Transition>
         <div
           className="absolute bottom-4 right-4 z-10 w-auto p-2 mr-[8%] bg-white rounded-md shadow-md text-gray-800"
@@ -771,49 +831,6 @@ export default function MapSection() {
               )}
             </button>
             <LegendMenu />
-            {/* <div>
-              {visualization === "umkm" ? (
-                <div className="w-[20vh]">
-                  <div className="mb-1 text-sm font-semibold text-right">
-                    Jumlah Usaha
-                  </div>
-                  <div className="relative h-6 mb-2 rounded-full">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #FFCE45,#D4AC2B, #B05E27, #7E370C)",
-                        borderRadius: "99px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between px-2 mt-1">
-                    <span className="text-xs">0</span>
-                    <span className="text-xs">100+</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="w-[20vh]">
-                  <div className="mb-1 text-sm font-semibold text-right">
-                    Jumlah Pendapatan
-                  </div>
-                  <div className="relative h-6 mb-2 rounded-full">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #C6DBEF,#9ECAE1, #6BAED6, #4292C6, #2171B5,#08519C, #08306B)",
-                        borderRadius: "99px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between px-2 mt-1">
-                    <span className="text-xs">0</span>
-                    <span className="text-xs">100 Juta+</span>
-                  </div>
-                </div>
-              )}
-            </div> */}
           </div>
         </div>
       </div>
