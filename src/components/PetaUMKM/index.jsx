@@ -40,81 +40,26 @@ export default function MapSection() {
   const [visualization, setVisualization] = useState("umkm");
   const toggleRT = () => setShowRT(!showRT);
 
-  const fetchData = async () => {
-    setLoading(true); // Mulai loading
+  const fetchData = async (url, setDataCallback) => {
+    setLoading(true);
     try {
-      const response = await api.get("/api/rt/all/geojson");
-      setData(response.data.data); // Update state dengan data dari API
+      const response = await api.get(url);
+      setDataCallback(response.data.data);
       console.log("Data fetched:", response.data.data);
     } catch (error) {
-      // Cek jika error memiliki respons body
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
-      } else {
-        // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
+      const errorMessage = error.response?.data?.message || error.message;
+      message.error(`Terjadi kesalahan: ${errorMessage}`, 5);
     } finally {
-      setLoading(false); // Akhiri loading
-    }
-  };
-
-  const fetchDataAgregat = async () => {
-    setLoading(true); // Mulai loading
-    try {
-      const response = await api.get("/api/rt/all/aggregate");
-      setDataAgregat(response.data.data); // Update state dengan data dari API
-      console.log("Data fetched:", response.data.data);
-    } catch (error) {
-      // Cek jika error memiliki respons body
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
-      } else {
-        // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
-    } finally {
-      setLoading(false); // Akhiri loading
-    }
-  };
-
-  const fetchDataRumahTangga = async () => {
-    setLoading(true); // Mulai loading
-    try {
-      const response = await api.get("/api/rumahTangga");
-      setDataRumahTangga(response.data.data); // Update state dengan data dari API
-      console.log("Data fetched:", response.data.data);
-    } catch (error) {
-      // Cek jika error memiliki respons body
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(`Terjadi kesalahan: ${error.response.data.message}`, 5);
-      } else {
-        // Jika error tidak memiliki respons body yang dapat diakses
-        message.error(`Terjadi kesalahan: ${error.message}`, 5);
-      }
-    } finally {
-      setLoading(false); // Akhiri loading
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (!isFetched) {
-      fetchData().then(() => {
-        fetchDataAgregat().then(() => {
-          fetchDataRumahTangga().then(() => {
-            setIsFetched(true); // Set isFetched to true after all data is fetched
+      fetchData("/api/rt/all/geojson", setData).then(() => {
+        fetchData("/api/rt/all/aggregate", setDataAgregat).then(() => {
+          fetchData("/api/rumahTangga/", setDataRumahTangga).then(() => {
+            setIsFetched(true);
           });
         });
       });
@@ -478,9 +423,7 @@ export default function MapSection() {
                 {showRT && (
                   <Marker
                     key={`marker-${geoJsonData.features[0].properties.kode}`}
-                    position={calculateCentroid(
-                      geoJsonData.features[0].geometry
-                    )}
+                    position={calculateCentroid(geoJsonData.features[0].geometry)}
                     icon={divIcon({
                       className: "custom-label",
                       html: `<div class="w-[75px] text-white text-[0.8rem] font-bold absolute p-2"
@@ -740,72 +683,42 @@ export default function MapSection() {
           }}
         >
           <div className="flex items-center justify-center">
-            <button
-              className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${
-                showRT ? "bg-[#BD0026] text-white" : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={toggleRT}
-            >
-              {showRT ? (
-                <div className="flex items-center">
-                  <span className="mr-2 text-xl material-icons">
-                    visibility_off
-                  </span>{" "}
-                  RT
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  <span className="mr-2 text-xl material-icons">
-                    visibility
-                  </span>{" "}
-                  RT
-                </div>
-              )}
-            </button>
-            <div>
-              {visualization === "umkm" ? (
-                <div className="w-[20vh]">
-                  <div className="mb-1 text-sm font-semibold text-right">
-                    Jumlah UMKM
-                  </div>
-                  <div className="relative h-6 mb-2 rounded-full">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)",
-                        borderRadius: "99px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between px-2 mt-1">
-                    <span className="text-xs">0</span>
-                    <span className="text-xs">100+</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="w-[20vh]">
-                  <div className="mb-1 text-sm font-semibold text-right">
-                    Jumlah Pendapatan
-                  </div>
-                  <div className="relative h-6 mb-2 rounded-full">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #C6DBEF,#9ECAE1, #6BAED6, #4292C6, #2171B5,#08519C, #08306B)",
-                        borderRadius: "99px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between px-2 mt-1">
-                    <span className="text-xs">0</span>
-                    <span className="text-xs">100 Juta+</span>
-                  </div>
-                </div>
-              )}
+          <button
+            className={`py-1 px-2 rounded-md justify-center items-center text-center text-sm mr-4 ${
+              showRT ? "bg-[#BD0026] text-white" : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={toggleRT}
+          >
+            {showRT ? (
+              <div className="flex items-center">
+                <span className="mr-2 text-xl material-icons">visibility_off</span> RT
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <span className="mr-2 text-xl material-icons">visibility</span> RT
+              </div>
+            )}
+          </button>
+          <div>
+            <div className="w-[20vh]">
+              <div className="mb-1 text-sm font-semibold text-right">Jumlah UMKM</div>
+              <div className="relative h-6 mb-2 rounded-full">
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to right, #FED976,#FEB24C, #FD8D3C, #FC4E2A, #E31A1C,#BD0026, #800026)",
+                    borderRadius: "99px",
+                  }}
+                ></div>
+              </div>
+              <div className="flex justify-between px-2 mt-1">
+                <span className="text-xs">0</span>
+                <span className="text-xs">100+</span>
+              </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
