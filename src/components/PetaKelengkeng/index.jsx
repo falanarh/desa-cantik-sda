@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useRef, memo} from "react";
+/* eslint-disable no-undef */
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useRef, memo, useMemo } from "react";
 import { MapContainer, TileLayer, GeoJSON, LayersControl, Marker, Popup} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
@@ -6,9 +10,8 @@ import { Transition } from "@headlessui/react";
 import api2 from "../../utils/api2.js";
 import { message } from "antd";
 import CountUp from "react-countup";
-import { MarkerClusterGroup } from 'react-leaflet-markercluster';
-import { PiOrangeDuotone } from "react-icons/pi";
-import { renderToString } from 'react-dom/server';
+import MarkerClusterGroup from 'react-leaflet-cluster';
+// import { MarkerClusterGroup } from 'react-leaflet-markercluster';
 import { BeatLoader } from "react-spinners";
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
@@ -361,6 +364,99 @@ export default function MapSection() {
     setSelectedtUsaha(event.target.value);
   };
 
+  const MemoizedGeoJSON = memo(({ data, style, onEachFeature }) => (
+    <GeoJSON data={data} style={style} onEachFeature={onEachFeature} />
+  ));
+
+  MemoizedGeoJSON.displayName = "MemoizedGeoJSON";
+
+  const filtered = useMemo(() => {
+    return dataRumahTangga.filter(
+      (item) =>
+        (selectedRT === "desa" || item.kodeSls === selectedRT) &&
+        (selectedClassification === "all" ||
+          (selectedClassification in variables &&
+            item[variables[selectedClassification]] !== 0)) &&
+        (selectedtUsaha === "all" || 
+          (Array.isArray(item.pemanfaatan_produk) &&
+          item.pemanfaatan_produk.includes(selectedtUsaha)))
+    );
+  }, [
+    dataRumahTangga,
+    selectedRT,
+    selectedClassification,
+    selectedtUsaha,
+  ]);
+
+  const CustomMarker = memo(
+    ({ item }) => (
+      <Marker
+        position={[parseFloat(item.latitude), parseFloat(item.longitude)]}
+        icon={markerIcon}
+      >
+      <Popup>
+          <div className="z-100">
+            <strong>Informasi Usaha:</strong>
+            {console.log("Check items ", item)}
+            <img
+              src={item.url_img}
+              alt="Kelengkeng Image"
+              className="w-full h-40 object-cover rounded-lg mb-3"
+              loading="lazy"
+            />
+            <b>{item.nama_kepala_keluarga}</b>
+            <br />
+            {item.rt_rw_dusun} 
+            <br />
+            <b>Jumlah Pohon: </b><br />{item.jml_pohon}
+            <br />
+            <b>Jenis Kelengkeng:</b>
+            <br />
+            {item.jml_pohon_new_crystal > 0 && (
+              <>
+                New Crystal: {item.jml_pohon_new_crystal} Pohon
+                <br />
+              </>
+            )}
+            {item.jml_pohon_pingpong > 0 && (
+              <>
+                Pingpong: {item.jml_pohon_pingpong} Pohon
+                <br />
+              </>
+            )}
+            {item.jml_pohon_metalada > 0 && (
+              <>
+                Metalada: {item.jml_pohon_metalada} Pohon
+                <br />
+              </>
+            )}
+            {item.jml_pohon_diamond_river > 0 && (
+              <>
+                Diamond River: {item.jml_pohon_diamond_river} Pohon
+                <br />
+              </>
+            )}
+            {item.jml_pohon_merah > 0 && (
+              <>
+                Merah: {item.jml_pohon_merah} Pohon
+                <br />
+              </>
+            )}
+            <b>Volume Produksi: </b><br />{item.volume_produksi} kg
+            <br />
+            <b>Jenis Pupuk: </b><br />{capitalizeWords(item.jenis_pupuk)}
+            <br />
+            <b>Pemanfaatan Produk: </b><br />{capitalizeWords(item.pemanfaatan_produk)}
+            <br />
+          </div>
+        </Popup>
+      </Marker>
+    ),
+    []
+  );
+
+  CustomMarker.displayName = "CustomMarker";
+
   const Colors = ['#FED976','#d4ac2b']; // Two colors: base color and a lighter tint
   const LegendMenu = () => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -368,7 +464,7 @@ export default function MapSection() {
     const toggleExpand2 = () => {
       setIsExpanded(!isExpanded);
     };
-  
+
     return (
       <div className="relative">
         {/* Tombol Simbol Legenda */}
@@ -407,7 +503,7 @@ export default function MapSection() {
             </div>
             <div className="flex justify-between px-2 mt-1">
               <span className="text-xs">0</span>
-              <span className="text-xs">100+</span>
+              <span className="text-xs">50+</span>
             </div>
           </div>
         )}
@@ -450,14 +546,10 @@ export default function MapSection() {
             data.length > 0 &&
             data.map((geoJsonData, index) => (
               <>
-                <GeoJSON
+                <MemoizedGeoJSON
                   key={index}
                   data={geoJsonData}
-                  style={
-                    visualization === "umkm"
-                      ? getStyle(geoJsonData)
-                      : getStyleIncome(geoJsonData)
-                  }
+                  style={getStyle(geoJsonData)}
                   onEachFeature={onEachFeature}
                 />
                 {showRT && (
@@ -476,95 +568,20 @@ export default function MapSection() {
                         ">RT ${
                           geoJsonData.features[0].properties.rt || "No label"
                         }</div>`,
-                    })}
+                      })}
                   />
                 )}
-                {showIndividu &&
-                  dataRumahTangga
-                  .filter((item) => {
-                      const isSelectedRT = selectedRT === "desa" || item.kodeSls === selectedRT;
-                      const isSelectedClassification = selectedClassification === "all" ||
-                                                      (selectedClassification in variables &&
-                                                        item[variables[selectedClassification]] !== 0);
-                      const isSelectedUsaha = selectedtUsaha === "all" || 
-                                              (Array.isArray(item.pemanfaatan_produk) &&
-                                              item.pemanfaatan_produk.includes(selectedtUsaha));
-                      
-                      return isSelectedRT && isSelectedClassification && isSelectedUsaha;
-                    })
-                    
-                    .map((item) => (
-                      <Marker
-                        key={`marker-${item._id}`}
-                        position={[
-                          parseFloat(item.latitude),
-                          parseFloat(item.longitude),
-                        ]}
-                        icon={markerIcon}
-                      >
-                        <Popup>
-                          <div className="z-100">
-                            <strong>Informasi Usaha:</strong>
-                            {console.log("Check items ", item)}
-                            <img
-                              src={item.url_img}
-                              alt="Kelengkeng Image"
-                              className="w-full h-40 object-cover rounded-lg mb-3"
-                              loading="lazy"
-                            />
-                            <b>{item.nama_kepala_keluarga}</b>
-                            <br />
-                            {item.rt_rw_dusun} 
-                            <br />
-                            <b>Jumlah Pohon: </b><br />{item.jml_pohon}
-                            <br />
-                            <b>Jenis Kelengkeng:</b>
-                            <br />
-                            {item.jml_pohon_new_crystal > 0 && (
-                              <>
-                                New Crystal: {item.jml_pohon_new_crystal} Pohon
-                                <br />
-                              </>
-                            )}
-                            {item.jml_pohon_pingpong > 0 && (
-                              <>
-                                Pingpong: {item.jml_pohon_pingpong} Pohon
-                                <br />
-                              </>
-                            )}
-                            {item.jml_pohon_metalada > 0 && (
-                              <>
-                                Metalada: {item.jml_pohon_metalada} Pohon
-                                <br />
-                              </>
-                            )}
-                            {item.jml_pohon_diamond_river > 0 && (
-                              <>
-                                Diamond River: {item.jml_pohon_diamond_river} Pohon
-                                <br />
-                              </>
-                            )}
-                            {item.jml_pohon_merah > 0 && (
-                              <>
-                                Merah: {item.jml_pohon_merah} Pohon
-                                <br />
-                              </>
-                            )}
-                            <b>Volume Produksi: </b><br />{item.volume_produksi} kg
-                            <br />
-                            <b>Jenis Pupuk: </b><br />{capitalizeWords(item.jenis_pupuk)}
-                            <br />
-                            <b>Pemanfaatan Produk: </b><br />{capitalizeWords(item.pemanfaatan_produk)}
-                            <br />
-                          </div>
-                        </Popup>
-                      </Marker>
-                    ))
-                    }
               </>
             ))
           ) : (
             <BeatLoader />
+          )}
+          {showIndividu && (
+            <MarkerClusterGroup>
+              {filtered.map((item) => (
+                <CustomMarker key={`marker-${item._id}`} item={item} />
+              ))}
+            </MarkerClusterGroup>
           )}
         </MapContainer>
       </div>
