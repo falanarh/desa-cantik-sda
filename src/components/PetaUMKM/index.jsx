@@ -10,14 +10,13 @@ import {
   Popup,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import "react-leaflet-markercluster/dist/styles.min.css";
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L, { divIcon } from "leaflet";
 import { Transition } from "@headlessui/react";
 import api from "../../utils/api.js";
 import { message } from "antd";
 import CountUp from "react-countup";
 import { BeatLoader } from "react-spinners";
-import { MarkerClusterGroup } from "react-leaflet-markercluster";
 
 export default function MapSection() {
   const [selectedClassification, setSelectedClassification] = useState("all");
@@ -116,7 +115,7 @@ export default function MapSection() {
           "RT",
           "RW",
           "Dusun",
-          "Jumlah Rumah Tangga",
+          "Jumlah Keluarga",
           "Jumlah UMKM",
         ];
         const keysToShow = ["rt", "rw", "dusun", "jml_ruta", "jml_umkm"];
@@ -442,15 +441,14 @@ export default function MapSection() {
           ) : (
             <BeatLoader />
           )}
-          {/* <MarkerClusterGroup>
-            <Marker position={[49.8397, 24.0297]} />
-            <Marker position={[52.2297, 21.0122]} />
-            <Marker position={[51.5074, -0.0901]} />
-          </MarkerClusterGroup>; */}
-          {showIndividu &&
-            filteredData2.map((item) => (
+          
+          {showIndividu && (
+            <MarkerClusterGroup>
+            {filteredData2.map((item) => (
               <CustomMarker key={`marker-${item._id}`} item={item} />
             ))}
+            </MarkerClusterGroup>
+            )}
         </MapContainer>
       </div>
 
