@@ -94,7 +94,7 @@ const LoginGrogol = () => {
             className="w-20 h-20 mb-3 md:w-30 md:h-30"
           />
           <p className="text-lg italic font-bold font-inter text-pgreen md:text-xl">
-            PENDATAAN USAHA SAYURAN
+            USAHA SAYURAN
           </p>
           <p className="text-sm font-semibold tracking-wider text-gray-500 font-assistant">
             DESA GROGOL
@@ -111,8 +111,7 @@ const LoginGrogol = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             classNames={{
-              label:
-                "text-black md:text-lg mt-[5px] font-inter font-semibold",
+              label: "text-black md:text-lg mt-[5px] font-inter font-semibold",
               inputWrapper: "bg-slate-100",
             }}
             className="my-2"
