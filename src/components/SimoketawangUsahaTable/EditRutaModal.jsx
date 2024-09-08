@@ -579,7 +579,7 @@ const EditRutaModal = ({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
-              Edit Usaha Kelengkeng
+              Edit Potensi Kelengkeng
             </ModalHeader>
             <ModalBody className="py-4">
               <div className="space-y-4 simoketawang-usaha-edit">
