@@ -202,12 +202,12 @@ const BuletinAdm = () => {
 
         <div className={styles.formGroup}>
           <label>No:</label>
-          <input type="text" name="no" defaultValue={currentItem?.no || ''} readOnly />
+          <input className="rounded-xl" placeholder="Masukkan No" type="text" name="no" defaultValue={currentItem?.no || ''} readOnly />
         </div>
 
         <div className={styles.formGroup}>
           <label>Judul:</label>
-          <input type="text" name="title" defaultValue={currentItem?.title || ''} required />
+          <input type="text" placeholder="Masukkan Judul" name="title" defaultValue={currentItem?.title || ''} required />
         </div>
 
         {/* Combined Tanggal Kegiatan and Tanggal Rilis in one row */}
@@ -228,13 +228,14 @@ const BuletinAdm = () => {
             name="desc" 
             defaultValue={currentItem?.desc || ''} 
             required 
-            rows="3" 
+            rows="3"
+            placeholder="Masukkan Deskripsi"  
           />
         </div>
 
         <div className={styles.formGroup}>
           <label>File Link:</label>
-          <input type="text" name="fileLink" defaultValue={currentItem?.fileLink || ''} required />
+          <input type="text" placeholder="Masukkan Tautan" name="fileLink" defaultValue={currentItem?.fileLink || ''} required />
         </div>
 
         <Button className='w-fit self-end text-white font-inter font-semibold bg-[#fcc300]'>
