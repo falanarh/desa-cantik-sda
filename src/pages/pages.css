@@ -25,6 +25,20 @@
   /* margin: 2px !important; */
 }
 
+.grogol-tabs [data-slot="tabList"] {
+  background-color: #ffffffb4 !important;
+}
+
+.grogol-tabs [data-slot="tabContent"] {
+  color: #68B92E !important;
+}
+
+.grogol-tabs [data-slot="cursor"] {
+  background-color: #dffec9 !important;
+  box-shadow: none !important;
+  /* margin: 2px !important; */
+}
+
 .form-login
   .group[data-focus="true"]
   .group-data-\[focus\=true\]\:bg-default-100,

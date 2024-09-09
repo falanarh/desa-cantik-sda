@@ -13,7 +13,7 @@ export default function SK() {
         </>
       ),
       img: "/pict/sk.png",
-      link: "https://drive.usercontent.google.com/u/0/uc?id=1UOvdCQ95BtCMDDNOewXqb8LMcr0vKP-H&export=download"
+      link: "https://drive.google.com/file/d/1UOvdCQ95BtCMDDNOewXqb8LMcr0vKP-H/view"
     },
     {
       title: (
@@ -24,29 +24,29 @@ export default function SK() {
       </>
       ),
       img: "/pict/sk.png",
-      link: "https://drive.usercontent.google.com/u/0/uc?id=1W15jXwRPC7ozJQc7PgZJZxo5u54heS6Q&export=download"
+      link: "https://drive.google.com/file/d/1W15jXwRPC7ozJQc7PgZJZxo5u54heS6Q/view"
     },
     {
       title: (
         <>
-          Surat Keputusan Desa Cinta Statistik 2024
+          Surat Edaran Desa Cinta Statistik 2024
           <br />
           (Bupati Kabupaten Sidoarjo)
         </>
       ),
       img: "/pict/sk.png",
-      link: "https://drive.usercontent.google.com/u/0/uc?id=14J5-WSjOF3LQfcHrDJZyMdl93__LfAvx&export=download"
+      link: "https://drive.google.com/file/d/14J5-WSjOF3LQfcHrDJZyMdl93__LfAvx/view"
     },
     {
       title: (
         <>
-          Surat Keputusan Desa Cinta Statistik 2024
+          Surat Keputusan Tim Desa Cinta Statistik 2024
           <br />
           (BPS Kabupaten Sidoarjo)
         </>
       ),
       img: "/pict/sk.png",
-      link: "https://drive.usercontent.google.com/u/0/uc?id=14J5-WSjOF3LQfcHrDJZyMdl93__LfAvx&export=download"
+      link: "https://drive.google.com/file/d/1XLOcXUM8Gmk1qBV5GYFXQcb3T3enGug9/view"
     },
   ];
 
