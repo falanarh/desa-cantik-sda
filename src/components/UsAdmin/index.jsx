@@ -224,21 +224,21 @@ const UsAdmin = () => {
                   {modalType === 'timDesaCantik' ? (
                     <>
                       <label className="font-assistant">Nama:</label>
-                      <input type="text" className="w-full p-2 border rounded-lg" defaultValue={editMode && selectedItem ? selectedItem.name : ''} />
+                      <input type="text" placeholder="Masukkan Nama" className="w-full p-2 border rounded-xl" defaultValue={editMode && selectedItem ? selectedItem.name : ''} />
 
                       <label className="font-assistant mt-4">Jabatan:</label>
-                      <input type="text" className="w-full p-2 border rounded-lg" defaultValue={editMode && selectedItem ? selectedItem.role : ''} />
+                      <input type="text" placeholder="Masukkan Jabatan"  className="w-full p-2 border rounded-xl" defaultValue={editMode && selectedItem ? selectedItem.role : ''} />
 
                       <label className="font-assistant mt-4">Unggah Foto:</label>
-                      <input type="file" className="w-full p-2 border rounded-lg bg-white" />
+                      <input type="file" className="w-full p-2 border rounded-xl bg-white" />
                     </>
                   ) : (
                     <>
                       <label className="font-inter">Judul Surat Keputusan:</label>
-                      <input type="text" className="w-full p-2 border rounded-lg" defaultValue={editMode && selectedItem ? selectedItem.title : ''} />
+                      <input type="text" placeholder="Masukkan Judul" className="w-full p-2 border rounded-xl" defaultValue={editMode && selectedItem ? selectedItem.title : ''} />
 
                       <label className="font-inter mt-4">Unggah Surat Keputusan:</label>
-                      <input type="file" className="w-full p-2 border rounded-lg bg-white" />
+                      <input type="file" className="w-full p-2 border rounded-xl bg-white" />
                     </>
                   )}
                 </ModalBody>
