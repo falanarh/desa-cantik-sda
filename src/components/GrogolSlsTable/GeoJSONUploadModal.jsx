@@ -134,20 +134,20 @@ const GeoJSONUploadModal = ({
           wrapper: "overflow-y-hidden",
         }}
       >
-        <ModalContent className="font-inter text-pyellow">
+        <ModalContent className="font-inter text-pgreen">
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
+              <ModalHeader className="flex flex-col gap-1 text-white bg-pgreen">
                 Tambah Satuan Lingkungan Setempat (SLS)
               </ModalHeader>
               <ModalBody className="py-4">
-                <div className="flex flex-col text-pyellow font-inter">
-                  <p className="font-semibold text-[14px] mb-3 text-pyellow">
+                <div className="flex flex-col text-pgreen font-inter">
+                  <p className="font-semibold text-[14px] mb-3 text-pgreen">
                     Upload geoJSON
                   </p>
                   <Dragger {...uploadProps}>
                     <p className="ant-upload-drag-icon">
-                      <InboxOutlined style={{ color: "#d4ac2b" }} />
+                      <InboxOutlined style={{ color: "#68b92e" }} />
                     </p>
                     <p className="ant-upload-text">
                       Klik atau seret file geoJSON ke area ini
@@ -165,7 +165,7 @@ const GeoJSONUploadModal = ({
                   Tutup
                 </Button>
                 <Button
-                  className="font-semibold text-white bg-pyellow font-inter"
+                  className="font-semibold text-white bg-pgreen font-inter"
                   onPress={handleAdd}
                   disabled={loading}
                 >
