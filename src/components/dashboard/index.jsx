@@ -184,11 +184,11 @@ const Dashboard = () => {
           </h3>
           <div className={styles.formGroup}>
             <label>No:</label>
-            <input type="text" name="no" defaultValue={currentItem?.no || ''} required />
+            <input type="text" placeholder="Masukkan No" name="no" defaultValue={currentItem?.no || ''} required />
           </div>
           <div className={styles.formGroup}>
             <label>Nama Desa:</label>
-            <input type="text" name="name" defaultValue={currentItem?.name || ''} required />
+            <input type="text" placeholder="Masukkan Nama Desa" name="name" defaultValue={currentItem?.name || ''} required />
           </div>
           <div className={styles.formGroup}>
             <label>Kecamatan:</label>
@@ -201,7 +201,7 @@ const Dashboard = () => {
           </div>
           <div className={styles.formGroup}>
             <label>Luas:</label>
-            <input type="text" name="area" defaultValue={currentItem?.area || ''} required />
+            <input type="text" placeholder="Masukkan Luas" name="area" defaultValue={currentItem?.area || ''} required />
           </div>
           <div className={styles.formGroup}>
             <label>Unggah Foto:</label>
