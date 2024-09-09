@@ -77,7 +77,7 @@ const customMarker = L.icon({
 const RutaMap = ({ latitude, longitude }) => (
   <div className="my-4">
     <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">
-      Titik lokasi Usaha Kelengkeng
+      Titik Lokasi Potensi Kelengkeng
     </p>
     <MapContainer
       center={[latitude, longitude]}
@@ -236,7 +236,7 @@ const DetailRutaModal = ({ isOpen, onOpenChange, selectedRuta }) => {
         {() => (
           <>
             <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
-              Detail Rumah Tangga UMKM
+              Detail Potensi Kelengkeng
             </ModalHeader>
             <ModalBody className="py-4">
               <RutaDetail ruta={selectedRuta} />

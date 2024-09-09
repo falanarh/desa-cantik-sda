@@ -16,11 +16,14 @@ import BuletinAd from "./pages/buletinAdmin";
 import MenuAd from "./pages/menuAdm";
 import BerandaAdm from "./pages/berandaAdm";
 import DescAdmin from "./pages/deskripsiAdmin";
-import StatAdm  from "./pages/statAdmin";
-import UsAdm  from "./pages/usAdmin";
+import StatAdm from "./pages/statAdmin";
+import UsAdm from "./pages/usAdmin";
 import ProtectedRouteSimoanginangin from "./hooks/ProtectedRouteSimoanginangin";
 import ProtectedRouteSimoketawang from "./hooks/ProtectedRouteSimoketawang";
 import NotFoundPage from "./pages/notFoundPage";
+import LoginGrogol from "./pages/loginGrogol";
+import ProtectedRouteGrogol from "./hooks/ProtectedRouteGrogol";
+import AdminGrogol from "./pages/adminGrogol";
 
 function App() {
   const navigate = useNavigate();
@@ -34,6 +37,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/login-simoanginangin" element={<LoginSimoanginangin />} />
         <Route path="/login-simoketawang" element={<LoginSimoKetawang />} />
+        <Route path="/login-grogol" element={<LoginGrogol />} />
         <Route
           path="/admin-simoanginangin"
           element={
@@ -51,17 +55,22 @@ function App() {
           }
         />
         <Route
+          path="/admin-grogol"
+          element={
+            <ProtectedRouteGrogol>
+              <AdminGrogol />
+            </ProtectedRouteGrogol>
+          }
+        />
+        <Route
           path="/peta-umkm-simoanginangin"
           element={<PetaUMKMSimonaginagin />}
         />
         <Route
           path="/peta-kelengkeng-simoketawang"
-          element={<PetaKelengkengSimoketawang/>}
+          element={<PetaKelengkengSimoketawang />}
         />
-        <Route
-          path="/peta-sayuran-grogol"
-          element={<PetaSayuranGrogol/>}
-        />
+        <Route path="/peta-sayuran-grogol" element={<PetaSayuranGrogol />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/buletin" element={<BuletinAd />} />
         <Route path="/admin/navbar" element={<MenuAd />} />

@@ -713,7 +713,7 @@ const AddRutaModal = ({
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
-              Tambah Usaha Kelengkeng
+              Tambah Potensi Kelengkeng
             </ModalHeader>
             <ModalBody className="py-4">
               {isSatuan ? (
@@ -991,7 +991,7 @@ const AddRutaModal = ({
                           />
                           <MapUpdater position={mapPosition} />
                           <Marker position={mapPosition} icon={customMarker}>
-                            <Popup>Posisi Usaha Kelengkeng</Popup>
+                            <Popup>Posisi Potensi Kelengkeng</Popup>
                           </Marker>
                         </MapContainer>
                       </div>

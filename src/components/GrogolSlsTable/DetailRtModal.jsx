@@ -54,38 +54,41 @@ const RtDetail = ({ rt, geojson = null }) => {
     console.log("Fitting bounds:", geoJsonLayer.getBounds());
   }
 
-  // Table columns configuration
   const tableColumns = [
     { label: 'Kode', value: rt.kode },
     { label: 'RT', value: rt.rt },
     { label: 'RW', value: rt.rw },
     { label: 'Dusun', value: rt.dusun },
-    { label: 'Jumlah Penduduk', value: rt.jml_penduduk },
-    { label: 'Potensi Kelengkeng', value: rt.jml_unit_usaha_klengkeng },
-    { label: 'Potensi Kelengkeng Pupuk Organik', value: rt.jml_unit_usaha_klengkeng_pupuk_organik },
-    { label: 'Potensi Kelengkeng Pupuk Anorganik', value: rt.jml_unit_usaha_klengkeng_pupuk_anorganik },
-    { label: 'Potensi Kelengkeng Tidak Ada Pupuk', value: rt.jml_unit_usaha_klengkeng_tidak_ada_pupuk },
-    { label: 'Potensi Kelengkeng Kopi Biji Kelengkeng', value: rt.jml_unit_usaha_klengkeng_kopi_biji_klengkeng },
-    { label: 'Potensi Kelengkeng Kerajinan Tangan', value: rt.jml_unit_usaha_klengkeng_kerajinan_tangan },
-    { label: 'Potensi Kelengkeng Batik Ecoprint', value: rt.jml_unit_usaha_klengkeng_batik_ecoprint },
-    { label: 'Potensi Kelengkeng Minuman', value: rt.jml_unit_usaha_klengkeng_minuman },
-    { label: 'Potensi Kelengkeng Makanan', value: rt.jml_unit_usaha_klengkeng_makanan },
-    { label: 'Potensi Kelengkeng Tidak Ada Pemanfaatan', value: rt.jml_unit_usaha_klengkeng_tidak_dimanfaatkan },
-    { label: 'Pohon Kelengkeng', value: rt.jml_pohon },
-    { label: 'Pohon Kelengkeng New Crystal', value: rt.jml_pohon_new_crystal },
-    { label: 'Pohon Kelengkeng Pingpong', value: rt.jml_pohon_pingpong },
-    { label: 'Pohon Kelengkeng Metalada', value: rt.jml_pohon_metalada },
-    { label: 'Pohon Kelengkeng Diamond River', value: rt.jml_pohon_diamond_river },
-    { label: 'Pohon Kelengkeng Merah', value: rt.jml_pohon_merah },
-    { label: 'Pohon Kelengkeng Belum Berproduksi', value: rt.jml_pohon_blm_berproduksi },
-    { label: 'Pohon Kelengkeng Sudah Berproduksi', value: rt.jml_pohon_sdh_berproduksi },
-    { label: 'Volume Produksi Agustus 2023-Juli 2024 (kg)', value: rt.volume_produksi },
+    { label: 'Total Usaha Sayuran', value: rt.total_usaha_sayuran },
+    { label: 'Total Tanaman Kangkung', value: rt.total_tanaman_kangkung },
+    { label: 'Total Tanaman Bayam', value: rt.total_tanaman_bayam },
+    { label: 'Total Tanaman Sawi', value: rt.total_tanaman_sawi },
+    { label: 'Total Luas Tanam Kangkung (m²)', value: rt.total_rata2_luas_tanam_kangkung },
+    { label: 'Total Luas Tanam Bayam (m²)', value: rt.total_rata2_luas_tanam_bayam },
+    { label: 'Total Luas Tanam Sawi (m²)', value: rt.total_rata2_luas_tanam_sawi },
+    { label: 'Total Luas Panen Kangkung (m²)', value: rt.total_rata2_luas_panen_kangkung },
+    { label: 'Total Luas Panen Bayam (m²)', value: rt.total_rata2_luas_panen_bayam },
+    { label: 'Total Luas Panen Sawi (m²)', value: rt.total_rata2_luas_panen_sawi },
+    { label: 'Total Volume Produksi Kangkung (kg)', value: rt.total_rata2_volume_produksi_kangkung },
+    { label: 'Total Volume Produksi Bayam (kg)', value: rt.total_rata2_volume_produksi_bayam },
+    { label: 'Total Volume Produksi Sawi (kg)', value: rt.total_rata2_volume_produksi_sawi },
+    { label: 'Total Nilai Produksi Kangkung (000 Rp)', value: rt.total_rata2_nilai_produksi_kangkung },
+    { label: 'Total Nilai Produksi Bayam (000 Rp)', value: rt.total_rata2_nilai_produksi_bayam },
+    { label: 'Total Nilai Produksi Sawi (000 Rp)', value: rt.total_rata2_nilai_produksi_sawi },
+    { label: 'Total Tanaman Kangkung Dijual Sendiri (kg)', value: rt.total_tanaman_kangkung_dijual_sendiri },
+    { label: 'Total Tanaman Bayam Dijual Sendiri (kg)', value: rt.total_tanaman_bayam_dijual_sendiri },
+    { label: 'Total Tanaman Sawi Dijual Sendiri (kg)', value: rt.total_tanaman_sawi_dijual_sendiri },
+    { label: 'Total Tanaman Kangkung Dijual ke Tengkulak (kg)', value: rt.total_tanaman_kangkung_dijual_ke_tengkulak },
+    { label: 'Total Tanaman Bayam Dijual ke Tengkulak (kg)', value: rt.total_tanaman_bayam_dijual_ke_tengkulak },
+    { label: 'Total Tanaman Sawi Dijual ke Tengkulak (kg)', value: rt.total_tanaman_sawi_dijual_ke_tengkulak },
   ];
+  
+  
   
 
   return (
     <div className="p-4">
-      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-detail-sls">
+      <table className="w-full overflow-hidden border border-gray-300 rounded-lg table-detail-sls-grogol">
         <tbody className="text-[14px]">
           {tableColumns.map((column, index) => (
             <tr key={index} className="bg-white/70">
@@ -101,7 +104,7 @@ const RtDetail = ({ rt, geojson = null }) => {
       </table>
       {geojson && (
         <div className="my-4">
-          <p className="text-[14px] font-semibold ml-3 my-2 text-pyellow">Peta Wilayah SLS</p>
+          <p className="text-[14px] font-semibold ml-3 my-2 text-pgreen">Peta Wilayah SLS</p>
           <MapContainer
             key={JSON.stringify(geojson)} // Ensure a new key when geojson changes
             ref={mapRef}
@@ -138,10 +141,10 @@ const DetailRtModal = ({ isOpen, onOpenChange, selectedRt, geojsonRt }) => {
         wrapper: "overflow-y-hidden",
       }}
     >
-      <ModalContent className="font-inter text-pyellow">
+      <ModalContent className="font-inter text-pgreen">
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1 text-white bg-pyellow">
+            <ModalHeader className="flex flex-col gap-1 text-white bg-pgreen">
               Detail {selectedRt.label}
             </ModalHeader>
             <ModalBody className="py-4 overflow-y-auto">
@@ -149,7 +152,7 @@ const DetailRtModal = ({ isOpen, onOpenChange, selectedRt, geojsonRt }) => {
             </ModalBody>
             <ModalFooter>
               <Button
-                className="font-semibold text-white bg-pyellow font-inter"
+                className="font-semibold text-white bg-pgreen font-inter"
                 onPress={() => onOpenChange(false)}
               >
                 Tutup
