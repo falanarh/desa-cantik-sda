@@ -1,13 +1,13 @@
 import Footer from "../components/Footer";
-import NavbarPetaKelengkeng from "../components/NavbarPeta/kelengkeng.jsx";
-// import MyMap from "../components/PetaSayuran";
+import NavbarPetaGrogol from "../components/NavbarPeta/grogol.jsx";
+import MapSection from "../components/PetaSayuran";
 
 const PetaSayuranGrogol = () => {
   return (
   
       <div className="w-full h-full relative">
-      <NavbarPetaKelengkeng />
-      {/* <MyMap /> */}
+      <NavbarPetaGrogol />
+      <MapSection />
       <Footer />
       </div>
   );
