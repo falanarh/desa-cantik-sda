@@ -8,7 +8,7 @@ const PetaSayuranGrogol = () => {
       <div className="w-full h-full relative">
       <NavbarPetaGrogol />
       <MapSection />
-      <Footer />
+      {/* <Footer /> */}
       </div>
   );
 };

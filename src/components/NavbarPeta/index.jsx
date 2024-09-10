@@ -41,7 +41,7 @@ export default function NavbarPeta() {
           </NavbarItem>
           <NavbarItem>
             <Link
-              to="https://drive.google.com/drive/folders/1_EBqkBbHGhOY2iAwAV0BlzuvEg5w4TA4?usp=drive_link"
+              to="https://drive.google.com/drive/folders/1ZF_rkfRYosh0d0vUtK-TDGvwtvJ9raPM?usp=drive_link"
               className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base cursor-pointer mr-2"
               target="_blank" // Opens the link in a new tab
               rel="noopener noreferrer" // Provides security benefits

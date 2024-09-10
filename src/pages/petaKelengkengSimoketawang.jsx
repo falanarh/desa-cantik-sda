@@ -8,7 +8,7 @@ const PetaKelengkengSimoketawang = () => {
       <div className="w-full h-full relative">
       <NavbarPetaKelengkeng />
       <MapSection />
-      <Footer />
+      {/* <Footer /> */}
       </div>
   );
 };

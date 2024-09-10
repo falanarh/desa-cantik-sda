@@ -8,7 +8,7 @@ const PetaUMKMSimonaginagin = () => {
       <div className="w-full h-full relative">
       <NavbarPeta />
       <MapSection />
-      <Footer />
+      {/* <Footer /> */}
       </div>
   
   );

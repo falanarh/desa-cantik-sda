@@ -40,7 +40,7 @@ export default function NavbarPetaKelengkeng() {
           <NavbarContent justify="end">
             <NavbarItem>
               <Link
-                to="/login-simoanginangin"
+                to="/login-simoketawang"
                 className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base cursor-pointer"
               >
                 <span className="hidden md:inline">Masuk</span>
@@ -49,7 +49,7 @@ export default function NavbarPetaKelengkeng() {
             </NavbarItem>
             <NavbarItem>
             <Link
-              to="https://drive.google.com/drive/folders/1i4HXiR0GAM41ZqFzq1COGFgZX24WfsOl?usp=drive_link"
+              to="https://drive.google.com/drive/folders/1hrlkzfvidivE55YydX4pJYpBiQTDdu69?usp=drive_link"
               className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base cursor-pointer mr-2"
               target="_blank" // Opens the link in a new tab
               rel="noopener noreferrer" // Provides security benefits
