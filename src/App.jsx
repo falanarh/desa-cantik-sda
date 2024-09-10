@@ -24,6 +24,8 @@ import NotFoundPage from "./pages/notFoundPage";
 import LoginGrogol from "./pages/loginGrogol";
 import ProtectedRouteGrogol from "./hooks/ProtectedRouteGrogol";
 import AdminGrogol from "./pages/adminGrogol";
+import Logout from "./components/Logout";
+import ProtectedRouteDescan from "./hooks/ProtectedRouteDescan";
 
 function App() {
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ function App() {
         <Route path="/buletin" element={<Buletin />} />
         <Route path="/tentangkami" element={<TentangKami />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
         <Route path="/login-simoanginangin" element={<LoginSimoanginangin />} />
         <Route path="/login-simoketawang" element={<LoginSimoKetawang />} />
         <Route path="/login-grogol" element={<LoginGrogol />} />
@@ -71,13 +74,62 @@ function App() {
           element={<PetaKelengkengSimoketawang />}
         />
         <Route path="/peta-sayuran-grogol" element={<PetaSayuranGrogol />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/admin/buletin" element={<BuletinAd />} />
-        <Route path="/admin/navbar" element={<MenuAd />} />
-        <Route path="/admin/dashboard" element={<BerandaAdm />} />
-        <Route path="/admin/desc" element={<DescAdmin />} />
-        <Route path="/admin/stat" element={<StatAdm />} />
-        <Route path="/admin/us" element={<UsAdm />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRouteDescan>
+              <Admin />
+            </ProtectedRouteDescan>
+          }
+        />
+        <Route
+          path="/admin/buletin"
+          element={
+            <ProtectedRouteDescan>
+              <BuletinAd />
+            </ProtectedRouteDescan>
+          }
+        />
+        <Route
+          path="/admin/navbar"
+          element={
+            <ProtectedRouteDescan>
+              <MenuAd />
+            </ProtectedRouteDescan>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRouteDescan>
+              <BerandaAdm />
+            </ProtectedRouteDescan>
+          }
+        />
+        <Route
+          path="/admin/desc"
+          element={
+            <ProtectedRouteDescan>
+              <DescAdmin />
+            </ProtectedRouteDescan>
+          }
+        />
+        <Route
+          path="/admin/stat"
+          element={
+            <ProtectedRouteDescan>
+              <StatAdm />
+            </ProtectedRouteDescan>
+          }
+        />
+        <Route
+          path="/admin/us"
+          element={
+            <ProtectedRouteDescan>
+              <UsAdm />
+            </ProtectedRouteDescan>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </NextUIProvider>

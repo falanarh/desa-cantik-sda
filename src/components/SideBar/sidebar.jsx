@@ -17,7 +17,7 @@ const Sidebar = () => {
       '/admin/desc': 'Deskripsi',
       '/admin/stat': 'Statistik',
       '/admin/us': 'Tentang Kami',
-      '/admin/logout': 'Keluar',
+      '/logout': 'Keluar',
     };
     
     setActiveMenu(pathToMenuMap[location.pathname] || '');
@@ -40,7 +40,7 @@ const Sidebar = () => {
           { icon: <FaHome />, text: 'Desa', path: '/admin' },
           { icon: <FaBook />, text: 'Buletin', path: '/admin/buletin' },
           { icon: <FaUser />, text: 'Tentang Kami', path: '/admin/us' },
-          { icon: <FaDoorOpen />, text: 'Keluar', path: '/admin/logout' },
+          { icon: <FaDoorOpen />, text: 'Keluar', path: '/logout' },
         ].map((item, index) => (
           <Link key={index} to={item.path} className={styles.navLink}>
             <div

@@ -123,6 +123,7 @@ const AddRutaModal = ({
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
   };
+  
   const handleChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     setCustomFilename(addUsahaData.nama_kepala_keluarga);

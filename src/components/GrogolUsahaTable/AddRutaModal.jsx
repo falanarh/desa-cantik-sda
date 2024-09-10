@@ -379,9 +379,9 @@ const AddRutaModal = ({
         tanamanErrors.frekuensi_panen = "Frekuensi Panen wajib diisi.";
       if (!tanaman.rata2_luas_panen)
         tanamanErrors.rata2_luas_panen = "Rata-rata Luas Panen wajib diisi.";
-      if (!tanaman.penyebab_luas_panen_kurang_dari_luas_tanam)
-        tanamanErrors.penyebab_luas_panen_kurang_dari_luas_tanam =
-          "Penyebab Luas Panen Kurang dari Luas Tanam wajib dipilih.";
+      // if (!tanaman.penyebab_luas_panen_kurang_dari_luas_tanam)
+      //   tanamanErrors.penyebab_luas_panen_kurang_dari_luas_tanam =
+      //     "Penyebab Luas Panen Kurang dari Luas Tanam wajib dipilih.";
       if (!tanaman.rata2_volume_produksi)
         tanamanErrors.rata2_volume_produksi =
           "Rata-rata Volume Produksi wajib diisi.";
