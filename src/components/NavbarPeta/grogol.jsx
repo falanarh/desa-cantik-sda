@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function NavbarPetaKelengkeng() {
   return (
     <div className="sticky top-0 z-50">
-        <Navbar className="bg-[#eaffdb] text-pgreen h-[11vh] p-3 sm:p-2 flex shadow-lg w-full">
+        <Navbar className="bg-[#eaffdb] text-[#065f46] h-[11vh] p-3 sm:p-2 flex shadow-lg w-full">
           <NavbarBrand justify="left">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Coat_of_Arms_of_Sidoarjo_Regency.png/664px-Coat_of_Arms_of_Sidoarjo_Regency.png"
@@ -20,10 +20,10 @@ export default function NavbarPetaKelengkeng() {
               height={48}
             />
             <div className="ml-3">
-              <p className="font-sfProDisplay font-semibold text-pgreen leading-tight">
+              <p className="font-sfProDisplay font-semibold text-[#065f46] leading-tight">
                 PETA USAHA TANAMAN SAYURAN
                 <br />
-                <span className="text-[1.2rem] text-pgreen font-bold font-sfProDisplay">DESA GROGOL</span>
+                <span className="text-[1.2rem] text-[#065f46] font-bold font-sfProDisplay">DESA GROGOL</span>
               </p>
             </div>
           </NavbarBrand>
@@ -47,7 +47,7 @@ export default function NavbarPetaKelengkeng() {
               target="_blank" // Opens the link in a new tab
               rel="noopener noreferrer" // Provides security benefits
             >
-              <span className="hidden md:inline">Dokumen</span>
+              <span className="hidden md:inline">Panduan</span>
               <span className="md:hidden material-icons">folder</span>
             </Link>
           </NavbarItem>

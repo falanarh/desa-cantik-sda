@@ -43,7 +43,7 @@ export default function NavbarPetaKelengkeng() {
                 to="/login-simoketawang"
                 className="flex items-center justify-center p-2 bg-[#0F1820] text-white font-medium rounded-xl md:rounded-full md:px-4 md:py-2 md:text-base cursor-pointer"
               >
-                <span className="hidden md:inline">Masuk</span>
+                <span className="hidden md:inline">Panduan</span>
                 <span className="md:hidden material-icons">account_circle</span>
               </Link>
             </NavbarItem>

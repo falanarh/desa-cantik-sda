@@ -46,7 +46,7 @@ export default function NavbarPeta() {
               target="_blank" // Opens the link in a new tab
               rel="noopener noreferrer" // Provides security benefits
             >
-              <span className="hidden md:inline material-icons">folder</span>
+              <span className="hidden md:inline">Panduan</span>
               <span className="md:hidden material-icons">folder</span>
             </Link>
           </NavbarItem>
