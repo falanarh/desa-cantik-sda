@@ -407,7 +407,7 @@ export default function MapSection() {
         </div>
 
         <div className="w-full rounded-lg overflow-hidden">
-        <div className="max-h-64 overflow-y-auto overflow-x-auto scrollbar-hide">
+        <div className="max-h-64 overflow-y-auto overflow-x-auto">
     <table className="w-full border-collapse">
       <thead className="bg-[#E6FF94] sticky top-0 z-10">
         <tr>
