@@ -3,17 +3,24 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef, memo, useMemo } from "react";
-import { MapContainer, TileLayer, GeoJSON, LayersControl, Marker, Popup} from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  GeoJSON,
+  LayersControl,
+  Marker,
+  Popup,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, { divIcon } from "leaflet";
 import { Transition } from "@headlessui/react";
 import api2 from "../../utils/api2.js";
 import { message } from "antd";
 import CountUp from "react-countup";
-import MarkerClusterGroup from 'react-leaflet-cluster';
+import MarkerClusterGroup from "react-leaflet-cluster";
 // import { MarkerClusterGroup } from 'react-leaflet-markercluster';
 import { BeatLoader } from "react-spinners";
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 export default function MapSection() {
   const [selectedClassification, setSelectedClassification] = useState("all");
@@ -115,7 +122,7 @@ export default function MapSection() {
         })
         .finally(() => setLoading(false));
     }
-  }, [isFetched]);  
+  }, [isFetched]);
 
   // Function to determine style based on feature properties
   const getStyle = (data) => {
@@ -147,8 +154,8 @@ export default function MapSection() {
   };
 
   const markerIcon = divIcon({
-  className: "custom-label",
-  html: `
+    className: "custom-label",
+    html: `
     <span
       class="material-symbols-outlined"
       style="
@@ -166,38 +173,26 @@ export default function MapSection() {
     </span>
   `,
   });
-  
-  
 
   let selectedLayer = null; // Track the currently selected layer
 
   const onEachFeature = (feature, layer) => {
-  layer.on({
-    mouseover: (e) => {
-      const layer = e.target;
-      if (layer !== selectedLayer) {
-        layer.setStyle({
-          weight: 4,
-          color: "#fff",
-          dashArray: "",
-          fillOpacity: 0.8,
-        });
-      }
+    layer.on({
+      mouseover: (e) => {
+        const layer = e.target;
+        if (layer !== selectedLayer) {
+          layer.setStyle({
+            weight: 4,
+            color: "#fff",
+            dashArray: "",
+            fillOpacity: 0.8,
+          });
+        }
 
-      const keysLayer = [
-        "RT",
-        "RW",
-        "Dusun",
-        "Jumlah Usaha",
-      ];
-      const keysToShow = [
-        "rt",
-        "rw",
-        "dusun",
-        "jml_unit_usaha_klengkeng",
-      ];
+        const keysLayer = ["RT", "RW", "Dusun", "Jumlah Usaha"];
+        const keysToShow = ["rt", "rw", "dusun", "jml_unit_usaha_klengkeng"];
 
-      const popupContent = `<div>
+        const popupContent = `<div>
         <strong>Informasi RT:</strong><br>
         ${keysToShow
           .map(
@@ -207,56 +202,58 @@ export default function MapSection() {
           .join("<br>")}
       </div>`;
 
-      const popup = layer.bindPopup(popupContent, {
-        autoPan: false,
-      }).openPopup(e.latlng);
+        const popup = layer
+          .bindPopup(popupContent, {
+            autoPan: false,
+          })
+          .openPopup(e.latlng);
 
-      popup.setLatLng(e.latlng);
-    },
+        popup.setLatLng(e.latlng);
+      },
 
-    mouseout: (e) => {
-      const layer = e.target;
-      if (layer !== selectedLayer) {
-        layer.setStyle({
-          weight: 2,
-          color: "white",
-          dashArray: "3",
-          fillOpacity: 0.3,
-        });
-      }
-      layer.closePopup();
-    },
+      mouseout: (e) => {
+        const layer = e.target;
+        if (layer !== selectedLayer) {
+          layer.setStyle({
+            weight: 2,
+            color: "white",
+            dashArray: "3",
+            fillOpacity: 0.3,
+          });
+        }
+        layer.closePopup();
+      },
 
-    click: (e) => {
-      const layer = e.target;
-      
-      // Reset previous selected layer style
-      if (selectedLayer) {
-        selectedLayer.setStyle({
-          weight: 2,
-          color: "white",
-          dashArray: "3",
-          fillOpacity: 0.3,
-        });
-      }
-      
-      // Set the current layer as the selected layer
-      if (selectedLayer === layer) {
-        selectedLayer = null;
-        setSelectedRT("desa");
-      } else {
-        selectedLayer = layer;
-        setSelectedRT(feature.properties.kode);
-        layer.setStyle({
-          weight: 4,
-          color: "#fff",
-          dashArray: "",
-          fillOpacity: 0.8, // Ensure opacity is set to 0.8 when clicked
-        });
-      }
-    },
-  });
-};
+      click: (e) => {
+        const layer = e.target;
+
+        // Reset previous selected layer style
+        if (selectedLayer) {
+          selectedLayer.setStyle({
+            weight: 2,
+            color: "white",
+            dashArray: "3",
+            fillOpacity: 0.3,
+          });
+        }
+
+        // Set the current layer as the selected layer
+        if (selectedLayer === layer) {
+          selectedLayer = null;
+          setSelectedRT("desa");
+        } else {
+          selectedLayer = layer;
+          setSelectedRT(feature.properties.kode);
+          layer.setStyle({
+            weight: 4,
+            color: "#fff",
+            dashArray: "",
+            fillOpacity: 0.8, // Ensure opacity is set to 0.8 when clicked
+          });
+        }
+      },
+    });
+  };
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -277,25 +274,23 @@ export default function MapSection() {
 
   function capitalizeWords(arr) {
     if (!Array.isArray(arr)) {
-        console.error("capitalizeWords expects an array but received:", arr);
-        return arr; // Or handle the error as needed
+      console.error("capitalizeWords expects an array but received:", arr);
+      return arr; // Or handle the error as needed
     }
 
     return arr
-        .map((str) => {
-            if (typeof str !== 'string') {
-                str = String(str); // Convert to string if it's not already
-            }
-            return str
-                .split(/[-_/]/) // Pisahkan berdasarkan "-" dan "/"
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ");
-        })
-        .join(" ") // Combine the processed strings with a space
-        .replace(/\s\/\s/, "/"); // Gabungkan kembali "/" tanpa spasi
-}
-
-  
+      .map((str) => {
+        if (typeof str !== "string") {
+          str = String(str); // Convert to string if it's not already
+        }
+        return str
+          .split(/[-_/]/) // Pisahkan berdasarkan "-" dan "/"
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      })
+      .join(" ") // Combine the processed strings with a space
+      .replace(/\s\/\s/, "/"); // Gabungkan kembali "/" tanpa spasi
+  }
 
   function calculateCentroid(multiPolygon) {
     let totalX = 0,
@@ -320,38 +315,38 @@ export default function MapSection() {
 
   const tempatUsaha = {
     all: "Semua Produk",
-    kopi_biji_klengkeng : "Kopi Biji Klengkeng",
-    Kerajinan_tangan : "Kerajinan Tangan dari Daun (contoh: pigura, kipas)",
-    batik_ecoprint : "Batik Ecoprint",
-    minuman : "Minuman Klengkeng (contoh: Susu jelly, sirup)",
-    makanan : "Makanan Kelengkeng (Selai, Strudel)",
+    kopi_biji_klengkeng: "Kopi Biji Klengkeng",
+    Kerajinan_tangan: "Kerajinan Tangan dari Daun (contoh: pigura, kipas)",
+    batik_ecoprint: "Batik Ecoprint",
+    minuman: "Minuman Klengkeng (contoh: Susu jelly, sirup)",
+    makanan: "Makanan Kelengkeng (Selai, Strudel)",
     tidak_dimanfaatkan: "Tidak Dimanfaatkan",
   };
 
   const classifications = {
     all: "Semua Jenis",
-    jml_pohon_new_crystal : "New Crystal",
-    jml_pohon_pingpong : "Pingpong",
-    jml_pohon_metalada : "Matalada",
-    jml_pohon_diamond_river : "Diamond River",
-    jml_pohon_merah : "Merah",
+    jml_pohon_new_crystal: "New Crystal",
+    jml_pohon_pingpong: "Pingpong",
+    jml_pohon_metalada: "Matalada",
+    jml_pohon_diamond_river: "Diamond River",
+    jml_pohon_merah: "Merah",
   };
 
   const variables = {
-    jml_pohon_new_crystal: 'jml_pohon_new_crystal',
-    jml_pohon_pingpong: 'jml_pohon_pingpong',
-    jml_pohon_metalada: 'jml_pohon_metalada',
-    jml_pohon_diamond_river: 'jml_pohon_diamond_river',
-    jml_pohon_merah: 'jml_pohon_merah'
+    jml_pohon_new_crystal: "jml_pohon_new_crystal",
+    jml_pohon_pingpong: "jml_pohon_pingpong",
+    jml_pohon_metalada: "jml_pohon_metalada",
+    jml_pohon_diamond_river: "jml_pohon_diamond_river",
+    jml_pohon_merah: "jml_pohon_merah",
   };
 
   const dataJenis = [
     {
-      name: 'Belum',
+      name: "Belum",
       value: dataAgregat.jml_pohon_blm_berproduksi,
     },
     {
-      name: 'Sudah',
+      name: "Sudah",
       value: dataAgregat.jml_pohon_sdh_berproduksi,
     },
   ];
@@ -377,16 +372,11 @@ export default function MapSection() {
         (selectedClassification === "all" ||
           (selectedClassification in variables &&
             item[variables[selectedClassification]] !== 0)) &&
-        (selectedtUsaha === "all" || 
+        (selectedtUsaha === "all" ||
           (Array.isArray(item.pemanfaatan_produk) &&
-          item.pemanfaatan_produk.includes(selectedtUsaha)))
+            item.pemanfaatan_produk.includes(selectedtUsaha)))
     );
-  }, [
-    dataRumahTangga,
-    selectedRT,
-    selectedClassification,
-    selectedtUsaha,
-  ]);
+  }, [dataRumahTangga, selectedRT, selectedClassification, selectedtUsaha]);
 
   const CustomMarker = memo(
     ({ item }) => (
@@ -394,7 +384,7 @@ export default function MapSection() {
         position={[parseFloat(item.latitude), parseFloat(item.longitude)]}
         icon={markerIcon}
       >
-      <Popup>
+        <Popup>
           <div className="z-100">
             <strong>Informasi Usaha:</strong>
             {console.log("Check items ", item)}
@@ -406,9 +396,11 @@ export default function MapSection() {
             />
             <b>{item.nama_kepala_keluarga}</b>
             <br />
-            {item.rt_rw_dusun} 
+            {item.rt_rw_dusun}
             <br />
-            <b>Jumlah Pohon: </b><br />{item.jml_pohon}
+            <b>Jumlah Pohon: </b>
+            <br />
+            {item.jml_pohon}
             <br />
             <b>Jenis Kelengkeng:</b>
             <br />
@@ -442,11 +434,17 @@ export default function MapSection() {
                 <br />
               </>
             )}
-            <b>Volume Produksi: </b><br />{item.volume_produksi} kg
+            <b>Volume Produksi: </b>
             <br />
-            <b>Jenis Pupuk: </b><br />{capitalizeWords(item.jenis_pupuk)}
+            {item.volume_produksi} kg
             <br />
-            <b>Pemanfaatan Produk: </b><br />{capitalizeWords(item.pemanfaatan_produk)}
+            <b>Jenis Pupuk: </b>
+            <br />
+            {capitalizeWords(item.jenis_pupuk)}
+            <br />
+            <b>Pemanfaatan Produk: </b>
+            <br />
+            {capitalizeWords(item.pemanfaatan_produk)}
             <br />
           </div>
         </Popup>
@@ -457,10 +455,10 @@ export default function MapSection() {
 
   CustomMarker.displayName = "CustomMarker";
 
-  const Colors = ['#FED976','#d4ac2b']; // Two colors: base color and a lighter tint
+  const Colors = ["#FED976", "#d4ac2b"]; // Two colors: base color and a lighter tint
   const LegendMenu = () => {
     const [isExpanded, setIsExpanded] = useState(false);
-  
+
     const toggleExpand2 = () => {
       setIsExpanded(!isExpanded);
     };
@@ -478,15 +476,15 @@ export default function MapSection() {
           {/* Ikon untuk tombol */}
           <span className="material-icons">legend_toggle</span>
         </button>
-  
+
         {/* Menu yang akan diperluas ketika tombol diklik */}
         {isExpanded && (
           <div
             className="absolute right-0 bottom-full mb-3 p-4 w-[20vh] bg-white rounded-md shadow-md text-gray-800"
             style={{
-            backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent background
-            backdropFilter: "blur(12px)", // Blur effect
-          }}
+              backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent background
+              backdropFilter: "blur(12px)", // Blur effect
+            }}
           >
             <div className="mb-1 text-sm font-semibold text-right">
               Jumlah Usaha
@@ -568,7 +566,7 @@ export default function MapSection() {
                         ">RT ${
                           geoJsonData.features[0].properties.rt || "No label"
                         }</div>`,
-                      })}
+                    })}
                   />
                 )}
               </>
@@ -576,13 +574,13 @@ export default function MapSection() {
           ) : (
             <BeatLoader />
           )}
-          {showIndividu && (
-            <MarkerClusterGroup>
-              {filtered.map((item) => (
-                <CustomMarker key={`marker-${item._id}`} item={item} />
-              ))}
-            </MarkerClusterGroup>
-          )}
+          {showIndividu &&
+            // <MarkerClusterGroup>
+            filtered.map((item) => (
+              <CustomMarker key={`marker-${item._id}`} item={item} />
+            ))
+            // </MarkerClusterGroup>
+          }
         </MapContainer>
       </div>
 
@@ -704,118 +702,155 @@ export default function MapSection() {
           className="absolute top-16 left-[10%] z-10 w-64 max-h-[77vh] p-4 bg-[#1D262C] rounded-md shadow-md text-white overflow-y-auto"
         >
           <div className="text-center">
-          {filteredData?.features?.[0] ? (
-            <>
-              {selectedRT !== "desa" ? (
-                <>
-                  <div className="mb-4">
-                    <p className="bg-[#2E2E2E] rounded-full p-1 text-sm text-white font-medium">
-                      <span className="mr-1 text-sm text-white material-icons">location_on</span>
-                      RT {filteredData.features[0].properties.rt} RW {filteredData.features[0].properties.rw} Dsn {filteredData.features[0].properties.dusun}
-                    </p>
-                  </div>
-
-                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                    <div className="text-4xl font-bold">
-                      <CountUp
-                        start={0}
-                        end={filteredData.features[0].properties.jml_unit_usaha_klengkeng}
-                        duration={3}
-                      />
+            {filteredData?.features?.[0] ? (
+              <>
+                {selectedRT !== "desa" ? (
+                  <>
+                    <div className="mb-4">
+                      <p className="bg-[#2E2E2E] rounded-full p-1 text-sm text-white font-medium">
+                        <span className="mr-1 text-sm text-white material-icons">
+                          location_on
+                        </span>
+                        RT {filteredData.features[0].properties.rt} RW{" "}
+                        {filteredData.features[0].properties.rw} Dsn{" "}
+                        {filteredData.features[0].properties.dusun}
+                      </p>
                     </div>
-                    <p className="text-xm">Pohon Kelengkeng</p>
-                  </div>
 
-                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                    <p className="mb-1 text-xm">Produksi</p>
-                    <PieChart width={175} height={175}>
-                      <Pie
-                        data={[
-                          { name: "Belum", value: filteredData.features[0].properties.jml_pohon_blm_berproduksi },
-                          { name: "Sudah", value: filteredData.features[0].properties.jml_pohon_sdh_berproduksi },
-                        ]}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={75}
-                        innerRadius={50}
-                      >
-                        {[
-                          { name: "Belum", value: filteredData.features[0].properties.jml_pohon_blm_berproduksi },
-                          { name: "Sudah", value: filteredData.features[0].properties.jml_pohon_sdh_berproduksi },
-                        ].map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={Colors[index % Colors.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend
-                        layout="horizontal"
-                        align="center"
-                        verticalAlign="bottom"
-                        wrapperStyle={{
-                          fontSize: "12px",
-                          marginTop: "1rem",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      />
-                    </PieChart>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="mb-4">
-                    <p className="bg-[#2E2E2E] rounded-full text-white p-1 text-sm font-medium">
-                      <span className="mr-1 text-sm material-icons">location_on</span>
-                      Desa Simoketawang
-                    </p>
-                  </div>
-
-                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                    <div className="text-4xl font-bold">
-                      <CountUp start={0} end={dataAgregat.jml_pohon} duration={3} />
+                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                      <div className="text-4xl font-bold">
+                        <CountUp
+                          start={0}
+                          end={
+                            filteredData.features[0].properties
+                              .jml_unit_usaha_klengkeng
+                          }
+                          duration={3}
+                        />
+                      </div>
+                      <p className="text-xm">Pohon Kelengkeng</p>
                     </div>
-                    <p className="text-xm">Pohon Kelengkeng</p>
-                  </div>
 
-                  <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                    <p className="mb-1 text-xm">Produksi</p>
-                    <PieChart width={175} height={175}>
-                      <Pie
-                        data={dataJenis}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={75}
-                        innerRadius={50}
-                      >
-                        {dataJenis.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={Colors[index % Colors.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend
-                        layout="horizontal"
-                        align="center"
-                        verticalAlign="bottom"
-                        wrapperStyle={{
-                          fontSize: "12px",
-                          marginTop: "2rem",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      />
-                    </PieChart>
-                  </div>
-                </>
-              )}
-            </>
-          ) : null}
+                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                      <p className="mb-1 text-xm">Produksi</p>
+                      <PieChart width={175} height={175}>
+                        <Pie
+                          data={[
+                            {
+                              name: "Belum",
+                              value:
+                                filteredData.features[0].properties
+                                  .jml_pohon_blm_berproduksi,
+                            },
+                            {
+                              name: "Sudah",
+                              value:
+                                filteredData.features[0].properties
+                                  .jml_pohon_sdh_berproduksi,
+                            },
+                          ]}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={75}
+                          innerRadius={50}
+                        >
+                          {[
+                            {
+                              name: "Belum",
+                              value:
+                                filteredData.features[0].properties
+                                  .jml_pohon_blm_berproduksi,
+                            },
+                            {
+                              name: "Sudah",
+                              value:
+                                filteredData.features[0].properties
+                                  .jml_pohon_sdh_berproduksi,
+                            },
+                          ].map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={Colors[index % Colors.length]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend
+                          layout="horizontal"
+                          align="center"
+                          verticalAlign="bottom"
+                          wrapperStyle={{
+                            fontSize: "12px",
+                            marginTop: "1rem",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        />
+                      </PieChart>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mb-4">
+                      <p className="bg-[#2E2E2E] rounded-full text-white p-1 text-sm font-medium">
+                        <span className="mr-1 text-sm material-icons">
+                          location_on
+                        </span>
+                        Desa Simoketawang
+                      </p>
+                    </div>
+
+                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                      <div className="text-4xl font-bold">
+                        <CountUp
+                          start={0}
+                          end={dataAgregat.jml_pohon}
+                          duration={3}
+                        />
+                      </div>
+                      <p className="text-xm">Pohon Kelengkeng</p>
+                    </div>
+
+                    <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
+                      <p className="mb-1 text-xm">Produksi</p>
+                      <PieChart width={175} height={175}>
+                        <Pie
+                          data={dataJenis}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="50%"
+                          outerRadius={75}
+                          innerRadius={50}
+                        >
+                          {dataJenis.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={Colors[index % Colors.length]}
+                            />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend
+                          layout="horizontal"
+                          align="center"
+                          verticalAlign="bottom"
+                          wrapperStyle={{
+                            fontSize: "12px",
+                            marginTop: "2rem",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        />
+                      </PieChart>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : null}
           </div>
-
-
         </Transition>
         <div
           className="absolute bottom-4 right-4 z-10 w-auto p-2 mr-[8%] bg-white rounded-md shadow-md text-gray-800"
@@ -841,7 +876,7 @@ export default function MapSection() {
               ) : (
                 <div className="flex items-center">
                   <span className="mr-2 text-xl material-icons">
-                  visibility_off
+                    visibility_off
                   </span>{" "}
                   RT
                 </div>
