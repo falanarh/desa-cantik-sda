@@ -401,7 +401,7 @@ export default function MapSection() {
             <img
               src={item.url_img}
               alt="Kelengkeng Image"
-              className="w-full h-40 object-cover rounded-lg mb-3"
+              className="object-cover w-full h-40 mb-3 rounded-lg"
               loading="lazy"
             />
             <b>{item.nama_kepala_keluarga}</b>
@@ -658,7 +658,7 @@ export default function MapSection() {
             </div>
 
             <label className="block mt-4 text-sm font-medium text-white">
-              Produksi
+              Jenis Kelengkeng
             </label>
             <select
               id="jenis"
@@ -710,7 +710,7 @@ export default function MapSection() {
                 <>
                   <div className="mb-4">
                     <p className="bg-[#2E2E2E] rounded-full p-1 text-sm text-white font-medium">
-                      <span className="mr-1 text-sm material-icons text-white">location_on</span>
+                      <span className="mr-1 text-sm text-white material-icons">location_on</span>
                       RT {filteredData.features[0].properties.rt} RW {filteredData.features[0].properties.rw} Dsn {filteredData.features[0].properties.dusun}
                     </p>
                   </div>
@@ -727,7 +727,7 @@ export default function MapSection() {
                   </div>
 
                   <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                    <p className="text-xm mb-1">Produksi</p>
+                    <p className="mb-1 text-xm">Produksi</p>
                     <PieChart width={175} height={175}>
                       <Pie
                         data={[
@@ -780,7 +780,7 @@ export default function MapSection() {
                   </div>
 
                   <div className="bg-[#101920] p-4 rounded-md mb-4 text-left">
-                    <p className="text-xm mb-1">Produksi</p>
+                    <p className="mb-1 text-xm">Produksi</p>
                     <PieChart width={175} height={175}>
                       <Pie
                         data={dataJenis}
