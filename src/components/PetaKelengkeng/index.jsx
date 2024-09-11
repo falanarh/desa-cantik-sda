@@ -17,8 +17,7 @@ import { Transition } from "@headlessui/react";
 import api2 from "../../utils/api2.js";
 import { message } from "antd";
 import CountUp from "react-countup";
-import MarkerClusterGroup from "react-leaflet-cluster";
-// import { MarkerClusterGroup } from 'react-leaflet-markercluster';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import { BeatLoader } from "react-spinners";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
