@@ -10,6 +10,8 @@ import {
   Button,
   useDisclosure,
   Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
@@ -42,6 +44,8 @@ import * as FileSaver from "file-saver";
 const RutaTable = ({ fetchDataAggregate }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRuta, setSelectedRuta] = useState(null);
+  const [selectedLokasiTempatUsaha, setSelectedLokasiTempatUsaha] =
+    useState("");
   const [dataRuta, setDataRuta] = useState([]);
   const [dataRt, setDataRt] = useState([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -134,6 +138,11 @@ const RutaTable = ({ fetchDataAggregate }) => {
     setSearchTerm(e.target.value);
   };
 
+  const handleLokasiChange = (value) => {
+    console.log("handleLokasiChange: ", value);
+    setSelectedLokasiTempatUsaha(value);
+  };
+
   const handleDetailClick = (ruta) => {
     setSelectedRuta(ruta);
     onOpen();
@@ -149,11 +158,17 @@ const RutaTable = ({ fetchDataAggregate }) => {
     deleteData(ruta);
   };
 
-  const filteredData = dataRuta.filter((ruta) =>
-    Object.values(ruta).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = dataRuta
+    .filter((ruta) =>
+      Object.values(ruta).some((value) =>
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
     )
-  );
+    .filter((ruta) =>
+      selectedLokasiTempatUsaha
+        ? ruta.lokasi_tempat_usaha === selectedLokasiTempatUsaha
+        : true
+    );
 
   const renderCell = (ruta, columnKey) => {
     const cellValue = ruta[columnKey];
@@ -273,14 +288,14 @@ const RutaTable = ({ fetchDataAggregate }) => {
 
   const getFormattedDateTime = () => {
     const now = new Date();
-  
+
     // Ambil komponen tanggal dan waktu
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0"); // Bulan dimulai dari 0
     const year = now.getFullYear();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-  
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+
     // Format tanggal dan waktu sesuai dengan "dd-MM-yyyy HH:mm"
     return `${day}-${month}-${year} ${hours}.${minutes}`;
   };
@@ -293,8 +308,8 @@ const RutaTable = ({ fetchDataAggregate }) => {
 
   return (
     <div className="p-4 bg-[#ffffffb4] rounded-xl">
-      <div className="flex justify-between">
-        <Input
+      <div className="flex justify-between gap-3">
+        {/* <Input
           label="Pencarian"
           radius="lg"
           classNames={{
@@ -307,40 +322,38 @@ const RutaTable = ({ fetchDataAggregate }) => {
           }
           value={searchTerm}
           onChange={handleSearchChange}
-        />
-        {/* <div
-          className="relative"
-          onMouseLeave={() => setDropdownVisible(false)}
-        >
-          <Button
-            color="success"
-            className="text-[14px] font-semibold text-white"
-            startContent={<FaPlus className="text-[20px] text-white" />}
-            onMouseEnter={() => setDropdownVisible(true)}
+        /> */}
+        <div className="flex items-center w-full gap-3 mb-4">
+          <Input
+            label="Pencarian"
+            radius="lg"
+            classNames={{
+              inputWrapper: "shadow",
+            }}
+            className="w-[50%] simoanginangin-umkm-search"
+            placeholder="Ketikkan kata kunci..."
+            startContent={
+              <SearchIcon className="mb-0.5 text-pdarkblue pointer-events-none flex-shrink-0" />
+            }
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+
+          {/* Tambahkan komponen Select untuk filter */}
+          <Select
+            label="Lokasi Tempat Usaha"
+            placeholder="Pilih filter"
+            classNames={{
+              inputWrapper: "shadow",
+            }}
+            className="w-[50%] simoanginangin-umkm-search"
+            onChange={(e) =>handleLokasiChange(e.target.value)}
           >
-            Tambah
-          </Button>
-          {dropdownVisible && (
-            <div className="absolute right-0 z-50 mt-2 bg-white border w-full border-gray-200 rounded-xl shadow-lg top-10 text-[14px] text-pdarkblue font-inter">
-              <div className="py-1">
-                <a
-                  href="#"
-                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
-                  onClick={handleSatuanAddModal}
-                >
-                  Satuan
-                </a>
-                <a
-                  href="#"
-                  className="block px-4 py-2 rounded-md hover:bg-gray-100"
-                  onClick={handleKumpulanAddModal}
-                >
-                  Kumpulan
-                </a>
-              </div>
-            </div>
-          )}
-        </div> */}
+            {lokasi_tempat_usaha.map((lokasi) => (
+              <SelectItem key={lokasi.key}>{lokasi.label}</SelectItem>
+            ))}
+          </Select>
+        </div>
         <div className="flex gap-2">
           <div
             className="relative"

@@ -66,7 +66,7 @@ const customMarker = L.icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/5693/5693840.png", // Replace with your custom icon URL
   iconSize: [45, 45], // Size of the icon
   iconAnchor: [19, 45], // Point of the icon which will correspond to marker's location
-  popupAnchor: [0, -45] // Point from which the popup should open relative to the iconAnchor
+  popupAnchor: [0, -45], // Point from which the popup should open relative to the iconAnchor
 });
 
 const RutaMap = ({ latitude, longitude }) => (
@@ -85,7 +85,7 @@ const RutaMap = ({ latitude, longitude }) => (
         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         attribution="Tiles © Esri"
       />
-      <Marker position={[latitude, longitude]} icon={customMarker}/>
+      <Marker position={[latitude, longitude]} icon={customMarker} />
     </MapContainer>
   </div>
 );
@@ -97,7 +97,10 @@ const RutaDetail = ({ ruta }) => {
     { label: "Kode", value: ruta.kode },
     { label: "Identitas SLS", value: ruta.rt_rw_dusun },
     { label: "No. Urut Bangunan", value: ruta.no_urut_bangunan },
-    { label: "Nama Kepala Keluarga", value: ruta.nama_kepala_keluarga },
+    {
+      label: "Nama Kepala Keluarga",
+      value: ruta.nama_kepala_keluarga === "" ? "-" : ruta.nama_kepala_keluarga,
+    },
     {
       label: "Nama Pemilik/Penanggungjawab",
       value: ruta.nama_pemilik_penanggungjawab,
@@ -119,9 +122,18 @@ const RutaDetail = ({ ruta }) => {
       label: "Kategori Usaha",
       value: getLabelByKey(ruta.kategori_usaha, kategori_usaha),
     },
-    { label: "Bentuk Badan Usaha", value: getLabelByKey(ruta.bentuk_badan_usaha, bentuk_badan_usaha) },
-    { label: "Lokasi Tempat Usaha", value: getLabelByKey(ruta.lokasi_tempat_usaha, lokasi_tempat_usaha) },
-    { label: "Skala Usaha", value: getLabelByKey(ruta.skala_usaha, skala_usaha) },
+    {
+      label: "Bentuk Badan Usaha",
+      value: getLabelByKey(ruta.bentuk_badan_usaha, bentuk_badan_usaha),
+    },
+    {
+      label: "Lokasi Tempat Usaha",
+      value: getLabelByKey(ruta.lokasi_tempat_usaha, lokasi_tempat_usaha),
+    },
+    {
+      label: "Skala Usaha",
+      value: getLabelByKey(ruta.skala_usaha, skala_usaha),
+    },
     { label: "Alamat", value: ruta.alamat },
     { label: "Latitude", value: ruta.latitude },
     { label: "Longitude", value: ruta.longitude },

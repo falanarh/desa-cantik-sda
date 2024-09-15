@@ -150,13 +150,13 @@ const AddRutaModal = ({
       }
     }
 
-    if (name === "nama_kepala_keluarga") {
-      if (!value) {
-        errors.nama_kepala_keluarga = "Nama Kepala Keluarga harus diisi.";
-      } else {
-        errors.nama_kepala_keluarga = "";
-      }
-    }
+    // if (name === "nama_kepala_keluarga") {
+    //   if (!value) {
+    //     errors.nama_kepala_keluarga = "Nama Kepala Keluarga harus diisi.";
+    //   } else {
+    //     errors.nama_kepala_keluarga = "";
+    //   }
+    // }
 
     if (name === "nama_pemilik_penanggungjawab") {
       if (!value) {
@@ -287,8 +287,8 @@ const AddRutaModal = ({
     if (!addRutaData.kodeRt) newErrors.kodeRt = "Identitas SLS wajib dipilih.";
     if (!addRutaData.no_urut_bangunan)
       newErrors.no_urut_bangunan = "No. Urut Bangunan wajib diisi.";
-    if (!addRutaData.nama_kepala_keluarga)
-      newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
+    // if (!addRutaData.nama_kepala_keluarga)
+    //   newErrors.nama_kepala_keluarga = "Nama Kepala Keluarga wajib diisi.";
     if (!addRutaData.nama_pemilik_penanggungjawab)
       newErrors.nama_pemilik_penanggungjawab =
         "Nama Pemilik atau Penanggungjawab wajib diisi.";

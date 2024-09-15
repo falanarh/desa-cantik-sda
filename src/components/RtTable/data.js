@@ -3,7 +3,8 @@ const columns = [
   { name: "RT", uid: "rt" },
   { name: "RW", uid: "rw" },
   { name: "Dusun", uid: "dusun" },
-  { name: "Jumlah UMKM", uid: "jml_umkm" },
+  { name: "Jml Keluarga", uid: "jml_ruta" },
+  { name: "Jml UMKM", uid: "jml_umkm" },
   { name: "Aksi", uid: "aksi" },
 ];
 
