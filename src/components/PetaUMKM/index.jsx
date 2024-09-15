@@ -248,27 +248,31 @@ export default function MapSection() {
 
   const classifications = {
     all: "Seluruh Lapangan Usaha",
-    // kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
+    kbli_a: "A. Pertanian, Kehutanan, dan Perikanan",
     kbli_b: "B. Pertambangan dan Penggalian",
     kbli_c: "C. Industri Pengolahan",
-    kbli_d: "D. Pengadaan Listrik dan Gas",
-    kbli_e: "E. Pengadaan Air; Pengelolaan Sampah, Limbah, dan Daur Ulang",
+    kbli_d: "D. Pengadaan Listrik, Gas, Uap/Air Panas dan Udara Dingin",
+    kbli_e:
+      "E. Treatment Air, Treatment Air Limbah, Treatment dan Pemulihan Material Sampah, dan Aktivitas Remediasi",
     kbli_f: "F. Konstruksi",
     kbli_g: "G. Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor",
-    kbli_h: "H. Transportasi dan Pergudangan",
-    kbli_i: "I. Penyediaan Akomodasi dan Makan Minum",
+    kbli_h: "H. Pengangkutan dan Pergudangan",
+    kbli_i: "I. Penyediaan Akomodasi dan Penyediaan Makan Minum",
     kbli_j: "J. Informasi dan Komunikasi",
-    kbli_k: "K. Jasa Keuangan dan Asuransi",
+    kbli_k: "K. Aktifitas Keuangan dan Asuransi",
     kbli_l: "L. Real Estat",
-    kbli_m: "M. Jasa Profesional, Ilmiah, dan Teknis",
-    kbli_n: "N. Jasa Administratif dan Jasa Dukungan",
-    // kbli_o: "O. Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib",
-    kbli_p: "P. Jasa Pendidikan",
-    kbli_q: "Q. Jasa Kesehatan dan Kegiatan Sosial",
-    kbli_r: "R. Jasa Perorangan dan Rumah Tangga",
+    kbli_m: "M. Aktivitas Profesional, Ilmiah, dan Teknis",
+    kbli_n:
+      "N. Aktivitas Penyewaan dan Sewa Guna Usaha Tanpa Hak Opsi, Ketenagakerjaan, Agen Perjalanan dan Penunjang Usaha Lainnya",
+    kbli_o: "O. Administrasi Pemerintahan, Pertahanan Dan Jaminan Sosial Wajib",
+    kbli_p: "P. Pendidikan",
+    kbli_q: "Q. Aktivitas Kesehatan Manusia dan Aktivitas Sosial",
+    kbli_r: "R. Kesenian, Hiburan, dan Rekreasi",
     kbli_s: "S. Jasa Lainnya",
-    // kbli_t: "R,S, T, U. Jasa Lainnya",
-    // kbli_u: "R,S, T, U. Jasa Lainnya"
+    kbli_t:
+      "T. Aktivitas Rumah Tangga Sebagai Pemberi Kerja; Aktivitas Yang Menghasilkan Barang Dan Jasa Oleh Rumah Tangga yang Digunakan untuk Memenuhi Kebutuhan Sendiri",
+    kbli_u:
+      "U. Aktivitas Badan Internasional dan Badan Ekstra Internasional Lainnya",
   };
 
   const handleClassificationChange = (event) => {
@@ -444,11 +448,12 @@ export default function MapSection() {
             <BeatLoader />
           )}
 
-          {showIndividu &&
-            // <MarkerClusterGroup>
-            filteredData2.map((item) => (
-              <CustomMarker key={`marker-${item._id}`} item={item} />
-            ))
+          {
+            showIndividu &&
+              // <MarkerClusterGroup>
+              filteredData2.map((item) => (
+                <CustomMarker key={`marker-${item._id}`} item={item} />
+              ))
             // </MarkerClusterGroup>
           }
         </MapContainer>

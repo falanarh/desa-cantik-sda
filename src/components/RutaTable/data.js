@@ -21,35 +21,54 @@ const kategori_usaha = [
   { key: "kbli_a", label: "A. Pertanian, Kehutanan, dan Perikanan" },
   { key: "kbli_b", label: "B. Pertambangan dan Penggalian" },
   { key: "kbli_c", label: "C. Industri Pengolahan" },
-  { key: "kbli_d", label: "D. Pengadaan Listrik, Gas, Uap, dan Udara Bersih" },
+  {
+    key: "kbli_d",
+    label: "D. Pengadaan Listrik, Gas, Uap/Air Panas dan Udara Dingin",
+  },
   {
     key: "kbli_e",
-    label: "E. Pengadaan Air, Pengelolaan Sampah, Limbah, dan Daur Ulang",
+    label:
+      "E. Treatment Air, Treatment Air Limbah, Treatment dan Pemulihan Material Sampah, dan Aktivitas Remediasi",
   },
   { key: "kbli_f", label: "F. Konstruksi" },
   {
     key: "kbli_g",
     label: "G. Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor",
   },
-  { key: "kbli_h", label: "H. Transportasi dan Pergudangan" },
+  { key: "kbli_h", label: "H. Pengangkutan dan Pergudangan" },
   {
     key: "kbli_i",
     label: "I. Penyediaan Akomodasi dan Penyediaan Makan Minum",
   },
   { key: "kbli_j", label: "J. Informasi dan Komunikasi" },
-  { key: "kbli_k", label: "K. Jasa Keuangan dan Asuransi" },
+  { key: "kbli_k", label: "K. Aktifitas Keuangan dan Asuransi" },
   { key: "kbli_l", label: "L. Real Estat" },
-  { key: "kbli_m", label: "M. Jasa Profesional, Ilmiah, dan Teknis" },
-  { key: "kbli_n", label: "N. Jasa Administratif dan Jasa Dukungan" },
-  { key: "kbli_o", label: "O. Jasa Pendidikan" },
-  { key: "kbli_p", label: "P. Jasa Kesehatan dan Kegiatan Sosial" },
-  { key: "kbli_q", label: "Q. Jasa Hiburan, Pariwisata, dan Rekreasi" },
-  { key: "kbli_r", label: "R. Jasa Perorangan dan Rumah Tangga" },
+  { key: "kbli_m", label: "M. Aktivitas Profesional, Ilmiah, dan Teknis" },
+  {
+    key: "kbli_n",
+    label:
+      "N. Aktivitas Penyewaan dan Sewa Guna Usaha Tanpa Hak Opsi, Ketenagakerjaan, Agen Perjalanan dan Penunjang Usaha Lainnya",
+  },
+  {
+    key: "kbli_o",
+    label: "O. Administrasi Pemerintahan, Pertahanan Dan Jaminan Sosial Wajib",
+  },
+  { key: "kbli_p", label: "P. Pendidikan" },
+  {
+    key: "kbli_q",
+    label: "Q. Aktivitas Kesehatan Manusia dan Aktivitas Sosial",
+  },
+  { key: "kbli_r", label: "R. Kesenian, Hiburan, dan Rekreasi" },
   { key: "kbli_s", label: "S. Jasa Lainnya" },
-  { key: "kbli_t", label: "T. Aktivitas Rumah Tangga sebagai Pengusaha" },
+  {
+    key: "kbli_t",
+    label:
+      "T. Aktivitas Rumah Tangga Sebagai Pemberi Kerja; Aktivitas Yang Menghasilkan Barang Dan Jasa Oleh Rumah Tangga yang Digunakan untuk Memenuhi Kebutuhan Sendiri",
+  },
   {
     key: "kbli_u",
-    label: "U. Organisasi Internasional dan Badan Ekstrateritorial",
+    label:
+      "U. Aktivitas Badan Internasional dan Badan Ekstra Internasional Lainnya",
   },
 ];
 
@@ -64,7 +83,10 @@ const lokasi_tempat_usaha = [
   { key: "bangunan-campuran", label: "Bangunan Campuran" },
   { key: "kaki-lima", label: "Kaki Lima" },
   { key: "keliling", label: "Keliling" },
-  { key: "didalam-bangunan-tempat-tinggal/online", label: "Di Dalam Bangunan Tempat Tinggal atau Online" },
+  {
+    key: "didalam-bangunan-tempat-tinggal/online",
+    label: "Di Dalam Bangunan Tempat Tinggal atau Online",
+  },
 ];
 
 const skala_usaha = [
