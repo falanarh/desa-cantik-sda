@@ -18,7 +18,15 @@ import api4 from "../../utils/api4";
 import { FaImages } from "react-icons/fa6";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { isPenyuluhanOptions, jenisKelaminOptions, jenisPupukOptions, namaTanamanOptions, pemanfaatanProdukOptions, pendidikanTerakhirOptions, penyebabLuasPanenKurangOptions } from "./data";
+import {
+  isPenyuluhanOptions,
+  jenisKelaminOptions,
+  jenisPupukOptions,
+  namaTanamanOptions,
+  pemanfaatanProdukOptions,
+  pendidikanTerakhirOptions,
+  penyebabLuasPanenKurangOptions,
+} from "./data";
 import { MdDeleteForever } from "react-icons/md";
 
 const getLabelByKey = (key, array) => {
@@ -62,9 +70,9 @@ const EditRutaModal = ({
   const [tanamanErrors, setTanamanErrors] = useState([{}]);
 
   const convertIsPenyuluhan = (tanamanArray) => {
-    return tanamanArray.map(tanaman => ({
+    return tanamanArray.map((tanaman) => ({
       ...tanaman,
-      is_penyuluhan: tanaman.is_penyuluhan ? "true" : "false"
+      is_penyuluhan: tanaman.is_penyuluhan ? "true" : "false",
     }));
   };
 
@@ -72,7 +80,7 @@ const EditRutaModal = ({
   //   console.log("Daftar Tanaman After Update:", daftarTanaman);
   //   console.log("Tanaman Errors After Update:", tanamanErrors);
   // }, [daftarTanaman, tanamanErrors]);
-  
+
   useEffect(() => {
     if (ruta) {
       setEditUsahaData(ruta);
@@ -99,7 +107,6 @@ const EditRutaModal = ({
       }
     }
   }, [editUsahaData]);
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -197,7 +204,7 @@ const EditRutaModal = ({
     const updatedDaftarTanaman = [...daftarTanaman];
     updatedDaftarTanaman[index][name] = value;
     setDaftarTanaman(updatedDaftarTanaman);
-    
+
     if (name === "frekuensi_tanam") {
       if (!value) {
         tanamanErrors[index].frekuensi_tanam = "Frekuensi Tanam harus diisi.";
@@ -286,12 +293,16 @@ const EditRutaModal = ({
 
   const handleTanamanSelectChange = (value, index, name) => {
     const updatedDaftarTanaman = [...daftarTanaman];
-    updatedDaftarTanaman[index][name] = value;
+    if (name === "jenis_pupuk") {
+      console.log("Pupuk", value);
+      updatedDaftarTanaman[index][name] = [...value];
+    } else {
+      updatedDaftarTanaman[index][name] = value;
+    }
     setDaftarTanaman(updatedDaftarTanaman);
   };
 
   const addTanamanForm = () => {
-  
     if (daftarTanaman.length < 3) {
       // Menambahkan elemen baru ke daftar tanaman
       const newDaftarTanaman = [
@@ -309,19 +320,15 @@ const EditRutaModal = ({
           is_penyuluhan: "",
         },
       ];
-      
+
       // Menambahkan elemen baru ke tanamanErrors dengan objek kosong
-      const newTanamanErrors = [
-        ...tanamanErrors,
-        {}
-      ];
-  
+      const newTanamanErrors = [...tanamanErrors, {}];
+
       // Memperbarui state
       setDaftarTanaman(newDaftarTanaman);
       setTanamanErrors(newTanamanErrors);
     }
   };
-  
 
   const removeTanamanForm = (index) => {
     const updatedDaftarTanaman = daftarTanaman.filter((_, i) => i !== index);
@@ -373,9 +380,9 @@ const EditRutaModal = ({
         tanamanErrors.frekuensi_panen = "Frekuensi Panen wajib diisi.";
       if (!tanaman.rata2_luas_panen)
         tanamanErrors.rata2_luas_panen = "Rata-rata Luas Panen wajib diisi.";
-      if (!tanaman.penyebab_luas_panen_kurang_dari_luas_tanam)
-        tanamanErrors.penyebab_luas_panen_kurang_dari_luas_tanam =
-          "Penyebab Luas Panen Kurang dari Luas Tanam wajib dipilih.";
+      // if (!tanaman.penyebab_luas_panen_kurang_dari_luas_tanam)
+      //   tanamanErrors.penyebab_luas_panen_kurang_dari_luas_tanam =
+      //     "Penyebab Luas Panen Kurang dari Luas Tanam wajib dipilih.";
       if (!tanaman.rata2_volume_produksi)
         tanamanErrors.rata2_volume_produksi =
           "Rata-rata Volume Produksi wajib diisi.";
@@ -475,10 +482,7 @@ const EditRutaModal = ({
       return;
     }
 
-    if (
-      errors.latitude ||
-      errors.longitude
-    ) {
+    if (errors.latitude || errors.longitude) {
       message.error(
         "Mohon tangani kesalahan terlebih dahulu sebelum menyimpan.",
         5
@@ -563,7 +567,7 @@ const EditRutaModal = ({
             </ModalHeader>
             <ModalBody className="py-4">
               <div className="space-y-4 grogol-usaha-edit">
-              <p className="text-[14px] font-semibold">
+                <p className="text-[14px] font-semibold">
                   BLOK I. KETERANGAN TEMPAT
                 </p>
                 <Input
@@ -903,15 +907,12 @@ const EditRutaModal = ({
                         size="md"
                         label="Jenis Pupuk yang Digunakan"
                         className="w-full"
+                        selectionMode="multiple"
                         name="jenis_pupuk"
-                        selectedKeys={[tanaman.jenis_pupuk]}
+                        selectedKeys={tanaman.jenis_pupuk}
                         placeholder="Pilih Jenis Pupuk yang Digunakan"
-                        onChange={(e) =>
-                          handleTanamanSelectChange(
-                            e.target.value,
-                            index,
-                            "jenis_pupuk"
-                          )
+                        onSelectionChange={(e) =>
+                          handleTanamanSelectChange(e, index, "jenis_pupuk")
                         }
                       >
                         {jenisPupukOptions.map((item) => (

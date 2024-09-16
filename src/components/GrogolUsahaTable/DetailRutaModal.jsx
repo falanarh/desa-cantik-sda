@@ -18,10 +18,22 @@ import {
   pendidikanTerakhirOptions,
   penyebabLuasPanenKurangOptions,
 } from "./data";
+import { formatNumberWithSpace } from "../../utils/formatNumberWithSpace";
 
 const getLabelByKey = (key, array) => {
   const item = array.find((obj) => obj.key === key);
   return item ? item.label : "Label not found";
+};
+
+const convertKeysToString = (keys, array) => {
+  const labels = keys.map((key) => getLabelByKey(key, array));
+
+  if (labels.length === 0) return "";
+
+  if (labels.length === 1) return labels[0];
+
+  const lastLabel = labels.pop();
+  return `${labels.join(", ")}, ${lastLabel}`;
 };
 
 function formatNumber(num) {
@@ -117,7 +129,7 @@ const RutaDetail = ({ ruta }) => {
           </div>
           <div className="flex justify-between">
             <strong>Rata-rata Luas Tanam (m²):</strong>
-            <span>{tanaman.rata2_luas_tanam}</span>
+            <span>{formatNumberWithSpace(tanaman.rata2_luas_tanam)}</span>
           </div>
           <div className="flex justify-between">
             <strong>Frekuensi Panen (kali):</strong>
@@ -125,7 +137,7 @@ const RutaDetail = ({ ruta }) => {
           </div>
           <div className="flex justify-between">
             <strong>Rata-rata Luas Panen (m²):</strong>
-            <span>{tanaman.rata2_luas_panen}</span>
+            <span>{formatNumberWithSpace(tanaman.rata2_luas_panen)}</span>
           </div>
           <div className="flex justify-between">
             <strong>Penyebab Luas Panen Kurang dari Luas Tanam:</strong>
@@ -140,15 +152,15 @@ const RutaDetail = ({ ruta }) => {
           </div>
           <div className="flex justify-between">
             <strong>Rata-rata Volume Produksi (kg):</strong>
-            <span>{tanaman.rata2_volume_produksi}</span>
+            <span>{formatNumberWithSpace(tanaman.rata2_volume_produksi)}</span>
           </div>
           <div className="flex justify-between">
             <strong>Rata-rata Nilai Produksi (000 Rp):</strong>
-            <span>{tanaman.rata2_nilai_produksi}</span>
+            <span>{formatNumberWithSpace(tanaman.rata2_nilai_produksi)}</span>
           </div>
           <div className="flex justify-between">
             <strong>Jenis Pupuk:</strong>
-            <span>{getLabelByKey(tanaman.jenis_pupuk, jenisPupukOptions)}</span>
+            <span>{convertKeysToString(tanaman.jenis_pupuk, jenisPupukOptions)}</span>
           </div>
           <div className="flex justify-between">
             <strong>Pemanfaatan Produk:</strong>

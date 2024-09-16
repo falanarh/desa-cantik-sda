@@ -11,6 +11,7 @@ import {
 import { MapContainer, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { formatNumberWithSpace } from "../../utils/formatNumberWithSpace";
 
 const RtDetail = ({ rt, geojson = null }) => {
   const mapRef = useRef();
@@ -59,28 +60,28 @@ const RtDetail = ({ rt, geojson = null }) => {
     { label: 'RT', value: rt.rt },
     { label: 'RW', value: rt.rw },
     { label: 'Dusun', value: rt.dusun },
-    { label: 'Total Usaha Sayuran', value: rt.total_usaha_sayuran },
-    { label: 'Total Tanaman Kangkung', value: rt.total_tanaman_kangkung },
-    { label: 'Total Tanaman Bayam', value: rt.total_tanaman_bayam },
-    { label: 'Total Tanaman Sawi', value: rt.total_tanaman_sawi },
-    { label: 'Total Luas Tanam Kangkung (m²)', value: rt.total_rata2_luas_tanam_kangkung },
-    { label: 'Total Luas Tanam Bayam (m²)', value: rt.total_rata2_luas_tanam_bayam },
-    { label: 'Total Luas Tanam Sawi (m²)', value: rt.total_rata2_luas_tanam_sawi },
-    { label: 'Total Luas Panen Kangkung (m²)', value: rt.total_rata2_luas_panen_kangkung },
-    { label: 'Total Luas Panen Bayam (m²)', value: rt.total_rata2_luas_panen_bayam },
-    { label: 'Total Luas Panen Sawi (m²)', value: rt.total_rata2_luas_panen_sawi },
-    { label: 'Total Volume Produksi Kangkung (kg)', value: rt.total_rata2_volume_produksi_kangkung },
-    { label: 'Total Volume Produksi Bayam (kg)', value: rt.total_rata2_volume_produksi_bayam },
-    { label: 'Total Volume Produksi Sawi (kg)', value: rt.total_rata2_volume_produksi_sawi },
-    { label: 'Total Nilai Produksi Kangkung (000 Rp)', value: rt.total_rata2_nilai_produksi_kangkung },
-    { label: 'Total Nilai Produksi Bayam (000 Rp)', value: rt.total_rata2_nilai_produksi_bayam },
-    { label: 'Total Nilai Produksi Sawi (000 Rp)', value: rt.total_rata2_nilai_produksi_sawi },
-    { label: 'Total Tanaman Kangkung Dijual Sendiri (kg)', value: rt.total_tanaman_kangkung_dijual_sendiri },
-    { label: 'Total Tanaman Bayam Dijual Sendiri (kg)', value: rt.total_tanaman_bayam_dijual_sendiri },
-    { label: 'Total Tanaman Sawi Dijual Sendiri (kg)', value: rt.total_tanaman_sawi_dijual_sendiri },
-    { label: 'Total Tanaman Kangkung Dijual ke Tengkulak (kg)', value: rt.total_tanaman_kangkung_dijual_ke_tengkulak },
-    { label: 'Total Tanaman Bayam Dijual ke Tengkulak (kg)', value: rt.total_tanaman_bayam_dijual_ke_tengkulak },
-    { label: 'Total Tanaman Sawi Dijual ke Tengkulak (kg)', value: rt.total_tanaman_sawi_dijual_ke_tengkulak },
+    { label: 'Total Usaha Sayuran', value: formatNumberWithSpace(rt.total_usaha_sayuran) },
+    { label: 'Total Tanaman Kangkung', value: formatNumberWithSpace(rt.total_tanaman_kangkung) },
+    { label: 'Total Tanaman Bayam', value: formatNumberWithSpace(rt.total_tanaman_bayam) },
+    { label: 'Total Tanaman Sawi', value: formatNumberWithSpace(rt.total_tanaman_sawi) },
+    { label: 'Total Luas Tanam Kangkung (m²)', value: formatNumberWithSpace(rt.total_rata2_luas_tanam_kangkung) },
+    { label: 'Total Luas Tanam Bayam (m²)', value: formatNumberWithSpace(rt.total_rata2_luas_tanam_bayam) },
+    { label: 'Total Luas Tanam Sawi (m²)', value: formatNumberWithSpace(rt.total_rata2_luas_tanam_sawi) },
+    { label: 'Total Luas Panen Kangkung (m²)', value: formatNumberWithSpace(rt.total_rata2_luas_panen_kangkung) },
+    { label: 'Total Luas Panen Bayam (m²)', value: formatNumberWithSpace(rt.total_rata2_luas_panen_bayam) },
+    { label: 'Total Luas Panen Sawi (m²)', value: formatNumberWithSpace(rt.total_rata2_luas_panen_sawi) },
+    { label: 'Total Volume Produksi Kangkung (kg)', value: formatNumberWithSpace(rt.total_rata2_volume_produksi_kangkung) },
+    { label: 'Total Volume Produksi Bayam (kg)', value: formatNumberWithSpace(rt.total_rata2_volume_produksi_bayam) },
+    { label: 'Total Volume Produksi Sawi (kg)', value: formatNumberWithSpace(rt.total_rata2_volume_produksi_sawi) },
+    { label: 'Total Nilai Produksi Kangkung (000 Rp)', value: formatNumberWithSpace(rt.total_rata2_nilai_produksi_kangkung) },
+    { label: 'Total Nilai Produksi Bayam (000 Rp)', value: formatNumberWithSpace(rt.total_rata2_nilai_produksi_bayam) },
+    { label: 'Total Nilai Produksi Sawi (000 Rp)', value: formatNumberWithSpace(rt.total_rata2_nilai_produksi_sawi) },
+    { label: 'Total Tanaman Kangkung Dijual Sendiri (kg)', value: formatNumberWithSpace(rt.total_tanaman_kangkung_dijual_sendiri) },
+    { label: 'Total Tanaman Bayam Dijual Sendiri (kg)', value: formatNumberWithSpace(rt.total_tanaman_bayam_dijual_sendiri) },
+    { label: 'Total Tanaman Sawi Dijual Sendiri (kg)', value: formatNumberWithSpace(rt.total_tanaman_sawi_dijual_sendiri) },
+    { label: 'Total Tanaman Kangkung Dijual ke Tengkulak (kg)', value: formatNumberWithSpace(rt.total_tanaman_kangkung_dijual_ke_tengkulak) },
+    { label: 'Total Tanaman Bayam Dijual ke Tengkulak (kg)', value: formatNumberWithSpace(rt.total_tanaman_bayam_dijual_ke_tengkulak) },
+    { label: 'Total Tanaman Sawi Dijual ke Tengkulak (kg)', value: formatNumberWithSpace(rt.total_tanaman_sawi_dijual_ke_tengkulak) },
   ];
   
   

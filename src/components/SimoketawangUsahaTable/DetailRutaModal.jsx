@@ -29,7 +29,7 @@ const convertKeysToString = (keys, array) => {
   if (labels.length === 1) return labels[0];
 
   const lastLabel = labels.pop();
-  return `${labels.join(", ")}, dan ${lastLabel}`;
+  return `${labels.join(", ")}, ${lastLabel}`;
 };
 
 function formatNumber(num) {

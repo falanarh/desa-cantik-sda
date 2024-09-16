@@ -17,13 +17,14 @@ import api from "../utils/api";
 import api4 from "../utils/api4";
 import GrogolSlsTable from "../components/GrogolSlsTable";
 import GrogolUsahaTable from "../components/GrogolUsahaTable";
+import { formatNumberWithSpace } from "../utils/formatNumberWithSpace";
 
 const username = localStorage.getItem("username");
 
 const AdminGrogol = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  const isMobile = useMediaQuery({ query: '(max-width: 500px)' }); 
+  const isMobile = useMediaQuery({ query: "(max-width: 500px)" });
 
   const fetchData = async () => {
     setLoading(true); // Mulai loading
@@ -105,7 +106,12 @@ const AdminGrogol = () => {
                     <StatComponent
                       key={key}
                       label={label}
-                      value={value !== undefined ? value : 0}
+                      value={
+                        typeof value === "number"
+                          ? formatNumberWithSpace(value)
+                          : 0
+                      }
+                      // value={value !== undefined ? value : 0}
                     />
                   );
                 })

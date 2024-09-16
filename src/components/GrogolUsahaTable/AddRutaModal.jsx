@@ -304,7 +304,12 @@ const AddRutaModal = ({
 
   const handleTanamanSelectChange = (value, index, name) => {
     const updatedDaftarTanaman = [...daftarTanaman];
-    updatedDaftarTanaman[index][name] = value;
+    if (name === "jenis_pupuk") {
+      console.log("Pupuk", value);
+      updatedDaftarTanaman[index][name] = [...value];
+    } else {
+      updatedDaftarTanaman[index][name] = value;
+    }
     setDaftarTanaman(updatedDaftarTanaman);
   };
 
@@ -953,15 +958,12 @@ const AddRutaModal = ({
                         size="md"
                         label="Jenis Pupuk yang Digunakan"
                         className="w-full"
+                        selectionMode="multiple"
                         name="jenis_pupuk"
-                        selectedKeys={[tanaman.jenis_pupuk]}
+                        selectedKeys={tanaman.jenis_pupuk}
                         placeholder="Pilih Jenis Pupuk yang Digunakan"
-                        onChange={(e) =>
-                          handleTanamanSelectChange(
-                            e.target.value,
-                            index,
-                            "jenis_pupuk"
-                          )
+                        onSelectionChange={(e) =>
+                          handleTanamanSelectChange(e, index, "jenis_pupuk")
                         }
                       >
                         {jenisPupukOptions.map((item) => (
