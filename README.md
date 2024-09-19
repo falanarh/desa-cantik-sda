@@ -72,29 +72,5 @@ Sebelum menjalankan proyek ini, pastikan Anda telah menginstal:
    ```
 
 ## Struktur Direktori
-DESA-CANTIK-SDA/
-│
-├── dist/                 # Folder build untuk file hasil build produksi
-├── node_modules/         # Folder berisi dependensi proyek
-├── public/               # Folder untuk file publik (misalnya favicon, gambar statis, dll.)
-├── src/                  # Folder utama kode sumber
-│   ├── assets/           # Folder untuk aset seperti gambar, ikon, dll.
-│   ├── components/       # Folder untuk komponen React
-│   ├── hooks/            # Folder untuk custom hooks React
-│   ├── pages/            # Folder untuk halaman React
-│   └── utils/            # Folder untuk fungsi utilitas
-├── App.jsx               # Komponen utama aplikasi React
-├── index.css             # File CSS utama
-├── main.jsx              # Entry point aplikasi React
-├── .eslintrc.cjs         # Konfigurasi ESLint
-├── .gitignore            # File untuk menentukan file/folder yang diabaikan oleh Git
-├── .htaccess             # File konfigurasi untuk server Apache
-├── index.html            # File HTML utama
-├── package-lock.json     # File penguncian dependensi
-├── package.json          # File yang berisi metadata proyek dan daftar dependensi
-├── postcss.config.js     # Konfigurasi untuk PostCSS
-├── README.md             # Dokumentasi proyek
-├── tailwind.config.js    # Konfigurasi untuk Tailwind CSS
-├── vercel.json           # Konfigurasi untuk Vercel (platform hosting)
-└── vite.config.js        # Konfigurasi untuk Vite (build tool)
 
+DESA-CANTIK-SDA/ │ ├── dist/ # Folder build untuk file hasil build produksi ├── node_modules/ # Folder berisi dependensi proyek ├── public/ # Folder untuk file publik (misalnya favicon, gambar statis, dll.) ├── src/ # Folder utama kode sumber │ ├── assets/ # Folder untuk aset seperti gambar, ikon, dll. │ ├── components/ # Folder untuk komponen React │ ├── hooks/ # Folder untuk custom hooks React │ ├── pages/ # Folder untuk halaman React │ └── utils/ # Folder untuk fungsi utilitas ├── App.jsx # Komponen utama aplikasi React ├── index.css # File CSS utama ├── main.jsx # Entry point aplikasi React ├── .eslintrc.cjs # Konfigurasi ESLint ├── .gitignore # File untuk menentukan file/folder yang diabaikan oleh Git ├── .htaccess # File konfigurasi untuk server Apache ├── index.html # File HTML utama ├── package-lock.json # File penguncian dependensi ├── package.json # File yang berisi metadata proyek dan daftar dependensi ├── postcss.config.js # Konfigurasi untuk PostCSS ├── README.md # Dokumentasi proyek ├── tailwind.config.js # Konfigurasi untuk Tailwind CSS ├── vercel.json # Konfigurasi untuk Vercel (platform hosting) └── vite.config.js # Konfigurasi untuk Vite (build tool)
