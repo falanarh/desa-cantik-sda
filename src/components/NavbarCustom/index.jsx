@@ -117,7 +117,7 @@ export default function NavbarCustom() {
                     <Link
                       href="/peta-umkm-simoanginangin"
                       className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
-                      onClick={() => handleMenuClick("/peta-tematik/pemetaan-umkm")}
+                      // onClick={() => handleMenuClick("/peta-tematik/pemetaan-umkm")}
                     >
                       Pemetaan UMKM
                     </Link>
@@ -134,7 +134,7 @@ export default function NavbarCustom() {
                     <Link
                       href="/peta-kelengkeng-simoketawang"
                       className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
-                      onClick={() => handleMenuClick("/peta-tematik/pemetaan-pemanfaatan-kelengkeng")}
+                      // onClick={() => handleMenuClick("/peta-tematik/pemetaan-pemanfaatan-kelengkeng")}
                     >
                       Pemetaan Pemanfaatan Kelengkeng
                     </Link>
@@ -149,9 +149,9 @@ export default function NavbarCustom() {
                 {activeNestedDropdown === "Grogol" && (
                   <div className="absolute top-0 z-10 mt-0 border border-gray-300 rounded-lg shadow-lg left-full bg-neutral-50">
                     <Link
-                      href="/peta-tematik/hortikultura"
+                      href="/peta-sayuran-grogol"
                       className="block px-4 py-2 text-sm font-semibold bg-base text-porange hover:text-[#F7BA74] rounded-md transition-colors duration-300"
-                      onClick={() => handleMenuClick("/peta-tematik/hortikultura")}
+                      // onClick={() => handleMenuClick("/peta-sayuran-grogol")}
                     >
                       Hortikultura
                     </Link>
