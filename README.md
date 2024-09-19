@@ -12,7 +12,7 @@ Repositori ini merupakan proyek frontend dari website Desa Cantik Kabupaten Sido
 
 ## Tentang Proyek
 
-Website ini dibuat untuk mendukung pelaksanaan program Desa Cinta Statistik oleh BPS Kabupaten Sidoarjo untuk seluruh desa/kelurahan/setingkat di Kabupaten Sidoarjo.
+Website ini dibuat untuk mendukung pelaksanaan program Desa Cinta Statistik oleh BPS Kabupaten Sidoarjo untuk seluruh desa/kelurahan/setingkat di Kabupaten Sidoarjo. Dalam proyek ini, terdapat tiga desa percontohan yang sudah dikembangkan khususnya untuk fitur peta tematik dan entry datanya, yaitu Desa Simoangin-angin, Simoketawang, dan Grogol.
 
 ## Fitur Utama
 
