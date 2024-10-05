@@ -299,9 +299,19 @@ const BuletinAdm = () => {
     accept: ".pdf,.doc,.docx",
     multiple: false,
     customRequest({ file, onSuccess, onError, onProgress }) {
+      const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5MB dalam bytes
+    
+      // Cek ukuran file sebelum melanjutkan
+      if (file.size > MAX_FILE_SIZE) {
+        message.error("File terlalu besar untuk diunggah. Maksimal ukuran file adalah 4.5MB.");
+        // Panggil onError agar proses upload dianggap gagal
+        onError(new Error("File size exceeds the limit."));
+        return;
+      }
+    
       const formData = new FormData();
       formData.append("file", file);
-
+    
       api5
         .post("/api/upload", formData, {
           onUploadProgress: ({ total, loaded }) => {
@@ -319,11 +329,11 @@ const BuletinAdm = () => {
           if (error.response && error.response.status === 413) {
             message.error("File terlalu besar untuk diunggah. Silakan pilih file yang lebih kecil.");
           } else {
-            message.error(`Gagal mengupload file.`);
+            message.error("Gagal mengupload file.");
           }
           onError(error);
         });
-    },
+    },    
     onChange(info) {
       const { status } = info.file;
       if (status !== "uploading") {
