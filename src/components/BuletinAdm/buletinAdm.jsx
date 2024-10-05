@@ -316,8 +316,12 @@ const BuletinAdm = () => {
         })
         .catch((error) => {
           console.error("Upload error:", error);
+          if (error.response && error.response.status === 413) {
+            message.error("File terlalu besar untuk diunggah. Silakan pilih file yang lebih kecil.");
+          } else {
+            message.error(`Gagal mengupload file.`);
+          }
           onError(error);
-          message.error(`${file.name} file upload failed.`);
         });
     },
     onChange(info) {
