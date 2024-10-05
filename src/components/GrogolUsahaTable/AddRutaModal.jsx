@@ -98,8 +98,6 @@ const AddRutaModal = ({
     // Cek apakah addRutaDataCache bukan objek kosong
     if (Object.keys(addUsahaDataCache).length > 0 && createError === true) {
       setAddUsahaData(addUsahaDataCache);
-      console.log("createError", createError);
-      console.log("addUsahaDataCache", addUsahaDataCache);
       setCreateError(false);
     }
   }, [createError]);

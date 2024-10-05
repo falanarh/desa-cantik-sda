@@ -311,7 +311,6 @@ const BuletinAdm = () => {
         .then((response) => {
           // Simpan URL dari response
           const fileUrl = response.data.url; // Sesuaikan dengan struktur response Anda
-          console.log("File URL:", fileUrl);
           setUrlFile(fileUrl);
           onSuccess(response.data, file);
         })

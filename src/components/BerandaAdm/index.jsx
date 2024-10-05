@@ -69,7 +69,6 @@ const BerandaAdm = () => {
 
   // Update data
   const updateData = async (field, value) => {
-    console.log(field, value);
     try {
       let endpoint = "";
 
@@ -156,7 +155,6 @@ const BerandaAdm = () => {
     api5
       .post("/api/upload", formData)
       .then((response) => {
-        console.log("Link Photo: ", response.data.url);
         onSuccess(response.data);
         setUrlImg(response.data.url);
       })

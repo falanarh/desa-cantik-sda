@@ -70,8 +70,6 @@ const GrogolSlsTable = ({ fetchDataAggregate }) => {
       ]);
       setData(rtResponse.data.data); // Update state dengan data dari API
       setDataGeoJson(geojsonResponse.data.data);
-      console.log("Data fetched:", rtResponse.data.data);
-      console.log("Data GeoJSON fetched:", geojsonResponse.data.data);
     } catch (error) {
       // Cek jika error memiliki respons body
       if (
@@ -139,7 +137,6 @@ const GrogolSlsTable = ({ fetchDataAggregate }) => {
   };
 
   const handleEditClick = (rt) => {
-    console.log("Check editRtData", rt);
     setEditRtData(rt);
     onEditModalOpen();
   };
@@ -211,14 +208,10 @@ const GrogolSlsTable = ({ fetchDataAggregate }) => {
 
   let list = useAsyncList({
     async sort({ items, sortDescriptor }) {
-      console.log("Before sorting:", items);
 
       let sortedItems = items.sort((a, b) => {
         let first = a[sortDescriptor.column];
         let second = b[sortDescriptor.column];
-
-        // Log the values being compared
-        console.log(`Comparing "${first}" with "${second}"`);
 
         // Convert to numbers if possible, or keep as strings
         let firstValue = parseInt(first) || first;

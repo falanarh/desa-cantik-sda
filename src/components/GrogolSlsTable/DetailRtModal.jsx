@@ -16,11 +16,8 @@ import { formatNumberWithSpace } from "../../utils/formatNumberWithSpace";
 const RtDetail = ({ rt, geojson = null }) => {
   const mapRef = useRef();
 
-  console.log("RtDetail: ", rt, geojson);
-
   if (geojson && mapRef.current) {
     const map = mapRef.current;
-    console.log("Map reference:", map);
 
     // Remove existing GeoJSON layers
     map.eachLayer((layer) => {
@@ -52,7 +49,6 @@ const RtDetail = ({ rt, geojson = null }) => {
     });
     geoJsonLayer.addTo(map);
     map.fitBounds(geoJsonLayer.getBounds());
-    console.log("Fitting bounds:", geoJsonLayer.getBounds());
   }
 
   const tableColumns = [

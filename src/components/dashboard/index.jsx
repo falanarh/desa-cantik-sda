@@ -238,7 +238,6 @@ const Dashboard = () => {
     api5
       .post("/api/upload", formData)
       .then((response) => {
-        console.log("Link Photo: ", response.data.url);
         onSuccess(response.data);
         setUrlImg(response.data.url);
       })

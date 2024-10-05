@@ -129,7 +129,6 @@ const EditRtModal = ({
   };
   
   const hasErrors = (errors) => {
-    console.log("Has Errors",errors);
     // Iterate over the values of the errors object
     for (let key in errors) {
       // Check if the error message is not empty
@@ -176,7 +175,6 @@ const EditRtModal = ({
         total_tanaman_sawi_dijual_ke_tengkulak: parseInt(editRtData.total_tanaman_sawi_dijual_ke_tengkulak, 10) || 0,
       };
       
-      console.log("Edit data:", convertedData);
       updateData(convertedData);
     }
   };
@@ -185,7 +183,6 @@ const EditRtModal = ({
     setLoading(true);
     try {
       const response = await api4.put(`/api/sls/${data.kode}`, data);
-      console.log("Data updated:", response.data.data);
       message.success(`SLS ${data.label} berhasil diupdate.`, 5);
       onEditModalOpenChange(false); // Close the modal
       await fetchData(); // Fetch updated data

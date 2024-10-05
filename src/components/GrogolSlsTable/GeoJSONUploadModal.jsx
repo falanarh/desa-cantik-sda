@@ -90,9 +90,6 @@ const GeoJSONUploadModal = ({
 
       const geojsons = await Promise.all(fileReaders);
 
-      // Debugging
-      console.log("SLS Data GeoJSON:", geojsons);
-
       // Mengirim data ke API
       await api3.post("/api/sls", geojsons);
 
