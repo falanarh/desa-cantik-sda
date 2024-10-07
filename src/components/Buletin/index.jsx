@@ -19,12 +19,14 @@ import { message } from "antd";
 export default function AplikasiLayanan() {
   const [selectedYears, setSelectedYears] = useState(new Set());
   const [selectedMonths, setSelectedMonths] = useState(new Set());
-  const [selectedVillages, setSelectedVillages] = useState(new Set());
+  const [selectedDesa, setSelectedDesa] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
   const [buletinList, setBuletinList] = useState([]);
+  const [desaList, setDesaList] = useState([]);
 
   useEffect(() => {
     fetchBuletin();
+    fetchDesa();
   }, []);
 
   const fetchBuletin = async () => {
@@ -35,6 +37,18 @@ export default function AplikasiLayanan() {
     } catch (error) {
       console.error("Error fetching buletin:", error);
       message.error(`Terjadi kesalahan dalam mengambil data buletin.`, 5);
+      return [];
+    }
+  };
+
+  const fetchDesa = async () => {
+    try {
+      const response = await api5.get("/api/desa");
+      setDesaList(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching desa:", error);
+      message.error(`Terjadi kesalahan dalam mengambil data desa.`, 5);
       return [];
     }
   };
@@ -112,47 +126,47 @@ export default function AplikasiLayanan() {
   //   }
   // ];
 
-  const list = [
-    {
-      _id: "66fe76485058ec3813f0e626",
-      judul: "Audiensi dengan Wakil Bupati",
-      tanggal_rilis: "30-09-2024",
-      tanggal_kegiatan: "29-09-2024",
-      deskripsi:
-        "Surat edaran tentang dukungan pelaksanaan pembinaan Desa Cantik di Kabupaten Sidoarjo tahun 2024",
-      link_file:
-        "https://drive.google.com/file/d/1_ArDoi-iwWNw2LHZnpd_7Xz2iWKxTA7u",
-      link_thumbnail:
-        "https://res.cloudinary.com/dfajk6tmu/image/upload/v1727952458/qppf79iyndrsrucqm33n.png",
-      __v: 0,
-    },
-    {
-      _id: "66fe76485058ec3813f0e626",
-      judul: "Audiensi dengan Wakil Bupati",
-      tanggal_rilis: "30-09-2024",
-      tanggal_kegiatan: "29-09-2024",
-      deskripsi:
-        "Surat edaran tentang dukungan pelaksanaan pembinaan Desa Cantik di Kabupaten Sidoarjo tahun 2024",
-      link_file:
-        "https://drive.google.com/file/d/1_ArDoi-iwWNw2LHZnpd_7Xz2iWKxTA7u",
-      link_thumbnail:
-        "https://res.cloudinary.com/dfajk6tmu/image/upload/v1727952458/qppf79iyndrsrucqm33n.png",
-      __v: 0,
-    },
-    {
-      _id: "66fe76485058ec3813f0e626",
-      judul: "Audiensi dengan Wakil Bupati",
-      tanggal_rilis: "30-09-2024",
-      tanggal_kegiatan: "29-09-2024",
-      deskripsi:
-        "Surat edaran tentang dukungan pelaksanaan pembinaan Desa Cantik di Kabupaten Sidoarjo tahun 2024",
-      link_file:
-        "https://drive.google.com/file/d/1_ArDoi-iwWNw2LHZnpd_7Xz2iWKxTA7u",
-      link_thumbnail:
-        "https://res.cloudinary.com/dfajk6tmu/image/upload/v1727952458/qppf79iyndrsrucqm33n.png",
-      __v: 0,
-    },
-  ];
+  // const list = [
+  //   {
+  //     _id: "66fe76485058ec3813f0e626",
+  //     judul: "Audiensi dengan Wakil Bupati",
+  //     tanggal_rilis: "30-09-2024",
+  //     tanggal_kegiatan: "29-09-2024",
+  //     deskripsi:
+  //       "Surat edaran tentang dukungan pelaksanaan pembinaan Desa Cantik di Kabupaten Sidoarjo tahun 2024",
+  //     link_file:
+  //       "https://drive.google.com/file/d/1_ArDoi-iwWNw2LHZnpd_7Xz2iWKxTA7u",
+  //     link_thumbnail:
+  //       "https://res.cloudinary.com/dfajk6tmu/image/upload/v1727952458/qppf79iyndrsrucqm33n.png",
+  //     __v: 0,
+  //   },
+  //   {
+  //     _id: "66fe76485058ec3813f0e626",
+  //     judul: "Audiensi dengan Wakil Bupati",
+  //     tanggal_rilis: "30-09-2024",
+  //     tanggal_kegiatan: "29-09-2024",
+  //     deskripsi:
+  //       "Surat edaran tentang dukungan pelaksanaan pembinaan Desa Cantik di Kabupaten Sidoarjo tahun 2024",
+  //     link_file:
+  //       "https://drive.google.com/file/d/1_ArDoi-iwWNw2LHZnpd_7Xz2iWKxTA7u",
+  //     link_thumbnail:
+  //       "https://res.cloudinary.com/dfajk6tmu/image/upload/v1727952458/qppf79iyndrsrucqm33n.png",
+  //     __v: 0,
+  //   },
+  //   {
+  //     _id: "66fe76485058ec3813f0e626",
+  //     judul: "Audiensi dengan Wakil Bupati",
+  //     tanggal_rilis: "30-09-2024",
+  //     tanggal_kegiatan: "29-09-2024",
+  //     deskripsi:
+  //       "Surat edaran tentang dukungan pelaksanaan pembinaan Desa Cantik di Kabupaten Sidoarjo tahun 2024",
+  //     link_file:
+  //       "https://drive.google.com/file/d/1_ArDoi-iwWNw2LHZnpd_7Xz2iWKxTA7u",
+  //     link_thumbnail:
+  //       "https://res.cloudinary.com/dfajk6tmu/image/upload/v1727952458/qppf79iyndrsrucqm33n.png",
+  //     __v: 0,
+  //   },
+  // ];
 
   const years = [
     { key: "2024", label: "2024" },
@@ -196,9 +210,12 @@ export default function AplikasiLayanan() {
       const monthMatch =
         selectedMonths.size === 0 ||
         selectedMonths.has(getMonthFromDateString(item.tanggal_rilis));
-      return yearMatch && monthMatch;
+      const desaMatch =
+        selectedDesa.size === 0 ||
+        selectedDesa.has(item.desa);
+      return yearMatch && monthMatch && desaMatch;
     });
-  }, [selectedYears, selectedMonths, selectedVillages, list]);
+  }, [selectedYears, selectedMonths, selectedDesa, buletinList]);
 
   const maxPage = Math.ceil(filteredList.length / itemsPerPage);
 
@@ -257,6 +274,20 @@ export default function AplikasiLayanan() {
           >
             {months.map((month) => (
               <SelectItem key={month.key}>{month.label}</SelectItem>
+            ))}
+          </Select>
+
+          <Select
+            // label="Favorite Animal"
+            aria-label="Pilih desa"
+            selectionMode="multiple"
+            placeholder="Pilih desa"
+            selectedKeys={selectedDesa}
+            className="max-w-xs border-2 rounded-xl"
+            onSelectionChange={setSelectedDesa}
+          >
+            {desaList.map((desa) => (
+              <SelectItem key={desa.nama}>{desa.nama}</SelectItem>
             ))}
           </Select>
         </div>
