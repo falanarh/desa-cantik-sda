@@ -596,6 +596,7 @@ import { convertDateFormat } from "../../utils/convertDateFormat.js";
 
 const BuletinAdm = () => {
   const [data, setData] = useState([]);
+  const [desa, setDesa] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
@@ -611,6 +612,7 @@ const BuletinAdm = () => {
 
   useEffect(() => {
     fetchAllBuletin();
+    fetchDesa();
   }, []);
 
   const sortTable = (key) => {
@@ -698,6 +700,15 @@ const BuletinAdm = () => {
     }
   };
 
+  const fetchDesa = async () => {
+    try {
+      const response = await api5.get("/api/desa");
+      setDesa(response.data);
+    } catch (error) {
+      console.error("Error fetching desa:", error);
+    }
+  };
+
   const deleteData = async (data) => {
     setIsLoading(true);
     try {
@@ -718,7 +729,11 @@ const BuletinAdm = () => {
       return response.data;
     } catch (error) {
       console.error("Error editing buletin:", error);
-      message.error("Gagal mengubah Buletin!", 8);
+      if (error.response && error.response.data && error.response.data.message) {
+        message.error(error.response.data.message, 8);
+      } else {
+        message.error("Gagal mengubah Buletin!", 8);
+      }
       throw new Error("Failed to edit buletin. Please try again.");
     } finally {
       setIsLoading(false);
@@ -733,7 +748,11 @@ const BuletinAdm = () => {
       return response.data;
     } catch (error) {
       console.error("Error creating buletin:", error);
-      message.error("Gagal menambahkan Buletin!", 8);
+      if (error.response && error.response.data && error.response.data.message) {
+        message.error(error.response.data.message, 8);
+      } else {
+        message.error("Gagal menambahkan Buletin!", 8);
+      }
       throw new Error("Failed to create buletin. Please try again.");
     } finally {
       setIsLoading(false);
@@ -755,7 +774,10 @@ const BuletinAdm = () => {
       tanggal_rilis: formatDate(formData.get("tanggal_rilis")),
       tanggal_kegiatan: formatDate(formData.get("tanggal_kegiatan")),
       deskripsi: formData.get("deskripsi"),
-      link_file: isUploadMode ? urlFile : simplifyGoogleDriveLink(formData.get("link_file")),
+      link_file: isUploadMode
+        ? urlFile
+        : formData.get("link_file"),
+      desa: formData.get("desa"),
     };
 
     try {
@@ -859,6 +881,9 @@ const BuletinAdm = () => {
                     <span>Deskripsi</span>
                   </th>
                   <th>
+                    <span>Desa</span>
+                  </th>
+                  <th>
                     <span>File Link</span>
                   </th>
                   <th>Aksi</th>
@@ -873,7 +898,7 @@ const BuletinAdm = () => {
                   </tr>
                 ) : currentItems.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="text-center">
+                    <td colSpan="8" className="text-center">
                       Tidak ada data
                     </td>
                   </tr>
@@ -885,6 +910,7 @@ const BuletinAdm = () => {
                       <td>{item.tanggal_kegiatan}</td>
                       <td>{item.tanggal_rilis}</td>
                       <td>{item.deskripsi}</td>
+                      <td>{item.desa}</td>
                       <td>
                         <a
                           href={item.link_file}
@@ -1000,6 +1026,29 @@ const BuletinAdm = () => {
               rows="3"
               placeholder="Masukkan Deskripsi"
             />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Desa:</label>
+            <select
+              name="desa"
+              defaultValue={currentItem?.desa || ""}
+              required
+              className={styles.select}
+            >
+              <option value="">Pilih Desa</option>
+              {desa.length > 0 ? (
+                desa.map((desaItem) => (
+                  <option key={desaItem._id} value={desaItem.nama}>
+                    {desaItem.nama}
+                  </option>
+                ))
+              ) : (
+                <option value="" disabled>
+                  Tidak ada desa tersedia
+                </option>
+              )}
+            </select>
           </div>
 
           <div className={styles.formGroup}>
