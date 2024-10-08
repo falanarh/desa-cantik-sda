@@ -246,8 +246,7 @@ export default function AplikasiLayanan() {
           Buletin
         </h1>
         <p className="w-full mb-6 font-sans text-xl text-left sub-header">
-          Berikut merupakan dokumen laporan terkait Desa Cantik yaitu Desa
-          Simoanginangin Kabupaten Sidoarjo.
+          Berikut merupakan dokumen laporan terkait Desa Cantik di Kabupaten Sidoarjo.
         </p>
         <p className="w-full mb-6 font-sans text-xl font-bold text-left sub-header">
           Pilih filter dokumen
