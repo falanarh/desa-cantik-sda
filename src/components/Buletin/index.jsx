@@ -204,6 +204,7 @@ export default function AplikasiLayanan() {
 
   const filteredList = useMemo(() => {
     return buletinList.filter((item) => {
+      const desaArray = item.desa.split(", ").map((desa) => desa.trim());
       const yearMatch =
         selectedYears.size === 0 ||
         selectedYears.has(getYearFromDateString(item.tanggal_rilis));
@@ -212,7 +213,10 @@ export default function AplikasiLayanan() {
         selectedMonths.has(getMonthFromDateString(item.tanggal_rilis));
       const desaMatch =
         selectedDesa.size === 0 ||
-        selectedDesa.has(item.desa);
+        Array.from(selectedDesa).some((desaFilter) =>
+          desaArray.includes(desaFilter)
+        );
+
       return yearMatch && monthMatch && desaMatch;
     });
   }, [selectedYears, selectedMonths, selectedDesa, buletinList]);
@@ -319,8 +323,9 @@ export default function AplikasiLayanan() {
                       <h2 className="text-2xl font-semibold text-gray-900">
                         {item.judul}
                       </h2>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {item.tanggal_kegiatan}
+                      <p className="flex gap-2 mt-1 text-sm text-gray-500">
+                        <span>{item.tanggal_kegiatan}</span>|
+                        <span>Desa: {item.desa}</span>
                       </p>
                       <p className="mt-4 text-base leading-relaxed text-gray-700">
                         {item.deskripsi}
@@ -333,7 +338,13 @@ export default function AplikasiLayanan() {
                       color="primary"
                       auto
                       className="mt-6 self-start bg-[#EB891B] hover:bg-[#D77A18]"
-                      onClick={() => window.open(item.link_file, '_blank', 'noopener,noreferrer')}
+                      onClick={() =>
+                        window.open(
+                          item.link_file,
+                          "_blank",
+                          "noopener,noreferrer"
+                        )
+                      }
                     >
                       Baca Selengkapnya
                     </Button>

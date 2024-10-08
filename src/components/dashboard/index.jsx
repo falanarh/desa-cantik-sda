@@ -313,13 +313,13 @@ const Dashboard = () => {
                     <span>No {getSortIcon("no")}</span>
                   </th>
                   <th onClick={() => sortTable("nama")}>
-                    <span>Nama Desa Cantik {getSortIcon("nama")}</span>
+                    <span>Nama Desa {getSortIcon("nama")}</span>
                   </th>
                   <th onClick={() => sortTable("kecamatan")}>
                     <span>Kecamatan {getSortIcon("kecamatan")}</span>
                   </th>
                   <th onClick={() => sortTable("luas")}>
-                    <span>Luas (m²) {getSortIcon("luas")}</span>
+                    <span>Luas (hektar) {getSortIcon("luas")}</span>
                   </th>
                   <th>
                     <span>Foto</span>
@@ -461,7 +461,7 @@ const Dashboard = () => {
             </select>
           </div>
           <div className={styles.formGroup}>
-            <label>Luas (m²):</label>
+            <label>Luas (hektar):</label>
             <input
               type="text"
               placeholder="Masukkan Luas"

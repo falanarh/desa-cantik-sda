@@ -295,10 +295,10 @@ const UsAdmin = () => {
     try {
       if (type === "timDesaCantik") {
         setIsLoading(true);
-        await api5.delete("/api/timdesacantik/" + selectedItem._id);
+        await api5.delete("/api/timdesacantik/" + data._id);
       } else {
         setIsLoading2(true);
-        await api5.delete("/api/suratkeputusan/" + selectedItem._id);
+        await api5.delete("/api/suratkeputusan/" + data._id);
       }
       message.success(
         `Berhasil menghapus ${
@@ -439,6 +439,7 @@ const UsAdmin = () => {
       }
       setUrlFile(""); // Kosongkan urlFile setelah berhasil
       setUrlImg(""); // Kosongkan urlImg setelah berhasil
+      setFileList([]); // Kosongkan fileList setelah berhasil
       await fetchAllData(); // Memperbarui data setelah berhasil
       onOpenChange(false); // Menutup modal atau melakukan aksi yang sesuai
     } catch (error) {
@@ -589,10 +590,10 @@ const UsAdmin = () => {
                         <FaEdit />
                       </button>
                       <Popconfirm
-                        title="Hapus Surat Keputusan"
-                        description="Anda yakin menghapus surat keputusan ini?"
+                        title="Hapus Anggota Tim Desa Cantik"
+                        description="Anda yakin menghapus anggota ini?"
                         onConfirm={() =>
-                          handleDeleteClick(item, "suratKeputusan")
+                          handleDeleteClick(item, "timDesaCantik")
                         }
                       >
                         <button
